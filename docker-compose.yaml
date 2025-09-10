@@ -1,0 +1,22 @@
+name: "oica-app"
+
+services:
+  frontend:
+    image: "node:22.19-alpine"
+    user: "node"
+    ports:
+      - 80:3000
+    volumes:
+      - services/frontend:/home/node/app
+    working_dir: /home/node/app
+    command: ["npm", "start"]
+
+  backend:
+    build:
+      context: ./config/backend
+      dockerfile: Dockerfile
+    ports:
+      - 5050:5000
+    volumes:
+      - services/backend:/usr/src/app
+    
