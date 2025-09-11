@@ -2,9 +2,8 @@
 # Prepare
 # 1. Verify docker
 
-result=$(docker --version)
-if [ -z "$result" ]; then
-    echo "Docker no está instsalado. Instalando..."
+if ! command -v docker &> /dev/null; then
+    echo "Docker no está instalado. Instalando..."
     # uninstall all conflicting packages
     for pkg in docker.io docker-doc docker-compose docker-compose-v2 podman-docker containerd runc; do sudo apt-get remove $pkg; done
     sudo apt-get update
