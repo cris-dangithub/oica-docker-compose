@@ -30,6 +30,30 @@ else
     echo "✅ Docker instalado correctamente"
 fi
 
+# 2. Verify nvm
+NVM_STATUS=$(command -v nvm >/dev/null 2>&1 && echo "installed" || echo "missing")
+if [ "$NVM_STATUS" = "installed" ]; then
+    echo "nvm is installed"
+else
+    echo "nvm no está instalado"
+fi
+
+# Install nvm and Node.js if node is missing
+if ! command -v node >/dev/null 2>&1; then
+    echo "⌛ Node.js no está instalado. Instalando nvm y Node.js 22..."
+    # Descarga e instala nvm:
+    curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh | bash
+    # en lugar de reiniciar la shell
+    \. "$HOME/.nvm/nvm.sh"
+    # Descarga e instala Node.js:
+    nvm install 22
+    # Verify the Node.js version:
+    node -v
+    # Verifica versión de npm:
+    npm -v
+    echo "✅ Node.js y nvm instalados correctamente"
+fi
+
 echo "⌛ Creando estructura del proyecto"
 mkdir services
 cd services
@@ -52,6 +76,7 @@ echo "✅ Frontend compilado exitosamente"
 cd ../..
 
 # Start services
+docker compose down && echo "✅ Servicios detenidos exitosamente" || echo "⌛ Iniciando contenedores"
 docker compose up -d --build
 echo "✅ Servicios iniciados exitosamente"
 
