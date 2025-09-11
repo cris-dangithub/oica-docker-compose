@@ -2,7 +2,12 @@
 # Prepare
 # 1. Verify docker
 
-if ! command -v docker &> /dev/null; then
+# Use a variable based on docker --version exit status
+DOCKER_STATUS=$(docker --version >/dev/null 2>&1 && echo "installed" || echo "missing")
+
+if [ "$DOCKER_STATUS" = "installed" ]; then
+    echo "Docker is installed"
+else
     echo "Docker no está instalado. Instalando..."
     # uninstall all conflicting packages
     for pkg in docker.io docker-doc docker-compose docker-compose-v2 podman-docker containerd runc; do sudo apt-get remove $pkg; done
@@ -21,9 +26,6 @@ if ! command -v docker &> /dev/null; then
 
     # 2. Install docker packages
     sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
-
-else
-    echo "Docker is installed"
 fi
 
 
