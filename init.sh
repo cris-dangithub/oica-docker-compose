@@ -1,9 +1,8 @@
 #!/bin/bash
 # Prepare
-apt
 # 1. Verify docker
 
-result=$(docker-compose --version)
+result=$(docker --version)
 if [ -z "$result" ]; then
     echo "Docker no está instsalado. Instalando..."
     # uninstall all conflicting packages
