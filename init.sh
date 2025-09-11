@@ -38,8 +38,11 @@ git clone -b main https://github.com/cris-dangithub/oica-steel-cutting-optimizer
 echo "✅ OICA Steel Cutting Optimizer clonado exitosamente"
 git clone -b main https://github.com/cris-dangithub/tesis-frontend.git frontend
 echo "✅ Frontend clonado exitosamente"
+cd ..
 
-
+# Start services
+docker compose up -d --build
+echo "✅ Servicios iniciados exitosamente"
 
 
 
