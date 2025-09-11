@@ -7,7 +7,7 @@ services:
     ports:
       - 80:3000
     volumes:
-      - services/frontend:/home/node/app
+      - ./services/frontend:/home/node/app
     working_dir: /home/node/app
     command: ["npm", "start"]
 
@@ -18,5 +18,5 @@ services:
     ports:
       - 5050:5000
     volumes:
-      - services/backend:/usr/src/app
+      - ./services/backend:/usr/src/app
     

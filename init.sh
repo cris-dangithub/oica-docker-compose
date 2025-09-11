@@ -1,18 +1,19 @@
 #!/bin/bash
 # Prepare
-# 1. Verify docker
+rm -rf services
+# 1. Verify docker is installed, if not install it
 
 # Use a variable based on docker --version exit status
 DOCKER_STATUS=$(docker --version >/dev/null 2>&1 && echo "installed" || echo "missing")
 
 if [ "$DOCKER_STATUS" = "installed" ]; then
-    echo "Docker is installed"
+    echo "✅ Docker is installed"
 else
-    echo "Docker no está instalado. Instalando..."
+    echo "⌛ Docker no está instalado. Instalando..."
     # uninstall all conflicting packages
     for pkg in docker.io docker-doc docker-compose docker-compose-v2 podman-docker containerd runc; do sudo apt-get remove $pkg; done
     sudo apt-get update
-    sudo apt-get install ca-certificates curl
+    sudo apt-get install -y ca-certificates curl
     sudo install -m 0755 -d /etc/apt/keyrings
     sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
     sudo chmod a+r /etc/apt/keyrings/docker.asc
@@ -24,9 +25,19 @@ else
     sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
     sudo apt-get update
 
-    # 2. Install docker packages
-    sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+    # 1.2. Install docker packages
+    sudo apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+    echo "✅ Docker instalado correctamente"
 fi
+
+echo "⌛ Creando estructura del proyecto"
+mkdir services
+cd services
+mkdir frontend && mkdir backend
+git clone -b main https://github.com/cris-dangithub/oica-steel-cutting-optimizer.git backend
+echo "✅ OICA Steel Cutting Optimizer clonado exitosamente"
+git clone -b main https://github.com/cris-dangithub/tesis-frontend.git frontend
+echo "✅ Frontend clonado exitosamente"
 
 
 
