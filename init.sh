@@ -34,8 +34,11 @@ echo "⌛ Creando estructura del proyecto"
 mkdir services
 cd services
 mkdir frontend && mkdir backend
+echo "✅ Estructura del proyecto creada exitosamente"
+echo "⌛ Clonando backend..."
 git clone -b main https://github.com/cris-dangithub/oica-steel-cutting-optimizer.git backend
 echo "✅ OICA Steel Cutting Optimizer clonado exitosamente"
+echo "⌛ Clonando frontend..."
 git clone -b main https://github.com/cris-dangithub/tesis-frontend.git frontend
 cd frontend
 echo "⌛ Instalando dependencias frontend..."
