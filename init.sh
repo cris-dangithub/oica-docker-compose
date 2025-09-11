@@ -37,6 +37,10 @@ mkdir frontend && mkdir backend
 git clone -b main https://github.com/cris-dangithub/oica-steel-cutting-optimizer.git backend
 echo "✅ OICA Steel Cutting Optimizer clonado exitosamente"
 git clone -b main https://github.com/cris-dangithub/tesis-frontend.git frontend
+cd frontend
+echo "⌛ Instalando dependencias frontend..."
+npm install
+echo "✅ Dependencias frontend instaladas exitosamente"
 echo "✅ Frontend clonado exitosamente"
 cd ..
 
