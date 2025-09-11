@@ -40,12 +40,16 @@ git clone -b main https://github.com/cris-dangithub/oica-steel-cutting-optimizer
 echo "✅ OICA Steel Cutting Optimizer clonado exitosamente"
 echo "⌛ Clonando frontend..."
 git clone -b main https://github.com/cris-dangithub/tesis-frontend.git frontend
+echo "✅ Frontend clonado exitosamente"
 cd frontend
 echo "⌛ Instalando dependencias frontend..."
 npm install
 echo "✅ Dependencias frontend instaladas exitosamente"
-echo "✅ Frontend clonado exitosamente"
-cd ..
+echo "⌛ Compilando frontend..."
+npm run build
+echo "✅ Frontend compilado exitosamente"
+# Volver al directorio raíz
+cd ../..
 
 # Start services
 docker compose up -d --build
