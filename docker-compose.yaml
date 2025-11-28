@@ -1,26 +1,96 @@
 name: "oica-app"
 
 services:
+  # PostgreSQL Database
+  db:
+    image: postgres:15-alpine
+    container_name: oica_postgres
+    environment:
+      POSTGRES_DB: oica_db
+      POSTGRES_USER: oica_user
+      POSTGRES_PASSWORD: oica_password
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./config/backend/init.sql:/docker-entrypoint-initdb.d/init.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U oica_user -d oica_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Redis for Celery
+  redis:
+    image: redis:7-alpine
+    container_name: oica_redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+
+  # Flask Backend
+  backend:
+    build:
+      context: ./services/backend
+      dockerfile: ../../config/backend/Dockerfile
+    container_name: oica_backend
+    ports:
+      - 5000:5000
+    environment:
+      - UPLOAD_PATH=/usr/src/app/data/filestore
+      - ACCEPTED_FORMATS=xlsx
+      - DATABASE_URL=postgresql://oica_user:oica_password@db:5432/oica_db
+      - REDIS_URL=redis://redis:6379/0
+      - FLASK_ENV=development
+    volumes:
+      - ./services/backend:/usr/src/app
+      - ./app/data/filestore:/usr/src/app/data/filestore
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+  # Celery Worker
+  celery_worker:
+    build:
+      context: ./services/backend
+      dockerfile: ../../config/celery_worker/Dockerfile
+    container_name: oica_celery_worker
+    environment:
+      - UPLOAD_PATH=/usr/src/app/data/filestore
+      - DATABASE_URL=postgresql://oica_user:oica_password@db:5432/oica_db
+      - REDIS_URL=redis://redis:6379/0
+    volumes:
+      - ./services/backend:/usr/src/app
+      - ./app/data/filestore:/usr/src/app/data/filestore
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+  # Next.js Frontend
   frontend:
     image: "node:22.19-alpine"
+    container_name: oica_frontend
     user: "node"
     ports:
       - 80:3000
     volumes:
       - ./services/frontend:/home/node/app
     working_dir: /home/node/app
-    command: ["npm", "start"]
+    command: sh -c "npm install && npm run build && npm start"
+    depends_on:
+      - backend
 
-  backend:
-    build:
-      context: ./config/backend
-      dockerfile: Dockerfile
-    ports:
-      - 5050:5000
-    environment:
-      - UPLOAD_PATH=/usr/src/app/data/filestore
-      - ACCEPTED_FORMATS=xlsx
-    volumes:
-      - ./services/backend:/usr/src/app
-      - ./app/data/filestore:/usr/src/app/data/filestore
+volumes:
+  postgres_data:
+  redis_data:
     

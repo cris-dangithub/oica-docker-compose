@@ -6,6 +6,7 @@ WORKDIR /usr/src/app
 # - WeasyPrint (cairo, pango, gdk-pixbuf, etc.)
 # - psycopg2-binary (postgresql-dev, gcc, python3-dev, musl-dev)
 # - Pillow for image processing (jpeg, zlib, freetype, etc.)
+# - Fonts for PDF generation
 RUN apk add --no-cache \
     postgresql-dev \
     gcc \
@@ -26,14 +27,20 @@ RUN apk add --no-cache \
     tk-dev \
     tcl-dev \
     harfbuzz-dev \
-    fribidi-dev
+    fribidi-dev \
+    fontconfig \
+    ttf-dejavu \
+    ttf-liberation \
+    font-noto
 
 # Copy requirements.txt from build context (services/backend/)
-# NOTE: This file should be synced from config/backend/requirements.txt
+# NOTE: This file should be synced from config/celery_worker/requirements.txt
 COPY requirements.txt ./
 RUN pip install --no-cache-dir -r requirements.txt
 
+# Copy application code
 COPY . .
 
-# Changed from main.py to server.py for new architecture
-CMD [ "python", "./server.py" ]
+# Run Celery worker
+# Using python -m ensures celery is found in the Python environment
+CMD ["python", "-m", "celery", "-A", "celery_worker", "worker", "--loglevel=info"]

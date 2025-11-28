@@ -15,8 +15,7 @@ redis==5.0.1
 # WebSocket
 flask-socketio==5.3.5
 python-socketio==5.10.0
-gevent==24.2.1
-gevent-websocket==0.10.1
+eventlet==0.33.3
 
 # Data Processing
 pandas>=1.5.0

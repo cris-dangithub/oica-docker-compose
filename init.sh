@@ -1,6 +1,6 @@
 #!/bin/bash
 # Prepare
-rm -rf services
+sudo rm -rf services
 # 1. Verify docker is installed, if not install it
 
 # Use a variable based on docker --version exit status
