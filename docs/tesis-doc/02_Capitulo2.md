@@ -28,6 +28,7 @@ En cuanto a las bases de datos, se optará por PostgreSQL para el almacenamiento
 
 > Nota: Hablar sobre qué subrama de IA estamos usando – algoritmo genético; IA generativa VS IA predictiva (algoritmos genéticos con redes neuronales evolutivas)
 
+### 2.1 Características de las Barras de Acero Comercial
 > Nota: Hablar sobre el marco teórico de las barras de acero en Colombia.
 
 | Características                                        | Detalle                                                                                                                         |
@@ -42,3 +43,35 @@ En cuanto a las bases de datos, se optará por PostgreSQL para el almacenamiento
 | Personalización                                        | Otros diámetros y longitudes pueden producirse por acuerdo con el cliente.                                                      |
 
 - Tabla ##: Longitudes estándar y normativas aplicables a las barras de acero comercial en Colombia
+
+La inclusión de esta tabla es siginificativa porque no solo precisa el alcance del problema del proyecto al proporcionar los parámetros específicos de las barras de acero en Colombia, sino que también establece las restricciones fundamentales para cualquier modelo de optimización. El problema de corte depende de cuánto material se tenga disponible. Además, al detallar las normativas nacionales e internacionales, se garantiza que la solución propuesta en el documento sea viable tanto legal como industrialmente. Finalmente, la tabla sirve como una referencia concisa y autorizada para el desarrollo de la aplicación, influyendo directamente en los modelos de datos, las reglas de validación y los formatos de salida. 
+
+### 2.2 Definición y Clasificación de los Problemas de Corte (1D, 2D, Nesting)
+
+> Nota: Buscar y hablar sobre este literal (con su respectiva bibliografía)
+
+### 2.3  Algoritmos Clásicos para la Solución de Problemas de Corte
+
+> Nota: Hacerlo sonar menos IA y verificar bibliografía; hablar también del método Búfalo que no es mencionado.
+
+Para abordar la complejidad inherente de los problemas de corte, se han desarrollado diversas metodologías algorítmicas. La elección de un algoritmo depende a menudo del equilibrio entre la búsqueda de una solución óptima y la necesidad de un tiempo de cómputo razonable, especialmente en contextos industriales donde las decisiones deben tomarse rápidamente. 
+
+- Generación de Columnas (Gilmore-Gomory): Este método, ampliamente reconocido y desarrollado por Gilmore y Gomory en la década de 1960, aborda el gran número de patrones de corte potenciales al comenzar con un conjunto limitado y generar nuevos patrones de forma dinámica. Implica la resolución iterativa de un programa lineal maestro y un problema auxiliar de la mochila para identificar patrones nuevos que mejoren el costo. Este método está teóricamente garantizado para converger a la solución óptima fraccional.    
+
+- Programación Dinámica: Esta técnica algorítmica puede utilizarse eficazmente para resolver el subproblema de la mochila dentro del marco de la generación de columnas, o para ciertas variantes específicas del CSP 1D, descomponiendo el problema en subproblemas superpuestos más simples.    
+
+- Heurísticas y Metaheurísticas: Dada la naturaleza NP-hard del CSP, los algoritmos heurísticos y metaheurísticos se emplean ampliamente en la práctica industrial para encontrar soluciones buenas o aceptables en un tiempo de cómputo razonable, incluso si no garantizan la optimización absoluta. Las heurísticas suelen realizar mejoras locales y "codiciosas". Las metaheurísticas, por otro lado, son métodos de exploración más generales que se aplican para optimizar una heurística subyacente. A diferencia de las heurísticas, que son específicas de un problema, las metaheurísticas son más generalizadas y pueden aplicarse de manera similar a muchos problemas diferentes. Se clasifican en metaheurísticas basadas en población (como los algoritmos inspirados en el comportamiento de enjambres o la evolución natural) y metaheurísticas basadas en iteración (inspiradas en leyes físicas, matemáticas o el comportamiento humano).    
+
+La elección entre algoritmos exactos, como la Programación Lineal Entera con generación de columnas, y las metaheurísticas para el problema de corte de stock dependerá del equilibrio aceptable entre la optimización de la solución y el tiempo de cómputo. Esta es una consideración crítica para una aplicación web que requiere respuestas en tiempo real. Los métodos exactos, aunque garantizan la solución óptima, pueden ser prohibitivamente lentos para grandes instancias de problemas NP-hard. Las metaheurísticas, si bien no garantizan la optimización global, pueden proporcionar soluciones de muy alta calidad en un tiempo mucho más corto, lo que las hace adecuadas para entornos operativos dinámicos. Por lo tanto, la implementación de la aplicación web necesitará evaluar cuidadosamente este compromiso, posiblemente utilizando una combinación de enfoques o un enfoque híbrido, donde las metaheurísticas generen soluciones rápidas que luego puedan ser refinadas por métodos exactos para instancias más pequeñas o críticas. 
+
+### 2.4 Desperdicios Admisibles y Optimización de Rendimiento en el Corte 
+
+> Nota: Misma situación que en el literal anterior, hacerlo sonar menos IA y verificar bibliografía.
+
+El concepto de "desperdicios admisibles" se enmarca en la filosofía de la manufactura esbelta (Lean Manufacturing), donde el desperdicio se define como cualquier actividad que no añade valor para el cliente. Esto va más allá de los residuos físicos e incluye cualquier cosa que consuma tiempo o reduzca la eficiencia operativa de una empresa. En este contexto, la "merma" (shrinkage) es la diferencia entre el inventario registrado y el real, y puede deberse a factores como el daño durante la fabricación, el deterioro o los errores de registro. El objetivo es minimizar estos desperdicios para reducir los tiempos de ciclo y de entrega, y aumentar la eficacia de los procesos.    
+
+La optimización del rendimiento del material es un pilar fundamental en la industria siderúrgica. El rendimiento del material se refiere a la proporción de producto terminado utilizable en relación con el total de materia prima de entrada. Las pérdidas de rendimiento en una planta de acero pueden ocurrir debido a la formación de escoria, recortes y retales, defectos superficiales, retrabajo, oxidación, errores de fundición o laminación, y daños durante la manipulación y el transporte. Incluso una pequeña mejora porcentual en el rendimiento (por ejemplo, del 92% al 94%) puede generar ahorros masivos en operaciones de alto volumen al reducir directamente el desperdicio, minimizar el retrabajo, mejorar la eficiencia energética y asegurar una mejor utilización de materias primas costosas.    
+
+La definición de "desperdicio admisible" requiere un marco cuantitativo que considere no solo la pérdida física del material, sino también el impacto económico y las implicaciones ambientales. Esto va más allá de un simple porcentaje de desperdicio para llegar a un análisis holístico de costo-beneficio. La justificación de esta aproximación radica en que el desperdicio no es solo una cuestión de material perdido, sino que tiene ramificaciones significativas en toda la cadena de valor. Por ejemplo, el desperdicio de material implica costos de adquisición no recuperados, costos de energía utilizados en su procesamiento inicial, y costos de disposición o reciclaje. Además, los restos de corte, si no son reutilizables, pueden generar costos de almacenamiento o la necesidad de retrabajo, lo que aumenta los gastos operativos. Desde una perspectiva ambiental, la reducción del desperdicio contribuye a la sostenibilidad al disminuir la huella de carbono y el consumo de recursos, un factor cada vez más relevante en la industria del acero. Por lo tanto, un marco cuantitativo para el "desperdicio admisible" consideraría el valor del material perdido, los costos de procesamiento asociados, los costos de manejo de residuos y el impacto ambiental, permitiendo una evaluación integral que va más allá de la simple métrica de "porcentaje de desperdicio" para determinar el nivel óptimo de desperdicio que minimiza el costo total y maximiza el valor.    
+
+
