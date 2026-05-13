@@ -17,19 +17,31 @@ Además, en este proyecto se trabajarán varios lenguajes de programación, incl
 - JavaScript: JavaScript es un lenguaje de programación de alto nivel, interpretado y multiplataforma. Es uno de los pilares fundamentales de la web junto con HTML y CSS. JavaScript se usa principalmente en el lado del cliente (navegador web), pero también puede usarse en el lado del servidor (por ejemplo, a través de Node.js). JavaScript permite agregar interactividad y dinamismo a las páginas web. Con JavaScript, los desarrolladores pueden manipular el contenido de una página web, responder a eventos del usuario (como clics de ratón o pulsaciones de teclas), realizar peticiones a servidores web para obtener o enviar datos (a través de AJAX), y muchas otras funciones que mejoran la experiencia del usuario. JavaScript es un lenguaje versátil y poderoso que ha experimentado un crecimiento significativo en popularidad y uso en los últimos años, convirtiéndose en una habilidad indispensable para muchos desarrolladores de software. 
 
 > Nota: Colocar NextJS
+>https://nextjs.org/docs/13
 
 Asimismo, es importante destacar que de los lenguajes de programación emergen los frameworks, herramientas cruciales definidas por ​(Spinelli, 2023)​ como facilitadores del desarrollo de aplicaciones de manera ágil y eficiente. Estos frameworks ofrecen un conjunto de recursos, bibliotecas y estándares de codificación que pueden ser reutilizados en la creación de diversos tipos de aplicaciones, optimizando así el proceso de desarrollo. 
 
 > Nota: El despliegue es Dockerizado.
+>https://repository.unad.edu.co/jspui/bitstream/10596/59287/1/jcleondi.pdf (Despliegue dockerizado)
+>Referencia Docker.pdf (Bibliografía)
+
 
 En cuanto a las bases de datos, se optará por PostgreSQL para el almacenamiento de información. Según AWS (2023), una base de datos se utiliza para almacenar, recuperar y editar datos de manera eficiente, siendo PostgreSQL un sistema de gestión de bases de datos relacional de código abierto y libre. Se le reconoce como uno de los más avanzados y populares del mundo, utilizado en aplicaciones ​(Dorantes, 2025).​ 
 
 > Nota: Hablar de Docker como open source
+>https://www.researchgate.net/publication/386515865_Utilizing_Docker_Containers_for_Reproducible_Builds_and_Scalable_Web_Application_Deployments
+>https://www.researchgate.net/publication/318816158_An_Introduction_to_Docker_and_Analysis_of_its_Performance
 
 > Nota: Hablar sobre qué subrama de IA estamos usando – algoritmo genético; IA generativa VS IA predictiva (algoritmos genéticos con redes neuronales evolutivas)
+>https://nn.cs.utexas.edu/downloads/papers/stanley.cec02.pdf
+>https://arxiv.org/pdf/2006.05415
+
 
 ### 2.1 Características de las Barras de Acero Comercial
 > Nota: Hablar sobre el marco teórico de las barras de acero en Colombia.
+>Reglamento Colombiano de Construcción Sismo Resistente (NSR-10): Específicamente el Título C (Concreto Estructural), el cual exige que todo el acero de refuerzo utilizado en el país cumpla con propiedades mecánicas controladas de tracción, fluencia y elongación para soportar cargas sísmicas sin colapsar.
+>Resolución 1856 de 2017 (MINCIT): Es el Reglamento Técnico oficial expedido por el Ministerio de Comercio, Industria y Turismo. Declara obligatoria la certificación del acero antes de su fabricación, importación o comercialización en Colombia para proteger la vida de las personas.
+(En el contexto de la infraestructura nacional, el Reglamento Técnico Colombiano (Resolución 1856, 2017) estipula que las barras corrugadas empleadas como refuerzo de concreto deben poseer un certificado de conformidad emitido por organismos acreditados. De acuerdo con la norma NTC 2289 del ICONTEC, este tipo de acero de baja aleación debe someterse a ensayos rigurosos de tracción y doblado por cada colada de producción, asegurando una adecuada relación entre la resistencia máxima y el límite de fluencia para cumplir las demandas de sismo-resistencia exigidas por la normativa NSR-10 (Camacol, 2010).)
 
 | Características                                        | Detalle                                                                                                                         |
 |--------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------|
@@ -49,6 +61,9 @@ La inclusión de esta tabla es siginificativa porque no solo precisa el alcance 
 ### 2.2 Definición y Clasificación de los Problemas de Corte (1D, 2D, Nesting)
 
 > Nota: Buscar y hablar sobre este literal (con su respectiva bibliografía)
+>https://riull.ull.es/xmlui/bitstream/handle/915/21169/cp457.pdf?sequence=1&isAllowed=y
+>https://repositorio.uniandes.edu.co/entities/publication/83a2746f-1b0b-4009-90c2-b969bc2aedfa
+>http://www.scielo.org.co/scielo.php?script=sci_arttext&pid=S1692-82612017000100112
 
 ### 2.3  Algoritmos Clásicos para la Solución de Problemas de Corte
 
