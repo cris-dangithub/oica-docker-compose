@@ -24,7 +24,7 @@ No se conoce aquí la ubicación física exacta del VHDX ni la causa del fallo. 
 ## Trabajo implementado
 
 - Código local migrado a `backend/` y `frontend/`, incluyendo correcciones anteriores sin commit. `services/` preservado intacto como copia histórica.
-- Se retiraron solo los dos gitlinks del índice. Rama local: `production`, todavía siguiendo `origin/main`.
+- Se retiraron solo los dos gitlinks del índice. Rama local: `production`, siguiendo `origin/production`.
 - Fast-forward a e8fa70a incorporó dos commits remotos de documentación. Con aprobación del usuario se creó el commit 0330943 de implementación. El push falló por falta de credenciales HTTPS y el token de gh es inválido. La rama predeterminada remota no se modificó.
 - Compose: Nginx, Next.js, Flask, Celery, PostgreSQL, Redis y migrador temporal. Puerto predeterminado 80; API relativa /api y Socket.IO /socket.io.
 - Imágenes con código, sin montajes de fuentes; secretos externos, volúmenes persistentes y requisitos Python fijados. Dockerfiles finales eliminan compiladores temporales, pero su build quedó interrumpido.
@@ -56,7 +56,7 @@ Las imágenes Python activas no deben considerarse la validación del código fi
 
 ## Pendiente para cerrar F
 
-El usuario autorizó commit y push. La comprobación de `gh auth status` confirma que el token local de GitHub es inválido, incluso fuera del aislamiento; renovar con `gh auth login -h github.com` antes de publicar. Se corrigió `.gitignore` para excluir solo `/app/` en la raíz y conservar `frontend/src/app/` en la entrega. La configuración SSH del entorno GitHub `production` y el acceso a la VPS siguen pendientes.
+El usuario autorizó commit y push. La publicación se completó usando Git por SSH: origin ahora es git@github.com:cris-dangithub/oica-docker-compose.git y production se publicó con los commits 0330943 y 7b77062. El token de gh sigue inválido, pero no impide operar Git por SSH. El usuario informa que configuró los secretos; falta comprobar la ejecución del pipeline y el despliegue. La rama predeterminada remota sigue pendiente de cambio. Se corrigió `.gitignore` para excluir solo `/app/` en la raíz y conservar `frontend/src/app/` en la entrega.
 
 1. Elegir dónde ejecutar la compilación final. Estimación local conservadora: 1–3 GB adicionales transitorios, variable según caché. No ejecutarla sin aviso/autorización del usuario; preferir GitHub si no hay margen físico suficiente.
 2. Validar imágenes finales, migraciones repetibles y recuperación en un entorno desechable con espacio suficiente. El ensayo real ya está programado en CI mediante scripts/test_operations_ci.sh; aún no se ha ejecutado.

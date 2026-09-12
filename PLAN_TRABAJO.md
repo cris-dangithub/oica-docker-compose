@@ -204,6 +204,7 @@ Resultados de la validación con `tests/data/001-pruebaInicial.xlsx`:
 - [ ] Instalar y probar el entorno nativo completo con Python 3.12/Node 22.
 - [ ] Activar puerto 80 del stack local final y configurar/desplegar VPS/HTTPS.
 - [x] Crear commit de implementación con autorización del usuario (0330943).
-- [ ] Publicar rama production y cambiar default remoto: autorizado, bloqueado por autenticación GitHub inválida.
+- [x] Publicar rama production mediante Git por SSH y configurar su seguimiento remoto.
+- [ ] Cambiar default remoto a production y comprobar GitHub Actions; token de API local inválido.
 
 **Restricción actual:** C: tiene 6 GB libres (99 % usado); no ejecutar builds ni instalaciones significativas sin avisar al usuario con estimación. No efectuar limpiezas, mounts ni cambios de permisos globales. Ver CURRENT_STATE.md para el estado exacto.

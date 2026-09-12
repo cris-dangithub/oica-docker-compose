@@ -23,13 +23,24 @@ jobs:
       ALLOWED_ORIGINS: http://localhost:8080
     steps:
       - uses: actions/checkout@v4
-      - name: Validar scripts y configuración
+      - name: Validar sintaxis Bash
         run: |
           for script in scripts/*.sh; do bash -n "$script"; done
-          shellcheck -x scripts/*.sh
-          docker compose config --quiet
-          df -h .
-          python3 -m unittest discover -s tests/deployment -p 'test_*.py'
+      - name: Revisar scripts con ShellCheck
+        run: |
+          if ! diagnostic=$(shellcheck -x scripts/*.sh 2>&1); then
+            diagnostic=${diagnostic//'%'/'%25'}
+            diagnostic=${diagnostic//$'\r'/'%0D'}
+            diagnostic=${diagnostic//$'\n'/'%0A'}
+            printf '::error title=ShellCheck::%s\n' "$diagnostic"
+            exit 1
+          fi
+      - name: Validar Compose
+        run: docker compose config --quiet
+      - name: Comprobar almacenamiento del runner
+        run: df -h .
+      - name: Probar seguridad de operaciones
+        run: python3 -m unittest discover -s tests/deployment -p 'test_*.py'
       - name: Construir imágenes y verificar frontend
         env:
           REBUILD: ${{ inputs.rebuild && 'true' || 'false' }}
