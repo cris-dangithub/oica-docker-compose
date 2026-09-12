@@ -374,8 +374,15 @@ def reprocess_file(file_id):
             'allowed': ['rapido', 'balanceado', 'profundo']
         }), 400
 
+    estado_anterior = uploaded_file.processing_status
+    detalle_anterior = uploaded_file.status_details
     try:
-        
+        # Persistir antes de publicar: una actualización puede interrumpir la
+        # tarea incluso si el worker todavía no comenzó a procesarla.
+        uploaded_file.processing_status = 'pending'
+        uploaded_file.status_details = 'Archivo encolado para reprocesamiento'
+        db.session.commit()
+
         # Encolar nueva tarea
         task = process_file_task.apply_async(
             args=[uploaded_file.id, nuevo_perfil],
@@ -391,6 +398,9 @@ def reprocess_file(file_id):
         
     except Exception as e:
         db.session.rollback()
+        uploaded_file.processing_status = estado_anterior
+        uploaded_file.status_details = detalle_anterior
+        db.session.commit()
         return jsonify({
             'error': 'Error al reprocesar archivo',
             'details': str(e)

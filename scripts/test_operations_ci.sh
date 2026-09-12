@@ -72,7 +72,8 @@ bash "$release/scripts/deploy.sh" deploy "$release_id"
 python3 - "$task_id" <<'PY'
 import json, sys, urllib.request
 with urllib.request.urlopen('http://localhost:8081/api/status/'+sys.argv[1]) as response:
-    assert json.load(response)['state']=='FAILURE'
+    status = json.load(response)
+    assert status['state']=='FAILURE', f'La tarea interrumpida no figura como fallo: {status}'
 PY
 
 # Reset con respaldo y restauración real de base + artefactos.
