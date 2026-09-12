@@ -88,7 +88,7 @@ jobs:
         run: |
           set -o pipefail
           if ! bash scripts/test_operations_ci.sh 2>&1 | tee "$RUNNER_TEMP/oica-operations.log"; then
-            diagnostic=$(tail -c 12000 "$RUNNER_TEMP/oica-operations.log")
+            diagnostic=$(tail -c 2500 "$RUNNER_TEMP/oica-operations.log")
             diagnostic=${diagnostic//'%'/'%25'}
             diagnostic=${diagnostic//$'\r'/'%0D'}
             diagnostic=${diagnostic//$'\n'/'%0A'}

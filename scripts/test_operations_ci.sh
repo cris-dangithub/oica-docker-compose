@@ -34,8 +34,21 @@ dc() {
         --env-file "$release/images.env" -f "$release/docker-compose.yaml" "$@"
 }
 cleanup() {
+    local code=$? service diagnostic
+    if (( code != 0 )); then
+        dc ps -a || true
+        # Anotaciones cortas por servicio: GitHub trunca mensajes largos.
+        for service in nginx backend migrate; do
+            diagnostic=$(dc logs --no-color --tail=15 "$service" 2>&1 | tail -c 2000) || true
+            diagnostic=${diagnostic//'%'/'%25'}
+            diagnostic=${diagnostic//$'\r'/'%0D'}
+            diagnostic=${diagnostic//$'\n'/'%0A'}
+            printf '::error title=Diagnóstico %s::%s\n' "$service" "$diagnostic"
+        done
+    fi
     # Solo los recursos creados por este ensayo, nunca los de producción.
-    dc down --volumes --remove-orphans
+    dc down --volumes --remove-orphans || true
+    return "$code"
 }
 trap cleanup EXIT
 unrelated=$(docker compose -p oica-ci ps -q | sort)
