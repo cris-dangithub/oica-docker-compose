@@ -1,0 +1,2 @@
+# Compatibilidad: instalar desde el monorepo.
+-r ../config/backend/requirements.txt

@@ -1,0 +1,17 @@
+**/.git
+services
+app
+.runtime
+**/.env*
+**/.venv*
+**/node_modules
+**/.next
+**/__pycache__
+**/*.pyc
+**/*.tsbuildinfo
+docs
+drafts
+.claude
+.codex
+
+**/next-env.d.ts

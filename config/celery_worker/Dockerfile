@@ -1,46 +1,13 @@
 FROM python:3.12-alpine
-
 WORKDIR /usr/src/app
-
-# Install system dependencies required for:
-# - WeasyPrint (cairo, pango, gdk-pixbuf, etc.)
-# - psycopg2-binary (postgresql-dev, gcc, python3-dev, musl-dev)
-# - Pillow for image processing (jpeg, zlib, freetype, etc.)
-# - Fonts for PDF generation
-RUN apk add --no-cache \
-    postgresql-dev \
-    gcc \
-    musl-dev \
-    python3-dev \
-    glib-dev \
-    gobject-introspection-dev \
-    pango-dev \
-    gdk-pixbuf-dev \
-    libffi-dev \
-    cairo-dev \
-    jpeg-dev \
-    zlib-dev \
-    freetype-dev \
-    lcms2-dev \
-    openjpeg-dev \
-    tiff-dev \
-    tk-dev \
-    tcl-dev \
-    harfbuzz-dev \
-    fribidi-dev \
-    fontconfig \
-    ttf-dejavu \
-    ttf-liberation \
-    font-noto
-
-# Copy requirements.txt from build context (services/backend/)
-# NOTE: This file should be synced from config/celery_worker/requirements.txt
-COPY requirements.txt ./
-RUN pip install --no-cache-dir -r requirements.txt
-
-# Copy application code
-COPY . .
-
-# Run Celery worker
-# Using python -m ensures celery is found in the Python environment
-CMD ["python", "-m", "celery", "-A", "celery_worker", "worker", "--loglevel=info"]
+ENV PYTHONUNBUFFERED=1 PYTHONDONTWRITEBYTECODE=1 MPLBACKEND=Agg
+RUN apk add --no-cache pango cairo gdk-pixbuf harfbuzz fribidi libffi \
+    libstdc++ libgcc fontconfig ttf-dejavu ttf-liberation font-noto
+COPY config/backend/requirements-common.txt config/backend/constraints.txt /tmp/config/backend/
+COPY config/celery_worker/requirements.txt /tmp/config/celery_worker/
+RUN --mount=type=cache,target=/root/.cache/pip apk add --no-cache --virtual .build-deps gcc musl-dev && pip install -r /tmp/config/celery_worker/requirements.txt && apk del .build-deps
+COPY backend/ ./
+RUN addgroup -g 10001 oica && adduser -D -u 10001 -G oica oica \
+    && mkdir -p /usr/src/app/data/filestore && chown -R oica:oica /usr/src/app
+USER oica
+CMD ["python", "-m", "celery", "-A", "celery_worker.celery", "worker", "--loglevel=info", "--concurrency=1", "--hostname=oica@%h"]

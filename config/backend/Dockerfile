@@ -1,39 +1,14 @@
 FROM python:3.12-alpine
-
 WORKDIR /usr/src/app
-
-# Install system dependencies required for:
-# - WeasyPrint (cairo, pango, gdk-pixbuf, etc.)
-# - psycopg2-binary (postgresql-dev, gcc, python3-dev, musl-dev)
-# - Pillow for image processing (jpeg, zlib, freetype, etc.)
-RUN apk add --no-cache \
-    postgresql-dev \
-    gcc \
-    musl-dev \
-    python3-dev \
-    glib-dev \
-    gobject-introspection-dev \
-    pango-dev \
-    gdk-pixbuf-dev \
-    libffi-dev \
-    cairo-dev \
-    jpeg-dev \
-    zlib-dev \
-    freetype-dev \
-    lcms2-dev \
-    openjpeg-dev \
-    tiff-dev \
-    tk-dev \
-    tcl-dev \
-    harfbuzz-dev \
-    fribidi-dev
-
-# Copy requirements.txt from build context (services/backend/)
-# NOTE: This file should be synced from config/backend/requirements.txt
-COPY requirements.txt ./
-RUN pip install --no-cache-dir -r requirements.txt
-
-COPY . .
-
-# Changed from main.py to server.py for new architecture
-CMD [ "python", "./server.py" ]
+ENV PYTHONUNBUFFERED=1 PYTHONDONTWRITEBYTECODE=1 MPLBACKEND=Agg
+RUN apk add --no-cache pango cairo gdk-pixbuf harfbuzz fribidi libffi \
+    libstdc++ libgcc fontconfig ttf-dejavu ttf-liberation font-noto
+COPY config/backend/*.txt /tmp/config/backend/
+RUN --mount=type=cache,target=/root/.cache/pip apk add --no-cache --virtual .build-deps gcc musl-dev && pip install -r /tmp/config/backend/requirements.txt && apk del .build-deps
+COPY backend/ ./
+COPY scripts/migrate.py scripts/interrupt_jobs.py ./scripts/
+COPY config/backend/migrations/ ./migrations/
+RUN addgroup -g 10001 oica && adduser -D -u 10001 -G oica oica \
+    && mkdir -p /usr/src/app/data/filestore && chown -R oica:oica /usr/src/app
+USER oica
+CMD ["python", "server.py"]

@@ -1,3 +1,17 @@
-app/
+# Copias originales preservadas; el código vive en backend/ y frontend/.
 services/
+/app/
 tmp/
+.runtime/
+.venv*/
+.env
+.env.*
+!.env.example
+!.env.development.example
+node_modules/
+.next/
+__pycache__/
+*.pyc
+*.tsbuildinfo
+
+.maintenance/

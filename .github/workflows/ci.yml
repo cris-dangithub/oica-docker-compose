@@ -1,0 +1,89 @@
+name: Verificar OICA
+on:
+  pull_request:
+    branches: [production]
+  workflow_call:
+    inputs:
+      publish:
+        type: boolean
+        default: false
+      rebuild:
+        type: boolean
+        default: false
+permissions:
+  contents: read
+  packages: write
+jobs:
+  validate:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 35
+    env:
+      COMPOSE_PROJECT_NAME: oica-ci
+      HTTP_PORT: '8080'
+      ALLOWED_ORIGINS: http://localhost:8080
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validar scripts y configuración
+        run: |
+          for script in scripts/*.sh; do bash -n "$script"; done
+          shellcheck -x scripts/*.sh
+          docker compose config --quiet
+          df -h .
+          python3 -m unittest discover -s tests/deployment -p 'test_*.py'
+      - name: Construir imágenes y verificar frontend
+        env:
+          REBUILD: ${{ inputs.rebuild && 'true' || 'false' }}
+        run: |
+          if [ "$REBUILD" = true ]; then
+            docker compose build --no-cache --pull backend celery_worker frontend
+          else
+            docker compose build backend celery_worker frontend
+          fi
+      - name: Pruebas del algoritmo
+        run: docker compose run --rm --no-deps backend python -m unittest discover -s tests -p 'test_*.py'
+      - name: Arranque desde cero
+        run: docker compose up -d --no-build --wait --wait-timeout 240
+      - name: Migraciones repetibles y flujo completo
+        run: |
+          docker compose run --rm --no-deps migrate
+          python3 scripts/smoke_e2e.py http://localhost:8080 tests/fixtures/small.xlsx --keep
+          docker compose exec -T backend python - --delete < scripts/verify_smoke_domain.py
+      - uses: docker/login-action@v3
+        if: inputs.publish && github.ref == 'refs/heads/production'
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Publicar exactamente las imágenes verificadas
+        if: inputs.publish && github.ref == 'refs/heads/production'
+        run: |
+          mkdir -p delivery
+          cp -r scripts config docker-compose.yaml compose.production.yaml delivery/
+          prefix="ghcr.io/${GITHUB_REPOSITORY,,}"
+          : > delivery/images.env
+          for role in backend worker frontend; do
+            ref="$prefix-$role:$GITHUB_SHA-$GITHUB_RUN_ID"
+            docker tag "oica-$role:local" "$ref"
+            docker push "$ref"
+            digest=$(docker image inspect --format '{{index .RepoDigests 0}}' "$ref")
+            printf '%s_IMAGE=%s\n' "${role^^}" "$digest" >> delivery/images.env
+          done
+          (cd delivery && sha256sum config/backend/migrations/*.sql > schema.sha256)
+          tar -czf release.tar.gz -C delivery .
+      - name: Ensayar recuperación en un proyecto desechable
+        if: inputs.publish && github.ref == 'refs/heads/production'
+        env:
+          OICA_RUN_DESTRUCTIVE_TESTS: '1'
+        run: bash scripts/test_operations_ci.sh
+      - uses: actions/upload-artifact@v4
+        if: inputs.publish && github.ref == 'refs/heads/production'
+        with:
+          name: release-${{ github.sha }}
+          path: release.tar.gz
+          retention-days: 30
+      - name: Logs ante fallo
+        if: failure()
+        run: docker compose logs --tail=150
+      - name: Limpiar proyecto de CI
+        if: always()
+        run: docker compose down --volumes --remove-orphans
