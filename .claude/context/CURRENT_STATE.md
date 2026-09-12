@@ -25,7 +25,7 @@ No se conoce aquí la ubicación física exacta del VHDX ni la causa del fallo. 
 
 - Código local migrado a `backend/` y `frontend/`, incluyendo correcciones anteriores sin commit. `services/` preservado intacto como copia histórica.
 - Se retiraron solo los dos gitlinks del índice. Rama local: `production`, todavía siguiendo `origin/main`.
-- Fast-forward a e8fa70a incorporó dos commits remotos de documentación; no se creó ningún commit nuevo ni se hizo push. La rama predeterminada remota no se modificó.
+- Fast-forward a e8fa70a incorporó dos commits remotos de documentación. Con aprobación del usuario se creó el commit 0330943 de implementación. El push falló por falta de credenciales HTTPS y el token de gh es inválido. La rama predeterminada remota no se modificó.
 - Compose: Nginx, Next.js, Flask, Celery, PostgreSQL, Redis y migrador temporal. Puerto predeterminado 80; API relativa /api y Socket.IO /socket.io.
 - Imágenes con código, sin montajes de fuentes; secretos externos, volúmenes persistentes y requisitos Python fijados. Dockerfiles finales eliminan compiladores temporales, pero su build quedó interrumpido.
 - Next.js 15.5.25 y overrides compatibles de seguridad. npm audit reportó cero vulnerabilidades antes del incidente.

@@ -203,6 +203,7 @@ Resultados de la validación con `tests/data/001-pruebaInicial.xlsx`:
 - [ ] Ensayar reset/restauración y rollback con datos en un entorno desechable.
 - [ ] Instalar y probar el entorno nativo completo con Python 3.12/Node 22.
 - [ ] Activar puerto 80 del stack local final y configurar/desplegar VPS/HTTPS.
-- [ ] Publicar rama production y cambiar default remoto cuando se autoricen commits/push.
+- [x] Crear commit de implementación con autorización del usuario (0330943).
+- [ ] Publicar rama production y cambiar default remoto: autorizado, bloqueado por autenticación GitHub inválida.
 
 **Restricción actual:** C: tiene 6 GB libres (99 % usado); no ejecutar builds ni instalaciones significativas sin avisar al usuario con estimación. No efectuar limpiezas, mounts ni cambios de permisos globales. Ver CURRENT_STATE.md para el estado exacto.
