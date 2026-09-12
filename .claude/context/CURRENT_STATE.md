@@ -5,7 +5,7 @@
 
 ## Objetivo y estado real
 
-El código del monorepo, Compose, proxy, workflows y scripts de operación está implementado. **No declarar producción desplegada ni validación final completa**: faltan completar los ensayos reales de reset/restauración y el despliegue en la VPS. El build final, los tests y el E2E pasaron en GitHub Actions (34686626604).
+El código del monorepo, Compose, proxy, workflows y scripts de operación está implementado. **No declarar producción desplegada ni validación final completa**: falta el despliegue en la VPS. Los ensayos reales de recuperación pasaron en GitHub Actions 34691570574. El build final, los tests y el E2E pasaron en GitHub Actions (34686626604).
 
 ## Restricción urgente de almacenamiento
 
@@ -56,12 +56,14 @@ Las imágenes Python activas no deben considerarse la validación del código fi
 
 ## Pendiente para cerrar F
 
+Seguimiento: 34691155372 confirmó arranque de Nginx y E2E, pero falló la comprobación de interrupción de un reprocesamiento en cola. server.py conservaba completed al encolar; interrupt_jobs.py no podía reconocer la tarea pendiente. Corregido en f2a6692: persistir pending antes de publicar en Celery y recuperar estado anterior si falla el envío. Dos comprobaciones aisladas en memoria confirmaron ambos casos. CI 34691570574 completó correctamente toda la validación y recuperación. El job deploy falló en Transferir y actualizar; falta preparar VPS según último estado del usuario y obtener diagnóstico de transferencia si persiste. Los diagnósticos de CI ahora se emiten por servicio en anotaciones cortas.
+
 Datos confirmados por el usuario para la VPS 169.58.196.25: Ubuntu 24.04.4, x86_64, Compose v5.5.0, 172 GB libres, sin contenedores activos y puertos 80/443 libres. No se ejecutó bootstrap. Correo TLS autorizado: cristiandaniel8080@gmail.com. DNS del dominio resuelve a la IP esperada. El acceso SSH a la VPS está en otra instancia de WSL. CI 34690720017 pasó build y pruebas, pero falló en el arranque de Nginx del ensayo de recuperación; anotación pública truncada, se solicitó al usuario el final del log. No hubo despliegue ni cambios en la VPS.
 
 El usuario autorizó commit y push. La publicación se completó usando Git por SSH: origin ahora es git@github.com:cris-dangithub/oica-docker-compose.git y production se publicó con los commits 0330943 y 7b77062. El token de gh sigue inválido, pero no impide operar Git por SSH. El usuario informa que configuró los secretos; falta comprobar la ejecución del pipeline y el despliegue. La rama predeterminada remota ya es production. La ejecución 34686626604 pasó build, tests, arranque, migraciones, E2E y publicación GHCR; falló el ensayo de recuperación y no desplegó. Se corrige la herencia de HTTP_PORT=8080 del runner para que el ensayo use 8081 y se añaden anotaciones públicas del diagnóstico. Se corrigió `.gitignore` para excluir solo `/app/` en la raíz y conservar `frontend/src/app/` en la entrega.
 
 1. Continuar las validaciones en GitHub; compilación final completada allí. No construir localmente.
-2. Validar imágenes finales, migraciones repetibles y recuperación en un entorno desechable con espacio suficiente. El ensayo real ya está programado en CI mediante scripts/test_operations_ci.sh; se ejecutó y falló; repetir tras corregir el aislamiento del puerto.
+2. Imágenes finales, migraciones repetibles y recuperación validadas en el runner desechable (34691570574). No repetir localmente.
 3. Configurar SSH, GHCR y secrets/environment GitHub; comprobar arquitectura x86_64, distribución, espacio y puertos reales de la VPS.
 4. Publicación y rama predeterminada production completadas; commits y push autorizados por el usuario.
 5. Preparar HTTPS para oica.cris-munoz.me y efectuar el primer despliegue vacío.

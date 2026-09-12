@@ -35,3 +35,6 @@ Se suspendieron builds/instalaciones. Se corrigió mantenimiento tras error de r
 Pendiente: build final (estimado 1–3 GB de almacenamiento transitorio adicional, dependiente de caché), recuperación real en entorno desechable y VPS. Requiere resolver margen físico o usar GitHub; no ejecutar limpiezas ni mounts ni cambios de permisos globales sin autorización.
 
 Los 58 tests del motor se repitieron tras la reparación, usando la imagen existente y la corrección en memoria: OK. Se preparó test_operations_ci.sh para ensayar operaciones reales en GitHub; no se ejecutó localmente.
+# Hallazgo en CI: reprocesamiento interrumpido
+
+La ejecución 34691155372 detectó que un reprocesamiento en cola conservaba el estado completed de la cartilla anterior. Al actualizar se limpiaba Redis, pero el registro no se marcaba como interrumpido; el polling podía quedar esperando. El commit f2a6692 persiste pending antes de enviar a Celery y restaura el estado anterior si falla el envío. Comprobaciones aisladas verificaron ambas rutas; el ensayo real completo pasó en CI 34691570574. No modifica demanda, diámetros ni el algoritmo.
