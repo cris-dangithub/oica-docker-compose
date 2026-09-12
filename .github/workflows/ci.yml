@@ -85,7 +85,16 @@ jobs:
         if: inputs.publish && github.ref == 'refs/heads/production'
         env:
           OICA_RUN_DESTRUCTIVE_TESTS: '1'
-        run: bash scripts/test_operations_ci.sh
+        run: |
+          set -o pipefail
+          if ! bash scripts/test_operations_ci.sh 2>&1 | tee "$RUNNER_TEMP/oica-operations.log"; then
+            diagnostic=$(tail -c 12000 "$RUNNER_TEMP/oica-operations.log")
+            diagnostic=${diagnostic//'%'/'%25'}
+            diagnostic=${diagnostic//$'\r'/'%0D'}
+            diagnostic=${diagnostic//$'\n'/'%0A'}
+            printf '::error title=Ensayo de recuperación::%s\n' "$diagnostic"
+            exit 1
+          fi
       - uses: actions/upload-artifact@v4
         if: inputs.publish && github.ref == 'refs/heads/production'
         with:

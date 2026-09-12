@@ -199,12 +199,13 @@ Resultados de la validación con `tests/data/001-pruebaInicial.xlsx`:
 - [x] Workflows de CI, publicación SSH, reset y rollback; publicación de imágenes ya verificadas sin segundo build.
 - [x] Pruebas del algoritmo (58), E2E inicial, tipos/lint y scripts (10).
 - [x] Verificar persistencia y coherencia matemática del smoke tras reparar WSL, solo mediante lecturas.
-- [ ] Completar build final de imágenes Python y comprobar su ejecución.
+- [x] Completar build final de imágenes Python y comprobar su ejecución en GitHub Actions.
 - [ ] Ensayar reset/restauración y rollback con datos en un entorno desechable.
 - [ ] Instalar y probar el entorno nativo completo con Python 3.12/Node 22.
 - [ ] Activar puerto 80 del stack local final y configurar/desplegar VPS/HTTPS.
 - [x] Crear commit de implementación con autorización del usuario (0330943).
 - [x] Publicar rama production mediante Git por SSH y configurar su seguimiento remoto.
-- [ ] Cambiar default remoto a production y comprobar GitHub Actions; token de API local inválido.
+- [x] Cambiar default remoto a production (usuario), confirmado mediante API pública.
+- [ ] Completar ensayo de recuperación y despliegue de GitHub Actions.
 
 **Restricción actual:** C: tiene 6 GB libres (99 % usado); no ejecutar builds ni instalaciones significativas sin avisar al usuario con estimación. No efectuar limpiezas, mounts ni cambios de permisos globales. Ver CURRENT_STATE.md para el estado exacto.

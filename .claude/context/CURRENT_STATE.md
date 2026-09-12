@@ -5,7 +5,7 @@
 
 ## Objetivo y estado real
 
-El código del monorepo, Compose, proxy, workflows y scripts de operación está implementado. **No declarar producción desplegada ni validación final completa**: faltan el build final de las imágenes Python, los ensayos reales de reset/restauración y el acceso a la VPS.
+El código del monorepo, Compose, proxy, workflows y scripts de operación está implementado. **No declarar producción desplegada ni validación final completa**: faltan completar los ensayos reales de reset/restauración y el despliegue en la VPS. El build final, los tests y el E2E pasaron en GitHub Actions (34686626604).
 
 ## Restricción urgente de almacenamiento
 
@@ -25,9 +25,9 @@ No se conoce aquí la ubicación física exacta del VHDX ni la causa del fallo. 
 
 - Código local migrado a `backend/` y `frontend/`, incluyendo correcciones anteriores sin commit. `services/` preservado intacto como copia histórica.
 - Se retiraron solo los dos gitlinks del índice. Rama local: `production`, siguiendo `origin/production`.
-- Fast-forward a e8fa70a incorporó dos commits remotos de documentación. Con aprobación del usuario se creó el commit 0330943 de implementación. El push falló por falta de credenciales HTTPS y el token de gh es inválido. La rama predeterminada remota no se modificó.
+- Fast-forward a e8fa70a incorporó dos commits remotos de documentación. Con aprobación del usuario se creó el commit 0330943 de implementación. El push falló por falta de credenciales HTTPS y el token de gh es inválido. Posteriormente se publicó por SSH y el usuario cambió la rama predeterminada a production, confirmado mediante API pública.
 - Compose: Nginx, Next.js, Flask, Celery, PostgreSQL, Redis y migrador temporal. Puerto predeterminado 80; API relativa /api y Socket.IO /socket.io.
-- Imágenes con código, sin montajes de fuentes; secretos externos, volúmenes persistentes y requisitos Python fijados. Dockerfiles finales eliminan compiladores temporales, pero su build quedó interrumpido.
+- Imágenes con código, sin montajes de fuentes; secretos externos, volúmenes persistentes y requisitos Python fijados. Dockerfiles finales eliminan compiladores temporales; su build se completó en GitHub Actions.
 - Next.js 15.5.25 y overrides compatibles de seguridad. npm audit reportó cero vulnerabilidades antes del incidente.
 - CI construye/verifica cada imagen una vez y publica exactamente esa imagen. Entregas SHA-RUN_ID, SSH, rollback, reset con confirmación y respaldo configurable.
 - Desarrollo nativo Linux/WSL: setup-dev.sh y dev.sh. La instalación completa no se ejecutó: Python 3.12 no estaba en PATH; Node local predeterminado es 24, aunque los builds Docker usaron Node 22.
@@ -56,12 +56,12 @@ Las imágenes Python activas no deben considerarse la validación del código fi
 
 ## Pendiente para cerrar F
 
-El usuario autorizó commit y push. La publicación se completó usando Git por SSH: origin ahora es git@github.com:cris-dangithub/oica-docker-compose.git y production se publicó con los commits 0330943 y 7b77062. El token de gh sigue inválido, pero no impide operar Git por SSH. El usuario informa que configuró los secretos; falta comprobar la ejecución del pipeline y el despliegue. La rama predeterminada remota sigue pendiente de cambio. Se corrigió `.gitignore` para excluir solo `/app/` en la raíz y conservar `frontend/src/app/` en la entrega.
+El usuario autorizó commit y push. La publicación se completó usando Git por SSH: origin ahora es git@github.com:cris-dangithub/oica-docker-compose.git y production se publicó con los commits 0330943 y 7b77062. El token de gh sigue inválido, pero no impide operar Git por SSH. El usuario informa que configuró los secretos; falta comprobar la ejecución del pipeline y el despliegue. La rama predeterminada remota ya es production. La ejecución 34686626604 pasó build, tests, arranque, migraciones, E2E y publicación GHCR; falló el ensayo de recuperación y no desplegó. Se corrige la herencia de HTTP_PORT=8080 del runner para que el ensayo use 8081 y se añaden anotaciones públicas del diagnóstico. Se corrigió `.gitignore` para excluir solo `/app/` en la raíz y conservar `frontend/src/app/` en la entrega.
 
-1. Elegir dónde ejecutar la compilación final. Estimación local conservadora: 1–3 GB adicionales transitorios, variable según caché. No ejecutarla sin aviso/autorización del usuario; preferir GitHub si no hay margen físico suficiente.
-2. Validar imágenes finales, migraciones repetibles y recuperación en un entorno desechable con espacio suficiente. El ensayo real ya está programado en CI mediante scripts/test_operations_ci.sh; aún no se ha ejecutado.
+1. Continuar las validaciones en GitHub; compilación final completada allí. No construir localmente.
+2. Validar imágenes finales, migraciones repetibles y recuperación en un entorno desechable con espacio suficiente. El ensayo real ya está programado en CI mediante scripts/test_operations_ci.sh; se ejecutó y falló; repetir tras corregir el aislamiento del puerto.
 3. Configurar SSH, GHCR y secrets/environment GitHub; comprobar arquitectura x86_64, distribución, espacio y puertos reales de la VPS.
-4. Publicar production y cambiar rama predeterminada remota solo mediante acciones explícitamente autorizadas; no hacer commits sin instrucción expresa.
+4. Publicación y rama predeterminada production completadas; commits y push autorizados por el usuario.
 5. Preparar HTTPS para oica.cris-munoz.me y efectuar el primer despliegue vacío.
 
 ## Contexto académico preservado

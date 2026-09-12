@@ -26,6 +26,9 @@ ALLOWED_ORIGINS=http://localhost:8081
 ENV
 export OICA_ROOT="$root" OICA_PROJECT="$project" OICA_TLS=false
 export OICA_SHARED_DIR="$root/shared" MAINTENANCE_DIR="$root/shared/maintenance"
+# El entorno del runner prevalece sobre --env-file en Compose.
+# Separar el ensayo del stack oica-ci, que sigue escuchando en 8080.
+export HTTP_PORT=8081 HTTP_BIND=127.0.0.1 ALLOWED_ORIGINS=http://localhost:8081
 dc() {
     docker compose -p "$project" --env-file "$root/shared/production.env" \
         --env-file "$release/images.env" -f "$release/docker-compose.yaml" "$@"
