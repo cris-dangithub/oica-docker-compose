@@ -20,7 +20,8 @@ done
 .venv-backend/bin/python scripts/migrate.py
 pids=()
 # Invocada por los traps.
-# shellcheck disable=SC2329
+# Invocada indirectamente por trap; ShellCheck antiguo no reconoce esa llamada.
+# shellcheck disable=SC2329,SC2317
 cleanup() {
     trap - EXIT INT TERM
     for pid in "${pids[@]}"; do kill -- "-$pid" 2>/dev/null || true; done
