@@ -260,7 +260,7 @@ del párrafo anterior. Decisiones funcionales explícitas consolidadas en INF-01
 | H6 Evaluación 001/002 | H3 | Cuatro escenarios, cinco semillas/perfil y controles | Completada: 136 ensayos + 12 controles válidos; artefactos finales 001/002 pasan |
 | H7 Coherencia académica | H6 | Capítulos y resultados sin extrapolación física | Capítulos 1–4 actualizados; revisión del director pendiente |
 | H8 E2E de imágenes nuevas | H5/H6 y presupuesto de disco | Carga, WS, descargas, reproceso y auditoría | Completado: imágenes nuevas saludables, Chrome 002 id 38 y HTTP/WS 001 id 39; cuatro versiones auditadas |
-| H9 Entrega revisable | H7/H8 | Diff y descripción de PR; sin merge automático | Commit/push/PR autorizados; Git SSH disponible, gh requiere renovar token para crear PR |
+| H9 Entrega revisable | H7/H8 | Diff y descripción de PR; sin merge automático | Commit 01c4dcc y push completados; creación de PR falla HTTP 401, pendiente gh auth login |
 
 H6 cerrado: proceso de matriz con salida 0, 136 combinaciones únicas, 92/67.443
 piezas exactas, una huella de código y balances auditados. Borrador de entrega:

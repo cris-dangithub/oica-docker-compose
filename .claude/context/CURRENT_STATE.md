@@ -4,8 +4,9 @@
 
 El usuario aprobó implementar la ampliación. Rama de trabajo:
 `feat/perdida-corte-reutilizacion`, basada en production 33a5328. El usuario autorizó
-commit, push y PR hacia production. Publicación Git en curso; SSH funciona, pero
-gh informa token inválido y el PR requiere renovar su autenticación HTTP.
+commit, push y PR hacia production. Commit de implementación `01c4dcc` publicado
+por SSH con seguimiento remoto. `gh pr create` falló con HTTP 401 Bad credentials:
+el PR no está creado; requiere renovar autenticación mediante `gh auth login`.
 No fusionar ni desplegar esta ampliación. Conservados cambios ajenos.
 
 Implementados parámetros canónicos HTTP, UI con ambos checks activos por defecto,
