@@ -19,14 +19,14 @@ with psycopg2.connect(os.environ['DATABASE_URL']) as connection:
     connection.set_session(readonly=True)
     with connection.cursor() as cursor:
         cursor.execute("""SELECT f.id, r.resultados, r.cartilla, r.excel_path,
-                                 r.pdf_path, r.graph_image_path
+                                 r.pdf_path, r.graph_image_path, r.inventory_path, r.metricas
                           FROM processing_results r JOIN uploaded_files f
                           ON f.id = r.uploaded_file_id
                           WHERE f.file_name = 'smoke.xlsx'
                           ORDER BY f.id, r.version_number""")
         rows = cursor.fetchall()
 assert rows, 'No hay resultados del smoke para verificar'
-for file_id, patterns, orders, excel, pdf, png in rows:
+for file_id, patterns, orders, excel, pdf, png, inventory, metrics in rows:
     expected = Counter()
     actual = Counter()
     for order in orders:
@@ -47,6 +47,13 @@ for file_id, patterns, orders, excel, pdf, png in rows:
     for name, signature in ((excel, b'PK'), (pdf, b'%PDF'), (png, b'\x89PNG')):
         with Path(name).open('rb') as artifact:
             assert artifact.read(len(signature)) == signature, name
+    if metrics.get('motor') == 'secuencial-1':
+        assert metrics['valido'] and metrics['piezas'] == sum(expected.values())
+        assert len({p['bar_id'] for p in patterns}) == len(patterns)
+        for pattern in patterns:
+            stages = [p['grupo_ejecucion'] for p in pattern['piezas_obtenidas']]
+            assert stages == sorted(stages), 'Etapas fuera de orden'
+        assert Path(inventory).read_bytes().startswith(b'PK')
 print(f'OK: {len(rows)} versiones conservan demanda, diámetro, longitudes y artefactos.')
 if '--delete' in sys.argv:
     for file_id in sorted({row[0] for row in rows}):

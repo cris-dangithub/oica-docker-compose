@@ -19,6 +19,9 @@ class UploadedFile(db.Model):
     document_number = db.Column(db.String(50))  # [DEPRECATED] Auto-rellenado para compatibilidad
     processing_status = db.Column(db.String(20), default='processing')
     status_details = db.Column(db.String(255))
+    execution_config = db.Column(db.JSON)
+    active_task_id = db.Column(db.String(160))
+    active_profile = db.Column(db.String(20))
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
     
@@ -35,7 +38,7 @@ class UploadedFile(db.Model):
             include_results: Si True, incluye array de versiones completo
         """
         # Obtener perfil del resultado más reciente
-        latest_perfil = self.results[0].perfil_usado if self.results else None
+        latest_perfil = self.active_profile or (self.results[0].perfil_usado if self.results else None)
         
         data = {
             'id': self.id,
@@ -47,6 +50,7 @@ class UploadedFile(db.Model):
             'status': self.processing_status,  # ← Para compatibilidad con frontend
             'processing_status': self.processing_status,
             'status_details': self.status_details,
+            'task_id': self.active_task_id,
             'perfil': latest_perfil,  # ← Perfil del último procesamiento
             'created_at': self.created_at.isoformat() if self.created_at else None,
             'updated_at': self.updated_at.isoformat() if self.updated_at else None,
@@ -86,6 +90,8 @@ class ProcessingResult(db.Model):
     graph_image_path = db.Column(db.String(500))
     pdf_path = db.Column(db.String(500))
     excel_path = db.Column(db.String(500))  # Copia del Excel original
+    inventory_path = db.Column(db.String(500))
+    execution_config = db.Column(db.JSON)
     
     # Estado del resultado
     result_status = db.Column(db.String(20), default='processing')
@@ -115,6 +121,9 @@ class ProcessingResult(db.Model):
             'graph_image_path': self.graph_image_path,
             'pdf_path': self.pdf_path,
             'excel_path': self.excel_path,
+            'inventory_path': self.inventory_path,
+            'motor': self.metricas.get('motor', 'historico') if self.metricas else 'historico',
+            'desperdicio_porcentaje': self.metricas.get('desperdicio_porcentaje') if self.metricas else None,
             'status': self.result_status,  # ← Para compatibilidad con frontend
             'result_status': self.result_status,
             'error_message': self.error_message,

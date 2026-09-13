@@ -90,3 +90,26 @@ El usuario aprobó unificar backend/frontend en este repositorio y preparar prod
 Tras un incidente de WSL reparado por el usuario con e2fsck, se suspendieron builds e instalaciones. C: reportó 6 GB libres aunque WSL mostraba 920 GB virtuales. Desde la reanudación solo se hicieron cambios pequeños y verificaciones que reutilizan archivos/imágenes existentes, sin limpiezas ni nuevos montajes de carpetas. El usuario exige aviso y estimación antes de consumos significativos.
 
 Código de infraestructura implementado; build final y activación real de la VPS siguen pendientes. El smoke de dos versiones sobrevivió al reinicio y pasó verificación de demanda, diámetro y artefactos. No confundir pruebas de imágenes intermedias con validación final. Consultar CURRENT_STATE.md.
+
+
+## 2026-09-13 — Giro al modelo secuencial y corpus 001/002
+
+El usuario descartó el caso 683 de la evaluación y aprobó implementar el plan con
+002 como caso crítico. Grupos son etapas sucesivas; el stock adicional y sobrantes
+se importan/exportan por proyecto. No hay pérdida de corte ni mínimo de sobrante.
+Se conserva el AG y se mide desperdicio final por masa. Se creó un núcleo separado
+del paquete genético histórico porque la reparación anterior borraba la herencia
+y no existía trazabilidad de inventario. El piloto nuevo consta de 34 ensayos válidos;
+la evaluación agrupada redujo el tiempo de 002 a menos de 10 s de motor en el entorno
+ensayado. No implica E2E desplegado ni validación física. Ver CURRENT_STATE.md.
+
+
+## 2026-09-13 — Entrega secuencial activada localmente
+
+Con autorización explícita para 2–4 GB de reconstrucción, se construyeron las tres
+imágenes usando caché, se aplicó 003 y se llevó el stack existente oica-validation
+de 8088 a localhost:80 conservando volúmenes. Chrome verificó 002 y reprocesamiento;
+la BD/Excel de ambas versiones pasó auditoría independiente. 001 calibró la ETA y
+el inventario de 002 se reimportó mediante HTTP. C: quedó con ~7,5 GB libres.
+No hubo commits, push ni modificaciones de VPS. No confundir este cierre técnico
+local con aprobación de tesis, licencia o validación de ejecución física.

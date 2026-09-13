@@ -1,8 +1,8 @@
 # Plan de Trabajo — OICA Tesis
 
-> **Última actualización:** 2026-09-12
-> **Estado global:** Monorepo e infraestructura implementados; validación final y VPS pendientes
-> **Bloque activo:** F — Producción, CI/CD y desarrollo nativo
+> **Última actualización:** 2026-09-13
+> **Estado global:** Motor secuencial y aplicación local validados; cierre académico pendiente
+> **Bloque activo:** G — Caso 002, planificación secuencial e inventario
 
 ---
 
@@ -14,9 +14,10 @@
 | A | Corrección de bugs críticos (server.py) | ✅ Completada | CRÍTICA |
 | B | Agrupación por diámetro en el AG | ✅ Completada | CRÍTICA |
 | C | Validación end-to-end | ✅ Completada | ALTA |
-| D | Reutilización de desperdicios previos | ⏳ Bloqueada por INF-alcance | MEDIA |
-| E | Actualización del documento de tesis | 🔄 Listo para iniciar | ALTA |
+| D | Reutilización de desperdicios previos | Integrada en G por decisión del usuario | ALTA |
+| E | Actualización del documento de tesis | Capítulos 1–4 reformulados; revisión académica pendiente | ALTA |
 | F | Producción, CI/CD y desarrollo nativo | 🔄 Código implementado; cierre pendiente | ALTA |
+| G | Corte secuencial, inventarios y caso 002 | Completado en localhost; cierre académico pendiente | ALTA |
 
 ---
 
@@ -210,3 +211,31 @@ Resultados de la validación con `tests/data/001-pruebaInicial.xlsx`:
 - [ ] Preparar VPS y completar despliegue: falló Transferir y actualizar en 34691570574.
 
 **Restricción actual:** C: tiene 6 GB libres (99 % usado); no ejecutar builds ni instalaciones significativas sin avisar al usuario con estimación. No efectuar limpiezas, mounts ni cambios de permisos globales. Ver CURRENT_STATE.md para el estado exacto.
+
+
+## Bloque G — Implementación aprobada el 2026-09-13
+
+Contrato y comandos: `docs/CORTE_SECUENCIAL.md`. Decisiones INF-008 e INF-012.
+Los bloques A–F anteriores describen hitos históricos; no certifican el nuevo motor.
+
+| Tarea | Dependencia | Aceptación | Estado |
+|---|---|---|---|
+| G1 Normalizar 001/002 e inventarios | Decisiones del usuario | Identidad de fila, números válidos, escala exacta | Implementado y probado |
+| G2 Validador independiente | G1 | Demanda, etapas, capacidad, stock y métrica | 11 pruebas, 60 casos diferenciales |
+| G3 AG secuencial con saldos agrupados | G2 | Herencia real, elitismo y evaluación igual al plan detallado | Implementado; 34 ensayos válidos |
+| G4 Inventario importable/exportable | G3 | Roundtrip y saldo físico sin doble conteo | Integración aislada y artefactos 002 pasan |
+| G5 Instantáneas, API y frontend | G4 | Carga, reproceso, inventario, estados y estimación | Build y E2E local pasan |
+| G6 Comparación 002 y regresión 001 | G3 | Cinco semillas/perfil, métricas y código identificados | Piloto completado |
+| G7 Actualizar tesis | G6 | Alcance y resultados contrastables, sin promesas no medidas | Capítulos 1–4 actualizados para revisión |
+| G8 Despliegue local y E2E real | G5 + presupuesto autorizado | Migración, imágenes, HTTP/WS y artefactos de 002 | Completado: localhost:80, Chrome, dos versiones 002 auditadas |
+
+No hacer commits ni descartar cambios previos. No repetir builds ni generar todos
+los artefactos por semilla. El caso 683 queda fuera de la evaluación académica.
+
+
+Cierre G: evidencia en `tests/benchmarks/2026-09-13-integracion-local.json`. Se
+conservaron cinco versiones de 001 para calibrar la estimación, dos de 002 y una
+carga técnica de reimportación. La VPS queda fuera de este cierre local.
+
+Publicación G autorizada por el usuario el 2026-09-13: rama nueva, commit, push
+y PR hacia production. No fusionar ni hacer push directo a production.

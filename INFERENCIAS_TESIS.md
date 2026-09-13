@@ -18,12 +18,13 @@
 | INF-002 | Académica | Media | [VALIDADA] | Nombres canónicos de perfiles: rapido/balanceado/profundo |
 | INF-003 | Arquitectura | Alta | [VALIDADA] | ¿La arquitectura final es Docker, no AWS? |
 | INF-004 | Suposición técnica | Alta | [VALIDADA] | Bugs críticos en server.py |
-| INF-005 | Académica | Media | [PENDIENTE] | Cap. 4 ampliado en origin/main; revisión académica pendiente |
+| INF-005 | Académica | Media | [VALIDADA] | Cap. 4 basado en 34 ensayos; revisión del director pendiente |
 | INF-006 | Datos | Alta | [CONSOLIDADA] | Consolidada con INF-001 |
 | INF-007 | Suposición técnica | Baja | [VALIDADA] | Servicios Docker inactivos actualmente |
-| INF-008 | Alcance | Media | [PENDIENTE] | ¿Reutilización de desperdicios está en el alcance? |
+| INF-008 | Alcance | Media | [VALIDADA] | Etapas sucesivas e inventario importable/exportable |
 | INF-009 | Técnica | Alta | [VALIDADA] | AG inviable para datasets reales por expansión de cantidades — BUG-003 corregido |
 | INF-010 | Técnica | Alta | [VALIDADA] | Inicialización de población cuelga en datasets medianos por búsqueda exhaustiva O(N^k) — BUG-004 corregido |
+| INF-012 | Datos y metodología | Alta | [VALIDADA] | Corpus 001/002, modelo ideal y desperdicio final por masa |
 | INF-011 | Arquitectura | Alta | [VALIDADA] | Monorepo, producción VPS, CI/CD y desarrollo nativo |
 
 ---
@@ -247,7 +248,7 @@ Bugs confirmados por análisis estático — pendientes de corrección en Bloque
 
 ## INF-005
 
-> Actualización 2026-09-12: el fast-forward incorporó un Cap. 4 de 212 líneas. La descripción de vacío que sigue es histórica; la revisión académica aún no se ha realizado.
+> Actualización 2026-09-13: la descripción que sigue es histórica. El capítulo 4 ahora presenta 34 ensayos verificables de 001/002 y distingue tiempos del motor de tiempos de la aplicación. La decisión de escribir resultados solo con evidencia queda satisfecha para este piloto; permanecen pendientes E2E real, procedencia de datos y revisión del director.
 
 ### Categoría
 
@@ -291,11 +292,11 @@ Ninguna
 
 ### Estado
 
-[PENDIENTE]
+[VALIDADA] — corpus y protocolo confirmados por el usuario; piloto ejecutado el 2026-09-13.
 
 ### Respuesta del usuario
 
-<!-- ¿Tienes resultados ya validados para incluir en Cap. 4, o esperamos a que la app funcione? -->
+Usar exclusivamente 001 y 002; continuar las pruebas y actualizar los capítulos según sus resultados.
 
 ---
 
@@ -450,7 +451,7 @@ Ninguna
 
 ### Estado
 
-[PENDIENTE]
+[VALIDADA]
 
 ### Respuesta del usuario
 
@@ -459,6 +460,8 @@ Ninguna
 ---
 
 ---
+
+Actualización 2026-09-13: el usuario define etapas sucesivas e importación/exportación de stock físico por proyecto. No se reutilizan automáticamente resultados de una simulación anterior al reprocesar. Ver INF-012.
 
 ## INF-009
 
@@ -627,3 +630,55 @@ No duplica INF-003: concreta operación y publicación en VPS, sin cambiar Flask
 
 ### Respuesta del usuario
 Unificar este repositorio; acceso público sin login; puertos 80/443 libres en VPS; dominio oica.cris-munoz.me; desarrollo Linux/WSL mediante un script; actualizar inmediatamente; primera instalación vacía; reset con respaldo configurable.
+
+
+## INF-012
+
+### Categoría
+Datos y metodología
+
+### Prioridad
+Alta
+
+### Pregunta inferida
+¿Qué casos, objetivo y supuestos gobiernan la nueva validación?
+
+### Respuesta asumida
+No es una suposición: decisiones explícitas del usuario. Usar 001 y 002, conservar
+el AG, desperdicio final por masa, etapas sucesivas, pérdida de corte cero y todo
+sobrante positivo disponible; duración 1–5 minutos deseable, sin aborto a cinco minutos.
+
+### Justificación
+Respuestas del usuario durante la planificación aprobada el 2026-09-13.
+
+### Impacto
+backend/cutting/, worker, API, frontend, tests y capítulos 1–4.
+
+### Riesgo si la asunción es incorrecta
+Alto. Un resultado rápido con grupos mezclados o desperdicio contado dos veces
+no responde al problema definido. Los supuestos ideales no validan cortes en obra.
+
+### Fecha
+2026-09-13
+
+### Inferencias relacionadas
+INF-008, INF-005.
+
+### Puede consolidarse con
+INF-008 cubre inventario; esta entrada registra métrica y corpus.
+
+### Estado
+[VALIDADA]
+
+### Respuesta del usuario
+El desperdicio es todo lo que sobra al finalizar el proyecto respecto de las barras
+utilizadas, tanto comerciales como adicionales. Medir por masa, con detalle en metros.
+Los casos 001 y 002 son las bases experimentales. El título puede reformularse con el director.
+
+
+### Evidencia de ejecución para INF-008 e INF-012 — 2026-09-13
+
+La integración local verificó 002 desde Chrome y auditó ambas versiones en BD/Excel.
+La reimportación real consumió inventario exportado sin catálogo comercial y mantuvo
+el saldo esperado. No modifica las decisiones validadas ni sustituye revisión del
+director o validación física. Evidencia: `tests/benchmarks/2026-09-13-integracion-local.json`.

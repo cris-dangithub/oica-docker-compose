@@ -1,0 +1,52 @@
+{
+  "fecha": "2026-09-13",
+  "url": "http://localhost",
+  "proyecto_compose": "oica-validation",
+  "migracion": "003_sequential_inputs.sql",
+  "pruebas_backend": 74,
+  "caso_001": {
+    "file_id": 35,
+    "versiones": 5,
+    "piezas": 92,
+    "http_websocket_descargas_reproceso": true,
+    "estimacion_muestras": 5
+  },
+  "caso_002": {
+    "file_id": 36,
+    "piezas": 67443,
+    "versiones": [
+      {
+        "version": 1,
+        "perfil": "balanceado",
+        "barras": 12709,
+        "desperdicio_porcentaje": 7.995056758356847,
+        "motor_segundos": 3.2351329910002278,
+        "artefactos_segundos": 6.396734351999839,
+        "pipeline_segundos": 9.693371083999864,
+        "procesamiento_registrado_segundos": 9.76
+      },
+      {
+        "version": 2,
+        "perfil": "profundo",
+        "barras": 12815,
+        "desperdicio_porcentaje": 7.934420091249485,
+        "motor_segundos": 10.835425509999823,
+        "artefactos_segundos": 8.342450319999898,
+        "pipeline_segundos": 19.359303653000097,
+        "procesamiento_registrado_segundos": 19.97
+      }
+    ],
+    "auditoria_persistencia_y_excel": true
+  },
+  "control_inventario": {
+    "file_id": 37,
+    "origen_file_id": 36,
+    "origen_version": 2,
+    "diametro": "#3",
+    "longitud_m": "0.01",
+    "catalogo": [],
+    "saldo_exportado_correcto": true
+  },
+  "alcance_tiempos": "El tiempo registrado en la base incluye calculo y artefactos; no equivale a latencia total del navegador ni incluye necesariamente todo el commit SQL. La espera de navegador de la carga inicial fue 20.15 s y esta documentada por separado.",
+  "preservacion": "Datos anteriores conservados; sin commits ni cambios VPS; perfil temporal de navegador retirado."
+}
