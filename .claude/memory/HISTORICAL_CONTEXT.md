@@ -113,3 +113,21 @@ la BD/Excel de ambas versiones pasó auditoría independiente. 001 calibró la E
 el inventario de 002 se reimportó mediante HTTP. C: quedó con ~7,5 GB libres.
 No hubo commits, push ni modificaciones de VPS. No confundir este cierre técnico
 local con aprobación de tesis, licencia o validación de ejecución física.
+
+## 2026-09-13 — Ampliación de condiciones físicas aprobada
+
+Después de fusionar G en production, el usuario aprobó pérdida por corte y mínimo
+reutilizable editables. Ambos checks activos en nuevas cargas UI: disco nominal
+1 mm, mínimo automático por menor demanda de cada diámetro de toda la cartilla,
+descarte inmediato; alternativas cizalla idealizada 0 mm, mínimo manual común y
+descarte al fin de etapa. No son requisitos legales. El objetivo sigue siendo
+material no incorporado a piezas respecto de barras raíz usadas, sin créditos
+por demanda futura hipotética. El modelo ideal anterior se conserva como control.
+H se trabaja en feat/perdida-corte-reutilizacion, sin modificar services/ ni datos
+históricos. Consultar CURRENT_STATE.md para estado de validación y build pendiente.
+
+H se activó después del reintento autorizado: C: recuperó 8,3 GB libres, las tres
+imágenes se construyeron con dependencias en caché y completaron E2E local.
+002 id 38 tiene balanceado/profundo y 001 id 39 dos versiones rápidas; las cuatro
+pasan auditoría desde JSON/Excel. Los históricos se conservaron. Sin commit/push
+ni operación de VPS. El bloqueo de almacenamiento ya no deja pendiente el build H.

@@ -22,12 +22,14 @@ def main():
     parser.add_argument('--semilla', type=int, default=0)
     parser.add_argument('--inventario')
     parser.add_argument('--catalogo', help='JSON con catálogo comercial')
+    parser.add_argument('--parametros-corte', help='Archivo JSON con condiciones de corte; omitido = ideal')
     parser.add_argument('--salida', help='Resumen JSON opcional; nunca escribe patrones o imágenes')
     args = parser.parse_args()
     started = time.perf_counter()
     catalog = json.loads(Path(args.catalogo).read_text()) if args.catalogo else None
     problem = normalize(read_rows(args.cartilla), catalog,
-                        read_rows(args.inventario) if args.inventario else None)
+                        read_rows(args.inventario) if args.inventario else None,
+                        json.loads(Path(args.parametros_corte).read_text()) if args.parametros_corte else None)
     read_seconds = time.perf_counter() - started
     last = [0.0]
     def progress(data):

@@ -1,0 +1,49 @@
+{
+  "fecha": "2026-09-13",
+  "motor": "secuencial-2",
+  "base": "http://localhost",
+  "compose_project": "oica-validation",
+  "build_completo": true,
+  "servicios_saludables": 6,
+  "pruebas_backend_imagen": 83,
+  "frontend_build_tipos_lint": true,
+  "disco_c_gib_aproximados_antes": 8.3,
+  "disco_c_gib_aproximados_despues": 8.3,
+  "dependencias_reutilizadas": true,
+  "imagenes": {
+    "backend": "sha256:8926cae43464cd39eafec188faa2b2f331650bc3afbd5dd6ca91c8891d5897e9",
+    "worker": "sha256:0c8da3ec29ae83866fd69ab7f2ffaf7122c3518cf8b14277a26d20e53bf0a1ab",
+    "frontend": "sha256:ff0a55760556d703ad572776902928f723c6f2ab4703da7d15b067ef585c94b3"
+  },
+  "002": {
+    "file_id": 38,
+    "navegador": "Chrome Windows headless mediante CDP, controles DOM reales",
+    "ambos_checks_predeterminados": true,
+    "minimos_visibles": true,
+    "websocket_frames": 33,
+    "errores_js": 0,
+    "descargas_validas": 8,
+    "versiones": [
+      {"version": 1, "perfil": "balanceado", "tiempo_registrado_s": 18.01, "desperdicio_porcentaje": 8.86018217924591, "piezas_auditadas": 67443},
+      {"version": 2, "perfil": "profundo", "tiempo_registrado_s": 24.77, "desperdicio_porcentaje": 8.881068843447302, "piezas_auditadas": 67443}
+    ],
+    "auditoria_json_excel_inventario": true,
+    "instantaneas_identicas": true,
+    "input_hash": "e179719065c8fae5ea50fc94acdbb4cf455707828a7bc347b9764de4e82d1035"
+  },
+  "001": {
+    "file_id": 39,
+    "nombre_tecnico": "smoke.xlsx",
+    "http_polling_websocket_filtros_reproceso": true,
+    "versiones": 2,
+    "piezas_por_version": 92,
+    "desperdicio_porcentaje": 5.154245122740882,
+    "auditoria_json_excel_inventario": true,
+    "instantaneas_identicas": true,
+    "input_hash": "0d276e1a20db4e35a5311f3484e277b1b56ca47cf4fa3c12629880838b23b01d"
+  },
+  "historico_002_id_36": {"versiones": 2, "auditoria_exitosa": true, "modificado": false},
+  "publicado_en_vps": false,
+  "commit_push": false,
+  "limite": "Valida software local y el modelo; no certifica corte fisico ni optimalidad. Los tiempos registrados no son latencia total de navegador."
+}

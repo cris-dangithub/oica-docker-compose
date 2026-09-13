@@ -4,6 +4,7 @@ El cálculo y los archivos son reales. No se conecta a Redis/PostgreSQL externos
 """
 import importlib
 import io
+import json
 import os
 from pathlib import Path
 import tempfile
@@ -49,9 +50,12 @@ class CuttingApiTests(unittest.TestCase):
         return {'file': (io.BytesIO(cartilla.encode()), 'cartilla.csv'), 'perfil': 'rapido',
                 'catalogo': '[{"diametro":"#3","longitud_m":9,"cantidad":1}]', 'visuales': 'false'}
 
-    def upload(self):
+    def upload(self, options=None):
+        data = self.data()
+        if options is not None:
+            data['parametros_corte'] = json.dumps(options)
         with patch.object(self.server.process_file_task, 'apply_async', return_value=MagicMock(id='process_1')):
-            response = self.client.post('/upload', data=self.data())
+            response = self.client.post('/upload', data=data)
         self.assertEqual(response.status_code, 202, response.json)
         return response.json['file_id']
 
@@ -70,12 +74,12 @@ class CuttingApiTests(unittest.TestCase):
         self.assertEqual(self.client.post(f'/reprocess/{file_id}', json={}).status_code, 409)
         self.assertEqual(self.client.delete(f'/file/{file_id}').status_code, 409)
 
-    def test_worker_y_roundtrip_inventario(self):
+    def test_worker_y_roundtrip_inventario(self, physical=False):
         import celery_worker as worker
         from cutting.io import read_rows
         from cutting.domain import normalize
         from cutting.optimizer import optimize
-        file_id = self.upload()
+        file_id = self.upload({} if physical else None)
         record = self.db.session.get(self.server.UploadedFile, file_id)
         with patch.dict(os.environ, {'UPLOAD_PATH': self.directory.name}), \
              patch.object(worker, 'create_flask_app', return_value=self.app), \
@@ -95,11 +99,35 @@ class CuttingApiTests(unittest.TestCase):
         response = self.client.get(f'/descargar-inventario/{result.storage_uuid}')
         self.assertEqual(response.status_code, 200)
         inventory = read_rows(io.BytesIO(response.data), 'inventario.xlsx')
-        self.assertEqual(inventory[0]['longitud_m'], '0.1')
+        if physical:
+            self.assertEqual(inventory, [])
+            self.assertAlmostEqual(result.metricas['perdida_corte_kg'], .003)
+            self.assertAlmostEqual(result.metricas['descartado_kg'], .097)
+            self.assertEqual(result.execution_config['parametros_resueltos']['minimos_por_diametro_m'], {'#3': '0.9'})
+            import pandas as pd
+            sheets = pd.read_excel(result.excel_path, sheet_name=None)
+            self.assertAlmostEqual(sheets['Descartados']['descartado_m'].sum(), .097)
+            self.assertAlmostEqual(sheets['Barras']['perdida_corte_m'].sum(), .003)
+            # Auditar las trazas después del roundtrip JSON de la base de datos.
+            from decimal import Decimal
+            from cutting.domain import validate
+            p = normalize(read_rows(record.file_path), record.execution_config['catalog'],
+                          options=record.execution_config['parametros_corte'])
+            def units(value):
+                return int(Decimal(str(value)) * p['scale'])
+            persisted = [{'bar_id': b['bar_id'], 'stock_id': b['stock_id'], 'diametro': b['diametro'],
+                'longitud': units(b['barra_origen_longitud']), 'remaining': units(b['desperdicio_resultante']),
+                'kerf': units(b['perdida_corte_m']), 'discarded': units(b['descartado_m']),
+                'cuts': b['trazabilidad_cortes'], 'discard_events': b['descartes_fin_etapa']}
+                for b in result.resultados]
+            self.assertTrue(validate(p, persisted, inventory)['valido'])
+        else:
+            self.assertEqual(inventory[0]['longitud_m'], '0.1')
         new_rows = [{'N° Orden': 1, 'N° de Barra': '#3', 'Cantidad': 1,
                      'Longitud total (m)': '.1', 'Masa total (kg)': '.1'}]
-        reused = optimize(normalize(new_rows, [], inventory))
-        self.assertEqual(reused['metrics']['desperdicio_porcentaje'], 0)
+        if not physical:
+            reused = optimize(normalize(new_rows, [], inventory))
+            self.assertEqual(reused['metrics']['desperdicio_porcentaje'], 0)
         self.assertEqual(record.execution_config['inventory'], [])
         self.assertTrue(Path(result.excel_path).is_file())
         self.assertIsNone(result.pdf_path)
@@ -107,6 +135,41 @@ class CuttingApiTests(unittest.TestCase):
             response = self.client.post(f'/reprocess/{file_id}', json={'perfil': 'profundo'})
         self.assertEqual(response.status_code, 202)
         self.assertEqual(record.active_profile, 'profundo')
+        self.assertEqual(record.execution_config['parametros_corte']['perdida_activa'], physical)
+        if physical:
+            original_snapshot = dict(result.execution_config)
+            with patch.dict(os.environ, {'UPLOAD_PATH': self.directory.name}), \
+                 patch.object(worker, 'create_flask_app', return_value=self.app), \
+                 patch.object(worker, 'redis_client'), patch.object(worker, 'publish_progress'), \
+                 patch.object(worker.process_file_task, 'update_state'):
+                worker.process_file_task.push_request(id='reprocess_1_x')
+                try:
+                    second = worker.process_file_task.run(file_id, 'profundo')
+                finally:
+                    worker.process_file_task.pop_request()
+            self.assertEqual(second['status'], 'completed')
+            self.db.session.expire_all()
+            versions = self.server.ProcessingResult.query.order_by(self.server.ProcessingResult.version_number).all()
+            self.assertEqual(len(versions), 2)
+            self.assertEqual(versions[1].execution_config, original_snapshot)
+
+    def test_worker_con_condiciones_fisicas(self):
+        self.test_worker_y_roundtrip_inventario(physical=True)
+
+    def test_parametros_http_y_estimacion(self):
+        defaults = self.client.get('/parametros-corte').json['defaults']
+        self.assertTrue(defaults['perdida_activa'] and defaults['minimo_activo'])
+        data = self.data(); data['parametros_corte'] = json.dumps(defaults)
+        with patch.object(self.server.redis_client, 'get', return_value='entorno'):
+            response = self.client.post('/estimate', data=data)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json['parametros_corte']['minimos_por_diametro_m'], {'#3': '0.9'})
+        for value in ['[]', '{"perdida_mm":"NaN"}', '{"minimo_m":0}']:
+            data = self.data(); data['parametros_corte'] = value
+            with patch.object(self.server.process_file_task, 'apply_async') as enqueue:
+                response = self.client.post('/upload', data=data)
+            self.assertEqual(response.status_code, 400)
+            enqueue.assert_not_called()
 
     def test_estimacion_sin_evidencia(self):
         with patch.object(self.server.redis_client, 'get', return_value='entorno'):

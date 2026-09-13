@@ -68,8 +68,11 @@ def decode_grouped(orders, stock, genome):
     return (consumed, commercial, bar_count), None
 
 
-def decode(orders, stock, genome, record=False, first_fit=False):
+def decode(orders, stock, genome, record=False, first_fit=False, rules=None):
     """Agrupa cantidades dentro de cada barra; las barras raíz nunca se duplican."""
+    if rules and (rules['kerf'] or any(rules['thresholds'].values())):
+        from .physical import decode_physical
+        return decode_physical(orders, stock, genome, rules, record, first_fit)
     if not record and not first_fit:
         return decode_grouped(orders, stock, genome)
     available = [s['cantidad'] for s in stock]
@@ -170,7 +173,7 @@ def optimize(problem, profile='rapido', seed=0, method='ag', callback=None):
             if genome not in cache:
                 before = time.perf_counter()
                 try:
-                    score, _ = decode(orders, stock, genome)
+                    score, _ = decode(orders, stock, genome, rules=problem.get('rules'))
                 except Infeasible:
                     score = (float('inf'),) * 3
                 timings['evaluation_seconds'] += time.perf_counter() - before
@@ -190,7 +193,7 @@ def optimize(problem, profile='rapido', seed=0, method='ag', callback=None):
         for first_fit in (True, False):
             for genome in (descending, best_fill, smallest):
                 try:
-                    score, _ = decode(orders, stock, genome, first_fit=first_fit)
+                    score, _ = decode(orders, stock, genome, first_fit=first_fit, rules=problem.get('rules'))
                 except Infeasible:
                     score = (float('inf'),) * 3
                 references.append((score, genome, first_fit))
@@ -244,7 +247,8 @@ def optimize(problem, profile='rapido', seed=0, method='ag', callback=None):
         if winner_score[0] == float('inf'):
             raise Infeasible(f'No se encontró un plan factible para {diam}; revisar inventario o ampliar la búsqueda')
         before = time.perf_counter()
-        checked_score, result = decode(orders, stock, winner, record=True, first_fit=winner_first_fit)
+        checked_score, result = decode(orders, stock, winner, record=True, first_fit=winner_first_fit,
+                                       rules=problem.get('rules'))
         if checked_score != winner_score:
             raise ValueError('La evaluación agrupada no coincide con el plan materializado')
         timings['materialization_seconds'] += time.perf_counter() - before
@@ -270,7 +274,8 @@ def optimize(problem, profile='rapido', seed=0, method='ag', callback=None):
     metrics = validate(problem, bars, final)
     timings['validation_seconds'] += time.perf_counter() - before
     metrics.update({'motor': VERSION, 'input_hash': problem['hash'], 'seed': seed, 'perfil': profile,
-                    'metodo': method, 'duracion_segundos': time.perf_counter() - start,
+                    'metodo': method, 'parametros_corte': problem.get('resolved_parameters'),
+                    'duracion_segundos': time.perf_counter() - start,
                     'etapas': sorted({o['grupo'] for o in problem['orders']}),
                     'evolucion': group_metrics, 'timings': dict(timings)})
     return {'bars': bars, 'inventory': final, 'metrics': metrics}

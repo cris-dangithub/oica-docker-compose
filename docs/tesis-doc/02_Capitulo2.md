@@ -10,15 +10,15 @@ El término «nesting» no se usa aquí para sugerir una implementación de dist
 
 ## 2.2 Factibilidad y objetivo
 
-Una solución factible cumple todas las cantidades por fila de origen, longitudes, diámetros, precedencias de etapa y cantidades de inventario. La longitud de una barra original equivale a la suma de piezas obtenidas durante todo el proyecto y su saldo final. El cumplimiento se comprueba independientemente del algoritmo que propone el plan.
+Una solución factible cumple todas las cantidades por fila de origen, longitudes, diámetros, precedencias de etapa y cantidades de inventario. La longitud de una barra original equivale a piezas más pérdida de corte, descartes y saldo reutilizable final. El cumplimiento se comprueba independientemente del algoritmo que propone el plan.
 
-Sea B el conjunto de barras originales efectivamente utilizadas; L_b su longitud inicial; r_b su saldo final y rho_b su masa por metro. El objetivo es minimizar:
+Sea B el conjunto de barras originales efectivamente utilizadas; L_b su longitud inicial; r_b su saldo reutilizable final; k_b la pérdida acumulada por corte; d_b la longitud descartada y rho_b su masa por metro. El objetivo es minimizar:
 
-`D = 100 × sum(rho_b × r_b) / sum(rho_b × L_b), para b en B`.
+`D = 100 × sum(rho_b × (r_b + k_b + d_b)) / sum(rho_b × L_b), para b en B`.
 
 Una barra adicional entra al denominador cuando se utiliza, con su longitud completa disponible al inicio. Los saldos que pasan entre etapas no se incorporan nuevamente al denominador. El inventario intacto queda fuera del indicador, aunque permanezca en el inventario final exportado.
 
-Con demanda fija por diámetro, la longitud útil es constante: minimizar la longitud original utilizada minimiza su saldo final. Como los diámetros no comparten material, minimizar ese valor en cada diámetro minimiza la masa incorporada total y el porcentaje global. No se promedian porcentajes de diámetros con distinta masa.
+Con demanda fija por diámetro, la longitud útil es constante: minimizar la longitud original utilizada minimiza el total no incorporado a piezas. Como los diámetros no comparten material, minimizar ese valor en cada diámetro minimiza la masa incorporada total y el porcentaje global. No se promedian porcentajes de diámetros con distinta masa. En empate se prefiere menor pérdida irrecuperable (corte más descarte), luego menor uso comercial y menor número de barras. La búsqueda heurística no certifica el mínimo global.
 
 El sobrante final se denomina desperdicio respecto de este proyecto, aunque pueda reutilizarse después. No equivale automáticamente a residuo desechado ni a una pérdida económica definitiva.
 
@@ -40,11 +40,17 @@ El criterio de parada depende del máximo de generaciones o del estancamiento ob
 
 ## 2.5 Hipótesis físicas y marco normativo
 
-Se adoptan explícitamente pérdida por corte cero y reutilización de cualquier sobrante positivo. Las longitudes comerciales de 6, 9 y 12 m son valores iniciales de la aplicación; no se presentan como una obligación normativa exclusiva.
+Se conserva un escenario ideal con pérdida cero y cualquier sobrante positivo, y se añaden condiciones editables de pérdida y mínimo reutilizable. Las longitudes comerciales de 6, 9 y 12 m son valores iniciales de la aplicación; no se presentan como una obligación normativa exclusiva.
 
 El Decreto 926 de 2010, que adopta el marco NSR-10, figura como vigente en la consulta de SUIN-Juriscol realizada el 13 de septiembre de 2026. Su consulta debe considerar las modificaciones incorporadas, no una copia inicial aislada. Fuente oficial: [Decreto 926 de 2010, SUIN-Juriscol](https://suin-juriscol.gov.co/viewDocument.asp?id=1918254).
 
-Esta referencia delimita el contexto de construcción; no valida por sí sola los patrones producidos por OICA. No se ha verificado una disposición vigente que permita deducir de ella pérdida por corte cero o ausencia de mínimo reutilizable. Por tanto, esas decisiones se presentan exclusivamente como hipótesis ideales del estudio. No se incorporan valores de NTC, resoluciones o tolerancias cuya edición, vigencia y aplicación no hayan sido comprobadas.
+Esta referencia delimita el contexto de construcción; no valida por sí sola los patrones producidos por OICA. No se ha verificado una disposición vigente que imponga un kerf o mínimo reutilizable universal. Los requisitos de longitud de desarrollo, anclaje o traslapo no equivalen a mínimos de inventario y no se trasladan a este parámetro.
+
+La interfaz propone disco de 1 mm como espesor nominal de una herramienta para acero, según la [ficha Hilti AC-D](https://www.hilti.com.ph/c/CLS_POWER_TOOL_INSERT_7126/CLS_ABRASIVES_7126/r6473822). No equivale a una medición de pérdida real: debe calibrarse con el equipo. Para cizalla, 0 mm es una idealización explícita y editable. Una pieza igual al saldo se obtiene sin nueva separación; las demás requieren espacio para pieza y pérdida completa. No se modela refrentado ni pérdida parcial de borde.
+
+El criterio automático conserva sobrantes cuya longitud es al menos la menor longitud demandada por diámetro, siguiendo la definición de retails de [Benjaoran y Bhokha (2013), Trim Loss Minimization for Construction Reinforcement Steel with Oversupply Constraints](https://www.joams.com/uploadfile/2013/1024/20131024100240137.pdf), DOI 10.12720/joams.1.3.313-316. Se adapta ese criterio a toda la cartilla conocida y se fija entre etapas; no se reproduce el algoritmo completo del artículo. Su parámetro Tw de pérdida admisible no es un mínimo universal de reutilización.
+
+El usuario puede sustituir el mínimo automático por un valor común positivo en metros y aplicar descarte inmediato o al cierre de etapa. Estos escenarios formalizan decisiones de manejo de material; no demuestran viabilidad estructural de cada sobrante. El material inicial excluido se informa aparte y no se atribuye como desperdicio del proyecto.
 
 ## 2.6 Evaluación y reproducibilidad
 

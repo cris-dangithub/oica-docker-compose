@@ -22,6 +22,9 @@ interface ProcessingResult {
   inventory_path?: string;
   motor?: string;
   desperdicio_porcentaje?: number;
+  perdida_corte_kg?: number;
+  descartado_kg?: number;
+  sobrante_final_kg?: number;
   version_number: number;
   storage_uuid: string;
   status: string;
@@ -427,8 +430,11 @@ export default function FilesTable({ apiUrl = API_URL }: FilesTableProps) {
                         <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                           {file.filename}
                           {latestResult && <div className="text-xs text-gray-500">
-                            {latestResult.motor === 'secuencial-1' ? 'Secuencial' : 'Histórico'}
+                            {latestResult.motor?.startsWith('secuencial-') ? latestResult.motor : 'Histórico'}
                             {latestResult.desperdicio_porcentaje != null && ` · Desperdicio: ${latestResult.desperdicio_porcentaje.toFixed(3)}% en masa`}
+                            {latestResult.motor === 'secuencial-2' && <div>
+                              Corte: {latestResult.perdida_corte_kg?.toFixed(3)} kg · Descartado: {latestResult.descartado_kg?.toFixed(3)} kg · Reutilizable final: {latestResult.sobrante_final_kg?.toFixed(3)} kg
+                            </div>}
                           </div>}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">

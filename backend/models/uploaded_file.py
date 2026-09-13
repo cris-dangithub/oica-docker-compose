@@ -124,6 +124,8 @@ class ProcessingResult(db.Model):
             'inventory_path': self.inventory_path,
             'motor': self.metricas.get('motor', 'historico') if self.metricas else 'historico',
             'desperdicio_porcentaje': self.metricas.get('desperdicio_porcentaje') if self.metricas else None,
+            **{key: (self.metricas or {}).get(key) for key in
+               ('perdida_corte_kg', 'descartado_kg', 'sobrante_final_kg')},
             'status': self.result_status,  # ← Para compatibilidad con frontend
             'result_status': self.result_status,
             'error_message': self.error_message,

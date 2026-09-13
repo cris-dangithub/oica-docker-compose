@@ -1,5 +1,72 @@
 # Estado actual — 2026-09-13
 
+## Bloque H completado localmente — pérdida por corte y mínimo reutilizable
+
+El usuario aprobó implementar la ampliación. Rama de trabajo:
+`feat/perdida-corte-reutilizacion`, basada en production 33a5328. El usuario autorizó
+commit, push y PR hacia production. Publicación Git en curso; SSH funciona, pero
+gh informa token inválido y el PR requiere renovar su autenticación HTTP.
+No fusionar ni desplegar esta ampliación. Conservados cambios ajenos.
+
+Implementados parámetros canónicos HTTP, UI con ambos checks activos por defecto,
+disco nominal 1 mm/cizalla idealizada 0 mm editables, mínimo automático fijo por
+diámetro o manual común, descarte inmediato o al cierre de etapa, exclusión de
+inventario inicial y balances separados. Motor `secuencial-2`, evaluación agrupada,
+validador independiente, instantáneas y compatibilidad ideal. Sin nueva migración.
+
+83 pruebas backend pasan con código cargado en memoria en Python 3.12 existente;
+las siete de API se repitieron tras añadir auditoría del JSON persistido y pasan.
+Tipos y lint frontend pasan sin emisión/caché. Matriz final **136/136 completa**,
+proceso terminado con código 0, combinaciones únicas y balances globales auditados.
+Se añadieron 12 controles válidos de cizalla y fin de etapa. Resultados definitivos:
+`tests/benchmarks/2026-09-13-fisico-matriz-final.jsonl` y dos `fisico-control-*`.
+002 con ambos checks: rápido 2,09–2,53 s, balanceado 5,31–6,20 s, profundo
+10,85–15,50 s de motor; todas las ejecuciones conservan 67.443 piezas.
+Máximo acumulado de memoria en la matriz: 115,55 MiB.
+
+Artefactos finales generados y reimportados: 001 95.090 bytes; 002 1.619.999 bytes,
+con siete hojas Excel, PDF/PNG acotados e inventario válido. Temporales retirados
+por el runner, resumen `2026-09-13-fisico-artefactos-final.jsonl` conservado.
+Se auditó además el archivo antiguo id 36 desde PostgreSQL y Excel, cargando el
+validador nuevo solo en memoria: sus dos versiones conservan demanda, inventario
+y métricas. No se modificaron registros históricos ni se cargaron proyectos nuevos.
+Capítulos 1–4 actualizados; 4.8 distingue la matriz nueva del E2E anterior.
+
+**secuencial-2 está activo en http://localhost.** Tras «Vuelve a intentarlo», C:
+tenía 8,3 GB libres. Se reconstruyeron las tres imágenes con dependencias en caché
+y se activaron juntas; seis servicios saludables, migrador finalizado. Build,
+tipos/lint y 83 pruebas dentro de la imagen nueva pasan. No se cambió el esquema.
+
+E2E Chrome Windows: 002 id 38, checks activos y mínimos automáticos visibles,
+carga balanceada (18,01 s registrados), reproceso profundo (24,77 s), 33 frames WS,
+cero excepciones JS y ocho descargas válidas (cuatro por versión). Las dos versiones
+pasan auditoría independiente de JSON/Excel, incluidas pérdida, descarte y saldo.
+001 id 39 pasa HTTP, polling, WS, filtros, reportes y reproceso; dos versiones
+auditadas con 92 piezas. Instantáneas idénticas entre versiones en ambos archivos.
+También se auditó id 36 histórico: dos versiones conservadas sin cambios.
+Evidencia: `2026-09-13-fisico-navegador-002.json`, `2026-09-13-fisico-http-001.json`
+y `2026-09-13-fisico-integracion-local.json` en tests/benchmarks/.
+
+El bloqueo previo de 2 GB quedó resuelto; no se determinó la causa de la variación
+del espacio disponible. Al cierre siguen aproximadamente 8,3 GB libres en C:.
+Se reutilizaron todas las dependencias; no hubo limpiezas globales ni cambios de
+filesystem o volúmenes. Chrome se cerró y solo se retiró su propio perfil temporal
+con la autorización del ensayo. Las cuatro versiones nuevas se conservaron.
+No hay preguntas funcionales críticas pendientes; las referencias no sustituyen
+calibración física ni revisión del director. Decisiones consolidadas en INF-012.
+
+El registro G siguiente es histórico: sus supuestos ideales siguen disponibles
+como control, pero ya no son los únicos parámetros aprobados para nuevas cargas.
+
+## Actualización de publicación
+
+El PR #1 fue fusionado en `production` (33a5328), confirmado por Git remoto.
+La rama local volvió a `production` y se actualizó por fast-forward conservando
+los cambios ajenos pendientes. El usuario informa que ya quedó subido en producción;
+esta sesión no comprobó independientemente el despliegue de la VPS.
+Siguiente dirección recomendada: validar supuestos con el director/ingeniero civil,
+documentar procedencia de 001/002 y cerrar evaluación reproducible y tesis.
+
 ## Bloque G: implementación y validación local completadas
 
 El usuario autorizó implementar el plan y después reconstruir las imágenes con

@@ -42,7 +42,7 @@ from hashlib import sha256
 code_hash = sha256(json.dumps(payload['sources'], sort_keys=True).encode()).hexdigest()
 for dataset in payload['datasets']:
     raw = base64.b64decode(dataset['content'])
-    problem = normalize(read_rows(io.BytesIO(raw), dataset['name']))
+    problem = normalize(read_rows(io.BytesIO(raw), dataset['name']), options=dataset.get('parameters', payload.get('parameters')))
     for method, profile, seed in payload['runs']:
         r = optimize(problem, profile, seed, method)
         m = r['metrics']
@@ -58,7 +58,7 @@ for dataset in payload['datasets']:
             with tempfile.TemporaryDirectory(prefix='oica-artefactos-') as directory:
                 files = generate(problem, r, directory, dataset['name'], True)
                 sheets = pd.read_excel(files['excel_path'], sheet_name=None)
-                assert set(sheets) == {'Barras', 'Cortes', 'Inventario', 'Metricas'}
+                assert set(sheets) == {'Barras', 'Cortes', 'Inventario', 'Metricas', 'Descartados', 'Inventario excluido', 'Parametros'}
                 actual = Counter()
                 for row in sheets['Cortes'].to_dict('records'):
                     actual[int(row['fila_origen'])] += int(row['cantidad'])
@@ -74,7 +74,8 @@ for dataset in payload['datasets']:
                 m['artefactos_bytes'] = {key: Path(path).stat().st_size for key, path in files.items()}
                 m['artefactos_verificados'] = True
             m['artefactos_y_verificacion_segundos'] = time.perf_counter() - started
-        m.update({'dataset': dataset['name'], 'archivo_sha256': sha256(raw).hexdigest(),
+        m.update({'dataset': dataset['name'], 'escenario': dataset.get('scenario', 'individual'),
+                  'archivo_sha256': sha256(raw).hexdigest(),
                   'codigo_sha256': code_hash, 'python': platform.python_version(),
                   'plataforma': platform.platform(),
                   'memoria_maxima_kib': resource.getrusage(resource.RUSAGE_SELF).ru_maxrss,
@@ -95,6 +96,8 @@ def main():
     parser.add_argument('--seeds', type=int, default=5)
     parser.add_argument('--profiles', nargs='+', default=['rapido', 'balanceado', 'profundo'])
     parser.add_argument('--output')
+    parser.add_argument('--parametros-corte', help='Objeto JSON con las condiciones del ensayo')
+    parser.add_argument('--matrix', action='store_true', help='Cuatro combinaciones de checks, en serie')
     args = parser.parse_args()
     root = Path(__file__).resolve().parents[1]
     sources = {}
@@ -116,6 +119,7 @@ def main():
                 if folder == 'tests' and path.stem.startswith('test_'):
                     names.append(name)
     payload = {'sources': sources, 'tests': args.tests, 'api_tests': args.api_tests,
+               'parameters': json.loads(args.parametros_corte) if args.parametros_corte else None,
                'artifacts_smoke': args.artifacts_smoke,
                'all_tests': args.all_tests, 'test_names': names,
                'datasets': [{'name': Path(p).name, 'content': base64.b64encode(Path(p).read_bytes()).decode()}
@@ -124,6 +128,13 @@ def main():
                        [('ag', profile, seed) for profile in args.profiles for seed in range(args.seeds)]}
     if args.artifacts_smoke:
         payload['runs'] = [('ag', 'rapido', 0)]
+    if args.matrix:
+        if args.parametros_corte or args.artifacts_smoke:
+            parser.error('--matrix no se combina con parámetros individuales ni artefactos')
+        payload['datasets'] = [{**dataset, 'scenario': name, 'parameters': options}
+            for name, options in [('ideal', None), ('solo_perdida', {'minimo_activo': False}),
+                                  ('solo_minimo', {'perdida_activa': False}), ('ambos', {})]
+            for dataset in payload['datasets']]
     output = open(args.output, 'x', encoding='utf-8') if args.output else None
     try:
         with subprocess.Popen(['docker', 'exec', '-i', args.container, 'python', '-B', '-c', RUNNER],
@@ -138,7 +149,7 @@ def main():
                 if output:
                     output.write(line)
                     output.flush()
-                print(f"{m['dataset']} {m['metodo']} {m['perfil']} semilla={m['seed']}: "
+                print(f"{m['escenario']} {m['dataset']} {m['metodo']} {m['perfil']} semilla={m['seed']}: "
                       f"{m['duracion_segundos']:.2f}s, desperdicio={m['desperdicio_porcentaje']:.4f}%, "
                       f"piezas={m['piezas']}, valido={m['valido']}", flush=True)
                 if m.get('artefactos_verificados'):

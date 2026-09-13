@@ -1,6 +1,7 @@
 'use client';
 import { API_URL } from '@/lib/api';
 import { CuttingOptions, initialCatalog, StockRow, Timing, TimingInfo } from './cutting-options';
+import { PhysicalOptions, PhysicalParameters, ParameterMetadata } from './physical-options';
 
 import { useState, useCallback, useEffect, useRef } from 'react';
 import { useDropzone } from 'react-dropzone';
@@ -19,6 +20,18 @@ export function FileUpload() {
    const [visuals, setVisuals] = useState(true);
    const [timing, setTiming] = useState<Timing | null>(null);
    const [estimating, setEstimating] = useState(false);
+   const [metadata, setMetadata] = useState<ParameterMetadata | null>(null);
+   const [parameters, setParameters] = useState<PhysicalParameters | null>(null);
+
+   useEffect(() => {
+      let active = true;
+      fetch(`${API_URL}/parametros-corte`).then(async response => {
+         if (!response.ok) throw new Error('No fue posible cargar los parámetros de corte. Recarga la página para reintentar.');
+         const data: ParameterMetadata = await response.json();
+         if (active) { setMetadata(data); setParameters(data.defaults); }
+      }).catch(error => { if (active) setBackendError(String(error)); });
+      return () => { active = false; };
+   }, []);
    
    // Estados para WebSocket
    const [taskId, setTaskId] = useState<string | null>(null);
@@ -36,7 +49,7 @@ export function FileUpload() {
    useEffect(() => {
       estimateRevision.current += 1;
       setTiming(null);
-   }, [files, perfil, catalog, inventory, visuals]);
+   }, [files, perfil, catalog, inventory, visuals, parameters]);
 
    const router = useRouter();
 
@@ -188,6 +201,8 @@ export function FileUpload() {
       form.append('perfil', perfil);
       form.append('catalogo', JSON.stringify(catalog));
       form.append('visuales', String(visuals));
+      if (!parameters) throw new Error('Espera a que carguen los parámetros de corte');
+      form.append('parametros_corte', JSON.stringify(parameters));
       if (inventory) form.append('inventario', inventory);
       return form;
    };
@@ -362,7 +377,9 @@ export function FileUpload() {
 
             <CuttingOptions catalog={catalog} onCatalog={setCatalog} onInventory={setInventory}
                visuals={visuals} onVisuals={setVisuals} disabled={loadingSendButton || estimating} />
-            <Button variant="outline" className="mr-3" disabled={!files.length || loadingSendButton || estimating}
+            {parameters && metadata && <PhysicalOptions value={parameters} metadata={metadata}
+               onChange={setParameters} disabled={loadingSendButton || estimating} />}
+            <Button variant="outline" className="mr-3" disabled={!parameters || !files.length || loadingSendButton || estimating}
                onClick={estimateTime}>{estimating ? 'Consultando...' : 'Estimar tiempo'}</Button>
             {timing && !loadingSendButton && <TimingInfo timing={timing} />}
             <Button
@@ -370,7 +387,7 @@ export function FileUpload() {
                onClick={handleSend}
                className="bg-blue-600 hover:bg-blue-800 text-lg px-8 py-4 rounded-lg"
                disabled={
-                  files.length === 0 || loadingSendButton
+                  !parameters || files.length === 0 || loadingSendButton
                }
             >
                {loadingSendButton ? 'Procesando...' : 'Enviar'}

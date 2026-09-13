@@ -101,17 +101,26 @@ def uploaded_configuration():
     source = request.files['file']
     try:
         rows = read_rows(source, source.filename)
-        problem = normalize(rows, catalog, inventory)
+        options = json.loads(request.form['parametros_corte']) if 'parametros_corte' in request.form else None
+        problem = normalize(rows, catalog, inventory, options)
     finally:
         source.seek(0)
     seed = int(request.form.get('semilla', '0'))
     return {'catalog': catalog, 'inventory': inventory, 'seed': seed,
+            'parametros_corte': problem['parameters'],
+            'parametros_resueltos': problem['resolved_parameters'],
             'visuals': request.form.get('visuales', 'true') == 'true'}, problem
 
 
 @app.route('/catalogo', methods=['GET'])
 def commercial_catalog():
     return jsonify(default_catalog())
+
+
+@app.route('/parametros-corte', methods=['GET'])
+def cutting_parameters():
+    from cutting.parameters import defaults, REFERENCES
+    return jsonify({'defaults': defaults(), 'referencias': REFERENCES})
 
 
 @app.route('/estimate', methods=['POST'])
@@ -130,7 +139,7 @@ def estimate_upload():
                    if r.execution_config and r.execution_config.get('input_hash') == problem['hash']
                    and r.execution_config.get('environment_key') == env_key
                    and r.execution_config.get('visuals', True) == config['visuals']]
-        return jsonify(estimate(samples))
+        return jsonify({**estimate(samples), 'parametros_corte': problem['resolved_parameters']})
     except (ValueError, KeyError, TypeError) as error:
         return jsonify({'error': str(error)}), 400
 

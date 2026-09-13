@@ -1,0 +1,116 @@
+{
+  "estimate": {
+    "calibration": "calibrando",
+    "estimated_total_seconds": null,
+    "parametros_corte": {
+      "descarte": "inmediato",
+      "minimo_activo": true,
+      "minimo_m": "0.5",
+      "minimos_por_diametro_m": {
+        "#3": "1.08",
+        "#4": "1",
+        "#5": "2"
+      },
+      "modo_minimo": "automatico",
+      "perdida_activa": true,
+      "perdida_efectiva_mm": "1.000",
+      "perdida_mm": "1",
+      "proceso": "disco",
+      "referencias": {
+        "automatico": {
+          "doi": "10.12720/joams.1.3.313-316",
+          "nota": "Menor longitud demandada por diámetro en toda la cartilla.",
+          "url": "https://www.joams.com/uploadfile/2013/1024/20131024100240137.pdf"
+        },
+        "cizalla": {
+          "nota": "Idealización editable, no medición ni requisito legal.",
+          "valor_mm": "0"
+        },
+        "disco": {
+          "nota": "Espesor nominal; medir la pérdida real del equipo.",
+          "url": "https://www.hilti.com.ph/c/CLS_POWER_TOOL_INSERT_7126/CLS_ABRASIVES_7126/r6473822",
+          "valor_mm": "1"
+        }
+      }
+    },
+    "remaining_seconds": null,
+    "samples": 0
+  },
+  "upload": {
+    "file_id": 39,
+    "message": "Archivo encolado para procesamiento",
+    "status": "uploaded",
+    "task_id": "process_39"
+  },
+  "detail": {
+    "created_at": "2026-09-13T13:16:17.385200",
+    "document_number": "smoke",
+    "file_extension": "xlsx",
+    "file_name": "smoke.xlsx",
+    "file_path": "/usr/src/app/data/filestore/temp/1789305377.384361_smoke.xlsx",
+    "filename": "smoke.xlsx",
+    "id": 39,
+    "latest_version": 2,
+    "perfil": "rapido",
+    "processing_results": [
+      {
+        "created_at": "2026-09-13T13:16:23.241943",
+        "descartado_kg": 26.681984,
+        "desperdicio_porcentaje": 5.154245122740882,
+        "error_message": null,
+        "excel_path": "/usr/src/app/data/filestore/8743233a-bc32-4d5d-929a-05fd1c749a27/resultados_optimizacion.xlsx",
+        "graph_image_path": "/usr/src/app/data/filestore/8743233a-bc32-4d5d-929a-05fd1c749a27/grafica_cortes.png",
+        "has_excel": true,
+        "has_graph": true,
+        "has_pdf": true,
+        "id": 47,
+        "inventory_path": "/usr/src/app/data/filestore/8743233a-bc32-4d5d-929a-05fd1c749a27/inventario_final.xlsx",
+        "motor": "secuencial-2",
+        "pdf_path": "/usr/src/app/data/filestore/8743233a-bc32-4d5d-929a-05fd1c749a27/plan_corte.pdf",
+        "pdf_template_version": "secuencial-2",
+        "perdida_corte_kg": 0.140118,
+        "perfil_usado": "rapido",
+        "processing_time_seconds": 1.85,
+        "result_status": "completed",
+        "sobrante_final_kg": 5.336058,
+        "status": "completed",
+        "storage_uuid": "8743233a-bc32-4d5d-929a-05fd1c749a27",
+        "updated_at": "2026-09-13T13:16:23.241949",
+        "uploaded_file_id": 39,
+        "version_number": 2
+      },
+      {
+        "created_at": "2026-09-13T13:16:19.422852",
+        "descartado_kg": 26.681984,
+        "desperdicio_porcentaje": 5.154245122740882,
+        "error_message": null,
+        "excel_path": "/usr/src/app/data/filestore/63350000-6e8d-42eb-8133-5555ba5480c7/resultados_optimizacion.xlsx",
+        "graph_image_path": "/usr/src/app/data/filestore/63350000-6e8d-42eb-8133-5555ba5480c7/grafica_cortes.png",
+        "has_excel": true,
+        "has_graph": true,
+        "has_pdf": true,
+        "id": 46,
+        "inventory_path": "/usr/src/app/data/filestore/63350000-6e8d-42eb-8133-5555ba5480c7/inventario_final.xlsx",
+        "motor": "secuencial-2",
+        "pdf_path": "/usr/src/app/data/filestore/63350000-6e8d-42eb-8133-5555ba5480c7/plan_corte.pdf",
+        "pdf_template_version": "secuencial-2",
+        "perdida_corte_kg": 0.140118,
+        "perfil_usado": "rapido",
+        "processing_time_seconds": 2.01,
+        "result_status": "completed",
+        "sobrante_final_kg": 5.336058,
+        "status": "completed",
+        "storage_uuid": "63350000-6e8d-42eb-8133-5555ba5480c7",
+        "updated_at": "2026-09-13T13:16:19.422857",
+        "uploaded_file_id": 39,
+        "version_number": 1
+      }
+    ],
+    "processing_status": "completed",
+    "status": "completed",
+    "status_details": "Plan y artefactos completados",
+    "task_id": "reprocess_39_1789305381.36798",
+    "total_versions": 2,
+    "updated_at": "2026-09-13T13:16:21.470220"
+  }
+}

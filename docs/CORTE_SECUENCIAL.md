@@ -12,10 +12,11 @@ su aporte, sin prometer optimalidad ni superioridad en todos los casos.
 
 Los grupos son etapas sucesivas. Cada diámetro se planifica independientemente,
 pero su cromosoma evalúa la secuencia completa de etapas: un sobrante permanece
-disponible hasta consumirse. No hay pérdida por corte ni mínimo de sobrante.
-Son hipótesis ideales, no prescripciones normativas ni garantía de ejecución física.
+disponible hasta consumirse o descartarse según los parámetros de esa ejecución.
+El modelo ideal anterior se conserva desactivando ambos checks. Las condiciones
+configurables son hipótesis, no prescripciones normativas ni garantía física.
 
-El porcentaje principal es `100 × masa sobrante final / masa original utilizada`.
+El porcentaje principal es `100 × (pérdida de corte + descartado + reutilizable final) / masa original utilizada`, todo en masa.
 Una barra original se cuenta una vez aunque se corte en varias etapas. El stock
 intacto se exporta, pero no participa en ese porcentaje. Para demanda fija por
 diámetro, minimizar longitud original utilizada equivale a minimizar ese porcentaje;
@@ -32,7 +33,7 @@ la agregación entre diámetros usa masa, no un promedio de porcentajes.
 - Inventario adicional: XLSX/CSV, columnas `diametro`, `longitud_m`, `cantidad`.
   Todas las cantidades son enteras positivas. No se admiten valores infinitos.
 - El inventario exportado contiene las existencias finitas intactas y todos los
-  sobrantes positivos. Puede importarse sin transformación en otro proyecto.
+  sobrantes elegibles. Puede importarse sin transformación en otro proyecto.
 - El usuario confirma la disponibilidad física fuera de la aplicación. Reprocesar
   no consume inventario de otros proyectos ni convierte una simulación en stock real.
 
@@ -112,7 +113,8 @@ no modificar migraciones aplicadas. Los registros anteriores conservan metadatos
 nulos y etiqueta histórica. La actualización de backend y worker debe coordinarse
 como una entrega normal, sin mezclar código anterior con esquema sin migrar.
 
-Excel contiene `Barras`, `Cortes`, `Inventario`, `Metricas`; el saldo final de la
+Excel contiene `Barras`, `Cortes`, `Inventario`, `Metricas`, `Descartados`,
+`Inventario excluido` y `Parametros`; el saldo final de la
 barra raíz aparece una vez. PDF muestra como máximo 150 registros y PNG 60 barras,
 identificados explícitamente como muestras. El Excel conserva el plan completo.
 
@@ -128,6 +130,9 @@ los datasets ni los resultados históricos. No usar limpiezas globales de Docker
 
 
 ## Estado local verificado el 13 de septiembre de 2026
+
+El registro de id 36 de esta sección corresponde a `secuencial-1`. La ampliación
+`secuencial-2` también completó reconstrucción y E2E; véase el cierre al final.
 
 La entrega está activa en `http://localhost`. En esta máquina, `.env` conserva
 `COMPOSE_PROJECT_NAME=oica-validation` y `HTTP_PORT=80` para reutilizar los volúmenes.
@@ -145,3 +150,71 @@ docker compose exec -T backend python - 36 < scripts/verify_sequential_result.py
 
 Los ID son propios de esta instalación. No son constantes para otras máquinas.
 La evidencia completa está en `tests/benchmarks/2026-09-13-integracion-local.json`.
+
+## Condiciones de corte — secuencial-2
+
+`GET /parametros-corte` entrega defaults y referencias canónicas. La interfaz los
+carga antes de habilitar el envío. `/upload` y `/estimate` reciben el campo multipart
+`parametros_corte`, un objeto JSON:
+
+```json
+{"perdida_activa":true,"proceso":"disco","perdida_mm":"1","minimo_activo":true,"modo_minimo":"automatico","minimo_m":"0.5","descarte":"inmediato"}
+```
+
+`minimo_m` solo se aplica en modo `manual`; 0,5 es una propuesta editable para ese
+campo, no el default automático ni una recomendación normativa. `proceso` admite
+`disco` y `cizalla`; al elegirlos la UI propone respectivamente 1 y 0 mm.
+`descarte` admite `inmediato` y `fin_etapa`. Omitir el objeto preserva el contrato
+ideal de clientes antiguos. Cambiar condiciones invalida la estimación anterior.
+El reprocesamiento conserva las condiciones originales; para compararlas se crea
+otra carga. Las instantáneas JSON existentes bastan: no se añade una migración.
+
+El mínimo automático se resuelve una vez por diámetro con toda la cartilla y
+se devuelve en `/estimate`. Los diámetros sin demanda no tienen mínimo automático.
+El modo manual aplica a todos los diámetros. El inventario adicional inferior al
+mínimo se excluye antes de buscar y no es desperdicio generado por el proyecto.
+
+Cada operación obtiene una pieza entera. Si coincide exactamente con el saldo,
+no se necesita separación. En otro caso se exige pieza más pérdida completa; no
+se permite pérdida parcial de borde ni se añade refrentado implícito. El descarte
+inmediato se aplica tras **cada pieza**, incluso dentro de una fila con cantidad.
+Al final de etapa se descartan los saldos inferiores al mínimo antes de la siguiente.
+La igualdad permite reutilizar. El balance por barra raíz es:
+
+`longitud original = piezas + pérdida + descartado + saldo reutilizable`.
+
+La puntuación considera todas las etapas conocidas. Primero minimiza material
+original utilizado; después pérdida irrecuperable, material comercial y número
+de barras. No descuenta créditos por demanda futura desconocida. La evaluación
+agrupada usa capacidad cerrada por lote; el validador recorre independientemente
+las operaciones del ganador y reconstruye pérdida y descarte.
+
+Referencias y límites: disco de espesor nominal 1 mm, [Hilti AC-D](https://www.hilti.com.ph/c/CLS_POWER_TOOL_INSERT_7126/CLS_ABRASIVES_7126/r6473822);
+criterio de sobrante al menos igual a la menor longitud demandada,
+[Benjaoran y Bhokha (2013)](https://www.joams.com/uploadfile/2013/1024/20131024100240137.pdf),
+DOI 10.12720/joams.1.3.313-316. El parámetro de trim loss `Tw` del artículo no es
+un mínimo reutilizable universal. Cizalla 0 mm es una idealización que debe
+calibrarse. No se verificó una ley que imponga estos valores.
+
+Ensayo de las cuatro combinaciones, en serie y sin reportes:
+
+```bash
+python3 -B scripts/check_cutting_container.py --matrix --dataset tests/data/001/001-pruebaInicial.xlsx --dataset tests/data/002/002-ingeBigTest.xlsx --output resumen-nuevo.jsonl
+```
+
+Para un escenario: `--parametros-corte '{"descarte":"fin_etapa"}'`. El comando
+nativo `benchmark_cutting.py` recibe `--parametros-corte archivo.json`.
+
+## Cierre local de secuencial-2
+
+La ampliación está activa en `http://localhost`, con seis servicios saludables.
+El build reutilizó dependencias; C: tenía aproximadamente 8,3 GB libres antes y
+después. Los 83 tests pasan en la imagen nueva; frontend pasa build, tipos y lint.
+002 se conserva con id 38 (balanceado y profundo) y 001 con id 39 (dos versiones,
+nombre técnico smoke.xlsx). El primero pasó carga y reproceso desde Chrome, ocho
+descargas y 33 frames WebSocket, sin excepciones JavaScript. Las cuatro versiones
+se auditaron desde JSON/Excel y conservan las instantáneas originales.
+
+Evidencia: `tests/benchmarks/2026-09-13-fisico-integracion-local.json`.
+La auditoría de lectura se puede repetir sustituyendo el ID por 38 o 39 en el
+comando anterior. No hay migración nueva ni publicación en VPS de esta ampliación.
