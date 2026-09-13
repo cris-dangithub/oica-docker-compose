@@ -1,3 +1,78 @@
+# Estado actual — 2026-09-13
+
+## Bloque G: implementación y validación local completadas
+
+El usuario autorizó implementar el plan y después reconstruir las imágenes con
+un presupuesto estimado de 2–4 GB. La aplicación nueva está activa y saludable en
+**http://localhost**, proyecto Compose `oica-validation`. `.env` local (ignorado por
+Git, sin secretos añadidos) conserva ese nombre y puerto 80 para los comandos habituales.
+El usuario autorizó publicar esta entrega en una rama nueva y abrir PR hacia
+`production`, reemplazando la petición de push directo. No fusionar el PR ni
+desplegar sin nueva instrucción. La VPS no se operó directamente en esta sesión.
+
+### Contrato aprobado
+
+Solo 001/002 como corpus académico; AG; etapas sucesivas con reutilización acumulada
+por diámetro; catálogo editable e inventario XLSX/CSV; exportación compatible;
+pérdida por corte cero, sin mínimo reutilizable; desperdicio final ponderado por
+masa de barras utilizadas una sola vez. 1–5 minutos como objetivo, sin aborto.
+Título y objetivos reformulados por autorización del autor, pendientes del director.
+
+### Implementado
+
+- `backend/cutting/`: normalización, validador independiente, AG con evaluación de
+  saldos agrupados, trazabilidad por barra y reportes acotados.
+- API/worker con instantáneas, tarea activa, reimportación de inventario y estimación.
+- Frontend con catálogo, inventario, progreso y descargas.
+- Migración 003 aplicada a PostgreSQL local. Los volúmenes y dos versiones previas
+  del archivo histórico id 2 permanecen intactos.
+- Capítulos 1–4 y `docs/CORTE_SECUENCIAL.md` contrastados con el piloto y el E2E local.
+
+### Evidencia verificada
+
+- Build de las tres imágenes exitoso, incluyendo compilación/tipos/lint de frontend.
+- 74 pruebas backend pasan dentro de la imagen nueva; 10 de scripts pasaron antes.
+- 34 ensayos de motor válidos; 002 rápido 1,38–1,51 s, balanceado 3,13–3,79 s,
+  profundo 5,65–9,15 s. Son tiempos de motor, no de aplicación.
+- Chrome real Windows: 002 cargado, progreso y WebSocket, redirección a resultados,
+  descargas Excel/PDF/PNG/inventario y reprocesamiento desde la tabla; sin errores JS.
+- 002 id 36: v1 balanceado 9,76 s registrados, 7,995 %; v2 profundo 19,97 s,
+  7,934 %. La espera medida en navegador para la primera carga fue 20,15 s.
+- Ambas versiones pasan auditoría independiente desde JSON persistido y Excel:
+  67.443 piezas, diámetros, etapas, capacidad, inventario y métricas exactos.
+- 001 id 35 (nombre técnico smoke.xlsx): cinco versiones conservadas; HTTP, WS,
+  descargas/reproceso y estimación empírica con cinco muestras (1,04–2,94 s).
+- Control de reimportación id 37: consume una pieza #3 de 0,01 m del inventario
+  exportado por 002 sin catálogo comercial y conserva exactamente los saldos.
+  Es una prueba técnica; no un tercer caso académico ni validación física.
+
+Evidencia: `tests/benchmarks/2026-09-13-integracion-local.json`, resultados de navegador,
+series JSONL, captura, huellas de imágenes y freeze de dependencias. La serie anterior
+`secuencial.jsonl` es diagnóstica incompleta; la serie final es `agrupado.jsonl`.
+Auditoría reproducible: `scripts/verify_sequential_result.py`.
+
+### Pendientes reales
+
+Procedencia y permisos de redistribución de 001/002; licencia de distribución;
+revisión bibliográfica y del director; reproducción en otra máquina. Sin certificado
+de optimalidad ni validación física del modelo ideal. La captura evidencia mejoras
+pendientes de contraste y ancho de tabla; no se amplió esta entrega con cosmética.
+No hay una pregunta técnica de alta prioridad que bloquee el uso local actual.
+
+### Almacenamiento y preservación
+
+C: pasó de aproximadamente 8,0 a 7,5 GB libres; sigue al 99 %. No confundir la
+capacidad virtual WSL con espacio físico. Se reutilizó caché; algunas capas Python
+necesitaron completarse. Se registraron versiones instaladas para la reproducibilidad.
+No hubo limpiezas globales, cambios de filesystem ni reinstalación del entorno.
+Chrome de prueba cerrado y únicamente su perfil temporal retirado; contenedores
+de la app siguen activos. El PostgreSQL antiguo `oica_postgres` sigue detenido.
+
+Preservados `services/`, datasets, borrado previo de `docs/METODOLOGIA.md` y archivos
+ajenos sin seguimiento, incluido `tests/data-tests.zip`. No hacer commits sin permiso.
+
+## Registro anterior de producción (histórico, no describe el bloque activo)
+
 # Estado actual del proyecto
 
 > Actualizado: 2026-09-12, reanudación después de reparación de WSL con e2fsck.

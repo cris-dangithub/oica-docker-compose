@@ -1,5 +1,6 @@
 'use client';
 import { API_URL } from '@/lib/api';
+import { CuttingOptions, initialCatalog, StockRow, Timing, TimingInfo } from './cutting-options';
 
 import { useState, useCallback, useEffect, useRef } from 'react';
 import { useDropzone } from 'react-dropzone';
@@ -13,6 +14,11 @@ export function FileUpload() {
    const [loadingSendButton, setLoadingSendButton] = useState(false);
    const [backendError, setBackendError] = useState<string | null>(null);
    const [perfil, setPerfil] = useState<string>('balanceado');
+   const [catalog, setCatalog] = useState<StockRow[]>(initialCatalog);
+   const [inventory, setInventory] = useState<File | null>(null);
+   const [visuals, setVisuals] = useState(true);
+   const [timing, setTiming] = useState<Timing | null>(null);
+   const [estimating, setEstimating] = useState(false);
    
    // Estados para WebSocket
    const [taskId, setTaskId] = useState<string | null>(null);
@@ -25,6 +31,12 @@ export function FileUpload() {
    // Refs para polling fallback
    const lastUpdateTime = useRef<number>(Date.now());
    const pollingInterval = useRef<NodeJS.Timeout | null>(null);
+   const estimateRevision = useRef(0);
+
+   useEffect(() => {
+      estimateRevision.current += 1;
+      setTiming(null);
+   }, [files, perfil, catalog, inventory, visuals]);
 
    const router = useRouter();
 
@@ -83,6 +95,7 @@ export function FileUpload() {
             
                if (response.ok) {
                   const data = await response.json();
+                  setTiming(data);
                   console.log('[FileUpload] Polling update:', data);
                
                   // Actualizar estado desde polling
@@ -96,10 +109,10 @@ export function FileUpload() {
                      setProcessingState(data.state);
                   
                      // Detener polling si completado o error
-                     if (data.state === 'SUCCESS' || data.state === 'FAILURE') {
+                     if (data.state === 'SUCCESS' || data.state === 'FAILURE' || data.state.startsWith('error_')) {
                         stopPolling();
                         setLoadingSendButton(false);
-                        if (data.state === 'FAILURE') setBackendError(data.message || 'Procesamiento interrumpido');
+                        if (data.state === 'FAILURE' || data.state.startsWith('error_')) setBackendError(data.message || 'Procesamiento interrumpido');
                         if (data.state === 'SUCCESS') {
                            setTimeout(() => {
                               router.push('/archivos');
@@ -151,6 +164,7 @@ export function FileUpload() {
       setTimeout(() => setIsPulsing(false), 300);
       
       setProgress(data.progress || 0);
+      setTiming(data);
       setProcessingState(data.state);
       setStatusMessage(data.message || '');
 
@@ -168,6 +182,30 @@ export function FileUpload() {
       }
    }, [router]);
 
+   const makeForm = () => {
+      const form = new FormData();
+      if (files[0]) form.append('file', files[0]);
+      form.append('perfil', perfil);
+      form.append('catalogo', JSON.stringify(catalog));
+      form.append('visuales', String(visuals));
+      if (inventory) form.append('inventario', inventory);
+      return form;
+   };
+
+   const estimateTime = async () => {
+      const revision = estimateRevision.current;
+      setEstimating(true);
+      setBackendError(null);
+      try {
+         const response = await fetch(`${API_URL}/estimate`, { method: 'POST', body: makeForm() });
+         const data = await response.json();
+         if (!response.ok) throw new Error(data.error || 'No fue posible estimar');
+         if (revision === estimateRevision.current) setTiming(data);
+      } catch (error) {
+         setBackendError(error instanceof Error ? error.message : String(error));
+      } finally { setEstimating(false); }
+   };
+
    const handleSend = async () => {
       console.log('CLICK ENVIAR');
       setBackendError(null);
@@ -177,16 +215,14 @@ export function FileUpload() {
          return;
       }
 
-      const file = files[0];
-
       try {
          setLoadingSendButton(true);
+         estimateRevision.current += 1;
+         setTiming(null);
          setProgress(0);
          setStatusMessage('Subiendo archivo...');
 
-         const formData = new FormData();
-         formData.append('file', file);
-         formData.append('perfil', perfil);
+         const formData = makeForm();
 
          const apiUrl = API_URL;
          const response = await fetch(`${apiUrl}/upload`, {
@@ -249,8 +285,8 @@ export function FileUpload() {
                Análisis Geométrico de aceros
             </h1>
             <p className="text-gray-600 text-lg">
-               Optimiza los patrones de corte aplicando el método Búfalo para
-               reducir el desperdicio de material. ¡Rápido y fácil!
+               Planifica cortes por etapas con algoritmos genéticos y reutiliza
+               los sobrantes disponibles para reducir el desperdicio final.
             </p>
          </div>
 
@@ -320,10 +356,15 @@ export function FileUpload() {
                >
                   <option value="rapido">Rápido (procesamiento rápido)</option>
                   <option value="balanceado">Balanceado (recomendado)</option>
-                  <option value="profundo">Profundo (más ahorro de material)</option>
+                  <option value="profundo">Profundo (mayor búsqueda, sin garantía de mejora)</option>
                </select>
             </div>
 
+            <CuttingOptions catalog={catalog} onCatalog={setCatalog} onInventory={setInventory}
+               visuals={visuals} onVisuals={setVisuals} disabled={loadingSendButton || estimating} />
+            <Button variant="outline" className="mr-3" disabled={!files.length || loadingSendButton || estimating}
+               onClick={estimateTime}>{estimating ? 'Consultando...' : 'Estimar tiempo'}</Button>
+            {timing && !loadingSendButton && <TimingInfo timing={timing} />}
             <Button
                size="lg"
                onClick={handleSend}
@@ -371,6 +412,7 @@ export function FileUpload() {
                         {statusMessage}
                      </p>
                   )}
+                  <TimingInfo timing={timing} />
 
                   {(processingState === 'completed' || processingState === 'SUCCESS') && (
                      <div className="mt-4 flex items-center justify-center text-green-600">

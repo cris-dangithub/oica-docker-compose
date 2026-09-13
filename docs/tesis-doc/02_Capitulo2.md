@@ -1,92 +1,53 @@
-## Capítulo 2
+# Capítulo 2. Fundamentos del modelo de corte
 
-### 2. Marco Teórico
+## 2.1 Problema de corte unidimensional
 
-En el marco de este proyecto de grado, es esencial profundizar en la comprensión del proceso de desarrollo de software, incluyendo el análisis de las tecnologías pertinentes y su implementación efectiva en entornos productivos.   
+OICA recibe longitudes de piezas ya definidas en una cartilla y las asigna a barras de longitud conocida. Una pieza no puede dividirse entre dos barras ni obtenerse de un diámetro diferente. La aplicación no determina dimensiones estructurales del elemento construido.
 
-El desarrollo de software constituye un componente fundamental en la esfera tecnológica, abarcando elementos intangibles que contrastan con los aspectos físicos del hardware. Este comprende una diversidad de programas que gestionan sistemas y engloba dependencias como bases de datos, documentos y procesos. Estos programas se materializan a través de lenguajes de programación, que actúan como sistemas de comunicación, permitiendo a los desarrolladores emitir instrucciones precisas a las computadoras. Estos lenguajes se rigen por un conjunto de reglas gramaticales que deben seguirse rigurosamente para garantizar su comprensión por parte de las máquinas ​(Luara, n.d.)​. 
+Se estudia stock con varias longitudes comerciales y disponibilidad configurable, complementado por un inventario finito. Las demandas están divididas en etapas ordenadas. Un sobrante puede permanecer disponible durante varias etapas, pero solo puede consumirse una vez en cada estado de su saldo.
 
-Además, en este proyecto se trabajarán varios lenguajes de programación, incluyendo los siguientes: 
+El término «nesting» no se usa aquí para sugerir una implementación de distribución bidimensional: no se modelan áreas, rotaciones de figuras o láminas. Tampoco se emplean modelos generativos, entrenamiento supervisado ni redes neuronales.
 
-- Python: Python es un lenguaje de programación de alto nivel, interpretado, multiparadigma y de tipado dinámico. Python es conocido por su sintaxis clara y legible; es un lenguaje de programación poderoso y fácil de aprender, utilizado en varios campos, incluida la programación web, la ciencia de datos, la inteligencia artificial, el desarrollo de juegos y más. 
+## 2.2 Factibilidad y objetivo
 
-- HTML: HTML (HyperText Markup Language) es el lenguaje estándar utilizado para crear y diseñar páginas web. Es un lenguaje de marcado que define la estructura y el contenido de una página web mediante una serie de elementos y etiquetas. Estas etiquetas se utilizan para definir diferentes tipos de contenido, como encabezados, párrafos, listas, enlaces, imágenes y muchos otros elementos que pueden encontrarse en una página web. HTML utiliza una sintaxis sencilla basada en etiquetas que envuelven el contenido y proporcionan información sobre cómo debería mostrarse dicho contenido en un navegador web. HTML es un componente fundamental en el desarrollo web y se combina con otros lenguajes como CSS (Cascading Style Sheets) para estilizar y dar formato a las páginas web, y JavaScript para agregar interactividad y funcionalidades dinámicas. En conjunto, estos lenguajes permiten crear experiencias web interactivas y atractivas para los usuarios. 
+Una solución factible cumple todas las cantidades por fila de origen, longitudes, diámetros, precedencias de etapa y cantidades de inventario. La longitud de una barra original equivale a la suma de piezas obtenidas durante todo el proyecto y su saldo final. El cumplimiento se comprueba independientemente del algoritmo que propone el plan.
 
-- CSS: CSS (Cascading Style Sheets) es un lenguaje de hojas de estilo utilizado para definir el aspecto y el formato de los documentos HTML (o XML). CSS describe cómo se deben mostrar los elementos HTML en la pantalla, en papel o en otros medios. CSS se usa para separar el contenido estructural de un documento HTML de su presentación visual. Permite controlar aspectos como el diseño, el espaciado, los colores, las fuentes y otros estilos de presentación de los elementos de una página web. Al aplicar reglas CSS a elementos HTML específicos, los desarrolladores pueden lograr una apariencia coherente y atractiva en toda la página o sitio web. 
+Sea B el conjunto de barras originales efectivamente utilizadas; L_b su longitud inicial; r_b su saldo final y rho_b su masa por metro. El objetivo es minimizar:
 
-- JavaScript: JavaScript es un lenguaje de programación de alto nivel, interpretado y multiplataforma. Es uno de los pilares fundamentales de la web junto con HTML y CSS. JavaScript se usa principalmente en el lado del cliente (navegador web), pero también puede usarse en el lado del servidor (por ejemplo, a través de Node.js). JavaScript permite agregar interactividad y dinamismo a las páginas web. Con JavaScript, los desarrolladores pueden manipular el contenido de una página web, responder a eventos del usuario (como clics de ratón o pulsaciones de teclas), realizar peticiones a servidores web para obtener o enviar datos (a través de AJAX), y muchas otras funciones que mejoran la experiencia del usuario. JavaScript es un lenguaje versátil y poderoso que ha experimentado un crecimiento significativo en popularidad y uso en los últimos años, convirtiéndose en una habilidad indispensable para muchos desarrolladores de software. 
+`D = 100 × sum(rho_b × r_b) / sum(rho_b × L_b), para b en B`.
 
-> Nota: Colocar NextJS
->https://nextjs.org/docs/13
+Una barra adicional entra al denominador cuando se utiliza, con su longitud completa disponible al inicio. Los saldos que pasan entre etapas no se incorporan nuevamente al denominador. El inventario intacto queda fuera del indicador, aunque permanezca en el inventario final exportado.
 
-Asimismo, es importante destacar que de los lenguajes de programación emergen los frameworks, herramientas cruciales definidas por ​(Spinelli, 2023)​ como facilitadores del desarrollo de aplicaciones de manera ágil y eficiente. Estos frameworks ofrecen un conjunto de recursos, bibliotecas y estándares de codificación que pueden ser reutilizados en la creación de diversos tipos de aplicaciones, optimizando así el proceso de desarrollo. 
+Con demanda fija por diámetro, la longitud útil es constante: minimizar la longitud original utilizada minimiza su saldo final. Como los diámetros no comparten material, minimizar ese valor en cada diámetro minimiza la masa incorporada total y el porcentaje global. No se promedian porcentajes de diámetros con distinta masa.
 
-> Nota: El despliegue es Dockerizado.
->https://repository.unad.edu.co/jspui/bitstream/10596/59287/1/jcleondi.pdf (Despliegue dockerizado)
->Referencia Docker.pdf (Bibliografía)
+El sobrante final se denomina desperdicio respecto de este proyecto, aunque pueda reutilizarse después. No equivale automáticamente a residuo desechado ni a una pérdida económica definitiva.
 
+## 2.3 Heurísticas de referencia
 
-En cuanto a las bases de datos, se optará por PostgreSQL para el almacenamiento de información. Según AWS (2023), una base de datos se utiliza para almacenar, recuperar y editar datos de manera eficiente, siendo PostgreSQL un sistema de gestión de bases de datos relacional de código abierto y libre. Se le reconoce como uno de los más avanzados y populares del mundo, utilizado en aplicaciones ​(Dorantes, 2025).​ 
+First Fit Decreasing (FFD) ordena pedidos por longitud decreciente dentro de la etapa y coloca piezas en la primera barra abierta con capacidad. Best Fit Decreasing (BFD) elige el saldo disponible más ajustado. Para stock de longitudes distintas es necesaria una regla adicional de apertura: esta implementación compara mayor longitud, menor longitud y menor residuo relativo para la pieza actual.
 
-> Nota: Hablar de Docker como open source
->https://www.researchgate.net/publication/386515865_Utilizing_Docker_Containers_for_Reproducible_Builds_and_Scalable_Web_Application_Deployments
->https://www.researchgate.net/publication/318816158_An_Introduction_to_Docker_and_Analysis_of_its_Performance
+Cada referencia devuelve su mejor plan factible entre esas tres reglas. Esta adaptación se declara porque comparar el genético únicamente contra una heurística que siempre abre barras de 12 m confundiría la selección del catálogo con el aporte de la evolución. Ninguna referencia recibe piezas de etapas futuras por adelantado.
 
-> Nota: Hablar sobre qué subrama de IA estamos usando – algoritmo genético; IA generativa VS IA predictiva (algoritmos genéticos con redes neuronales evolutivas)
->https://nn.cs.utexas.edu/downloads/papers/stanley.cec02.pdf
->https://arxiv.org/pdf/2006.05415
+## 2.4 Algoritmo genético y representación
 
+La población contiene candidatos con genes por orden, no por pieza individual. Cada orden tiene una prioridad de colocación y una regla de elección de longitud. El decodificador respeta primero la etapa; la prioridad genética solo decide dentro de esa restricción.
 
-### 2.1 Características de las Barras de Acero Comercial
-> Nota: Hablar sobre el marco teórico de las barras de acero en Colombia.
->Reglamento Colombiano de Construcción Sismo Resistente (NSR-10): Específicamente el Título C (Concreto Estructural), el cual exige que todo el acero de refuerzo utilizado en el país cumpla con propiedades mecánicas controladas de tracción, fluencia y elongación para soportar cargas sísmicas sin colapsar.
->Resolución 1856 de 2017 (MINCIT): Es el Reglamento Técnico oficial expedido por el Ministerio de Comercio, Industria y Turismo. Declara obligatoria la certificación del acero antes de su fabricación, importación o comercialización en Colombia para proteger la vida de las personas.
-(En el contexto de la infraestructura nacional, el Reglamento Técnico Colombiano (Resolución 1856, 2017) estipula que las barras corrugadas empleadas como refuerzo de concreto deben poseer un certificado de conformidad emitido por organismos acreditados. De acuerdo con la norma NTC 2289 del ICONTEC, este tipo de acero de baja aleación debe someterse a ensayos rigurosos de tracción y doblado por cada colada de producción, asegurando una adecuada relación entre la resistencia máxima y el límite de fluencia para cumplir las demandas de sismo-resistencia exigidas por la normativa NSR-10 (Camacol, 2010).)
+La selección por torneo favorece candidatos con menor material incorporado. El cruce uniforme combina genes de ambos padres; la mutación altera prioridades o reglas de apertura; el elitismo conserva candidatos mejores. No se considera evolución válida reconstruir todos los hijos como la misma solución BFD ignorando lo heredado.
 
-| Características                                        | Detalle                                                                                                                         |
-|--------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------|
-| Longitudes Estándar                                    | 6 metros, 9 metros, 12 metros                                                                                                   |
-| Diámetros Comunes                                      | 6mm, ¼", 8mm, 9mm, 3/8", 11mm, 12mm, ½", 15mm, 5/8", ¾", 7/8", 1", 1 ¼", 1 3/8"                                                 |
-| Tipo de Material                                       | Barras microaleadas de alta ductilidad, sección recta y redonda, proyecciones Hi-bond                                           |
-| Norma Técnica Colombiana (NTC)                         | NTC 2289 (Décima actualización): Barras corrugadas y lisas de acero de baja aleación para refuerzo de concreto.                 |
-| Reglamento Colombiano de Construcción Sismo Resistente | NSR-10: Requisitos generales para amarres, pruebas, corte, doblado, traslapes y uniones de barras de acero.                     |
-| Norma Internacional Aplicable                          | ASTM A706/A706M-16: Especificación estándar para barras de acero de baja aleación deformadas y lisas para refuerzo de concreto. |
-| Presentación Comercial                                 | Suministradas en paquetes de 1 o 2 toneladas, en varillas                                                                       |
-| Personalización                                        | Otros diámetros y longitudes pueden producirse por acuerdo con el cliente.                                                      |
+La evaluación usa lotes de barras con saldos idénticos para no materializar miles de objetos en cada candidato. El ganador se reconstruye barra por barra, se contrasta su puntuación con la evaluación agrupada y se valida su demanda e inventario. Las pruebas diferenciales comprueban que ambas representaciones produzcan la misma puntuación.
 
-- Tabla ##: Longitudes estándar y normativas aplicables a las barras de acero comercial en Colombia
+El criterio de parada depende del máximo de generaciones o del estancamiento observado. No demuestra optimalidad matemática. Un resultado mejor en una semilla no garantiza que un perfil sea superior en todas las ejecuciones.
 
-La inclusión de esta tabla es siginificativa porque no solo precisa el alcance del problema del proyecto al proporcionar los parámetros específicos de las barras de acero en Colombia, sino que también establece las restricciones fundamentales para cualquier modelo de optimización. El problema de corte depende de cuánto material se tenga disponible. Además, al detallar las normativas nacionales e internacionales, se garantiza que la solución propuesta en el documento sea viable tanto legal como industrialmente. Finalmente, la tabla sirve como una referencia concisa y autorizada para el desarrollo de la aplicación, influyendo directamente en los modelos de datos, las reglas de validación y los formatos de salida. 
+## 2.5 Hipótesis físicas y marco normativo
 
-### 2.2 Definición y Clasificación de los Problemas de Corte (1D, 2D, Nesting)
+Se adoptan explícitamente pérdida por corte cero y reutilización de cualquier sobrante positivo. Las longitudes comerciales de 6, 9 y 12 m son valores iniciales de la aplicación; no se presentan como una obligación normativa exclusiva.
 
-> Nota: Buscar y hablar sobre este literal (con su respectiva bibliografía)
->https://riull.ull.es/xmlui/bitstream/handle/915/21169/cp457.pdf?sequence=1&isAllowed=y
->https://repositorio.uniandes.edu.co/entities/publication/83a2746f-1b0b-4009-90c2-b969bc2aedfa
->http://www.scielo.org.co/scielo.php?script=sci_arttext&pid=S1692-82612017000100112
+El Decreto 926 de 2010, que adopta el marco NSR-10, figura como vigente en la consulta de SUIN-Juriscol realizada el 13 de septiembre de 2026. Su consulta debe considerar las modificaciones incorporadas, no una copia inicial aislada. Fuente oficial: [Decreto 926 de 2010, SUIN-Juriscol](https://suin-juriscol.gov.co/viewDocument.asp?id=1918254).
 
-### 2.3  Algoritmos Clásicos para la Solución de Problemas de Corte
+Esta referencia delimita el contexto de construcción; no valida por sí sola los patrones producidos por OICA. No se ha verificado una disposición vigente que permita deducir de ella pérdida por corte cero o ausencia de mínimo reutilizable. Por tanto, esas decisiones se presentan exclusivamente como hipótesis ideales del estudio. No se incorporan valores de NTC, resoluciones o tolerancias cuya edición, vigencia y aplicación no hayan sido comprobadas.
 
-> Nota: Hacerlo sonar menos IA y verificar bibliografía; hablar también del método Búfalo que no es mencionado.
+## 2.6 Evaluación y reproducibilidad
 
-Para abordar la complejidad inherente de los problemas de corte, se han desarrollado diversas metodologías algorítmicas. La elección de un algoritmo depende a menudo del equilibrio entre la búsqueda de una solución óptima y la necesidad de un tiempo de cómputo razonable, especialmente en contextos industriales donde las decisiones deben tomarse rápidamente. 
+Corrección, calidad y tiempo son dimensiones distintas. Un programa puede terminar rápidamente y producir piezas incorrectas; también puede producir un plan válido con desperdicio alto. La evaluación exige primero factibilidad, luego comparación de desperdicio y duración bajo las mismas entradas y restricciones.
 
-- Generación de Columnas (Gilmore-Gomory): Este método, ampliamente reconocido y desarrollado por Gilmore y Gomory en la década de 1960, aborda el gran número de patrones de corte potenciales al comenzar con un conjunto limitado y generar nuevos patrones de forma dinámica. Implica la resolución iterativa de un programa lineal maestro y un problema auxiliar de la mochila para identificar patrones nuevos que mejoren el costo. Este método está teóricamente garantizado para converger a la solución óptima fraccional.    
-
-- Programación Dinámica: Esta técnica algorítmica puede utilizarse eficazmente para resolver el subproblema de la mochila dentro del marco de la generación de columnas, o para ciertas variantes específicas del CSP 1D, descomponiendo el problema en subproblemas superpuestos más simples.    
-
-- Heurísticas y Metaheurísticas: Dada la naturaleza NP-hard del CSP, los algoritmos heurísticos y metaheurísticos se emplean ampliamente en la práctica industrial para encontrar soluciones buenas o aceptables en un tiempo de cómputo razonable, incluso si no garantizan la optimización absoluta. Las heurísticas suelen realizar mejoras locales y "codiciosas". Las metaheurísticas, por otro lado, son métodos de exploración más generales que se aplican para optimizar una heurística subyacente. A diferencia de las heurísticas, que son específicas de un problema, las metaheurísticas son más generalizadas y pueden aplicarse de manera similar a muchos problemas diferentes. Se clasifican en metaheurísticas basadas en población (como los algoritmos inspirados en el comportamiento de enjambres o la evolución natural) y metaheurísticas basadas en iteración (inspiradas en leyes físicas, matemáticas o el comportamiento humano).    
-
-La elección entre algoritmos exactos, como la Programación Lineal Entera con generación de columnas, y las metaheurísticas para el problema de corte de stock dependerá del equilibrio aceptable entre la optimización de la solución y el tiempo de cómputo. Esta es una consideración crítica para una aplicación web que requiere respuestas en tiempo real. Los métodos exactos, aunque garantizan la solución óptima, pueden ser prohibitivamente lentos para grandes instancias de problemas NP-hard. Las metaheurísticas, si bien no garantizan la optimización global, pueden proporcionar soluciones de muy alta calidad en un tiempo mucho más corto, lo que las hace adecuadas para entornos operativos dinámicos. Por lo tanto, la implementación de la aplicación web necesitará evaluar cuidadosamente este compromiso, posiblemente utilizando una combinación de enfoques o un enfoque híbrido, donde las metaheurísticas generen soluciones rápidas que luego puedan ser refinadas por métodos exactos para instancias más pequeñas o críticas. 
-
-### 2.4 Desperdicios Admisibles y Optimización de Rendimiento en el Corte 
-
-> Nota: Misma situación que en el literal anterior, hacerlo sonar menos IA y verificar bibliografía.
-
-El concepto de "desperdicios admisibles" se enmarca en la filosofía de la manufactura esbelta (Lean Manufacturing), donde el desperdicio se define como cualquier actividad que no añade valor para el cliente. Esto va más allá de los residuos físicos e incluye cualquier cosa que consuma tiempo o reduzca la eficiencia operativa de una empresa. En este contexto, la "merma" (shrinkage) es la diferencia entre el inventario registrado y el real, y puede deberse a factores como el daño durante la fabricación, el deterioro o los errores de registro. El objetivo es minimizar estos desperdicios para reducir los tiempos de ciclo y de entrega, y aumentar la eficacia de los procesos.    
-
-La optimización del rendimiento del material es un pilar fundamental en la industria siderúrgica. El rendimiento del material se refiere a la proporción de producto terminado utilizable en relación con el total de materia prima de entrada. Las pérdidas de rendimiento en una planta de acero pueden ocurrir debido a la formación de escoria, recortes y retales, defectos superficiales, retrabajo, oxidación, errores de fundición o laminación, y daños durante la manipulación y el transporte. Incluso una pequeña mejora porcentual en el rendimiento (por ejemplo, del 92% al 94%) puede generar ahorros masivos en operaciones de alto volumen al reducir directamente el desperdicio, minimizar el retrabajo, mejorar la eficiencia energética y asegurar una mejor utilización de materias primas costosas.    
-
-La definición de "desperdicio admisible" requiere un marco cuantitativo que considere no solo la pérdida física del material, sino también el impacto económico y las implicaciones ambientales. Esto va más allá de un simple porcentaje de desperdicio para llegar a un análisis holístico de costo-beneficio. La justificación de esta aproximación radica en que el desperdicio no es solo una cuestión de material perdido, sino que tiene ramificaciones significativas en toda la cadena de valor. Por ejemplo, el desperdicio de material implica costos de adquisición no recuperados, costos de energía utilizados en su procesamiento inicial, y costos de disposición o reciclaje. Además, los restos de corte, si no son reutilizables, pueden generar costos de almacenamiento o la necesidad de retrabajo, lo que aumenta los gastos operativos. Desde una perspectiva ambiental, la reducción del desperdicio contribuye a la sostenibilidad al disminuir la huella de carbono y el consumo de recursos, un factor cada vez más relevante en la industria del acero. Por lo tanto, un marco cuantitativo para el "desperdicio admisible" consideraría el valor del material perdido, los costos de procesamiento asociados, los costos de manejo de residuos y el impacto ambiental, permitiendo una evaluación integral que va más allá de la simple métrica de "porcentaje de desperdicio" para determinar el nivel óptimo de desperdicio que minimiza el costo total y maximiza el valor.    
-
-
+Se conservan huellas de entradas y código, semilla, perfil, versión de Python, plataforma, tiempos y consumo máximo observado de memoria. Los ensayos del motor excluyen PDF y PNG para separar optimización de presentación. Cinco semillas por perfil constituyen un piloto descriptivo; no bastan para afirmar significación estadística, optimalidad o generalización a todas las cartillas.

@@ -1,0 +1,5 @@
+{
+  "oica-backend:local": "sha256:94c597628f9253cfcd6be49af7b26f620b944ab124ec6ae20645d8568a10664d",
+  "oica-worker:local": "sha256:a86a97cd533c5c855f3a646695c74eaf444e2687d4d56e910cf3849ea64cba41",
+  "oica-frontend:local": "sha256:b6753f00536022fdcb4b0e74ccd0d048580a6159b5ffcc4b9e2430dc67b68638"
+}

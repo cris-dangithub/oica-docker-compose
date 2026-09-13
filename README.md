@@ -2,6 +2,8 @@
 
 Monorepo con Flask, Celery, Next.js, PostgreSQL, Redis y Nginx.
 
+El motor secuencial planifica por diámetro y etapa, reutiliza sobrantes y admite inventario importable/exportable. Consultar [el contrato de corte, las pruebas 001/002 y los comandos de benchmark](docs/CORTE_SECUENCIAL.md). El modelo supone pérdida por corte cero y sus resultados requieren validación física antes de ejecutarse en obra.
+
 ```bash
 # Aplicación completa en http://localhost
 docker compose up

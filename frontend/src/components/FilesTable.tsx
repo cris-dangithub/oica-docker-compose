@@ -19,16 +19,21 @@ import { Button } from '@/components/ui/button';
 import { subscribeToTask, unsubscribeFromTask, TaskUpdate } from '@/lib/socket';
 
 interface ProcessingResult {
+  inventory_path?: string;
+  motor?: string;
+  desperdicio_porcentaje?: number;
   version_number: number;
   storage_uuid: string;
   status: string;
   excel_path?: string;
   pdf_path?: string;
   image_path?: string;
+  graph_image_path?: string;
   created_at: string;
 }
 
 interface UploadedFile {
+  task_id?: string;
   id: number;
   filename: string;
   document_number: string;
@@ -47,6 +52,7 @@ interface FilesTableProps {
 }
 
 const STATUS_LABELS: Record<string, string> = {
+  pending: 'En cola',
   uploaded: 'Cargado',
   validating: 'Validando',
   validated: 'Validado',
@@ -144,14 +150,14 @@ export default function FilesTable({ apiUrl = API_URL }: FilesTableProps) {
   // Suscribirse a actualizaciones en tiempo real de archivos en procesamiento
   useEffect(() => {
     const processingFiles = files.filter(file => 
-      file.status === 'processing' || 
+      file.status === 'pending' || file.status === 'processing' ||
       file.status === 'validating' ||
       file.status === 'generating_artifacts'
     );
     
     // Suscribirse a cada archivo en procesamiento
     processingFiles.forEach(file => {
-      const taskId = `process_${file.id}`;
+      const taskId = file.task_id || `process_${file.id}`;
       subscribeToTask(taskId, (data: TaskUpdate) => {
         console.log(`[FilesTable] Update para file ${file.id}:`, data);
         
@@ -181,7 +187,7 @@ export default function FilesTable({ apiUrl = API_URL }: FilesTableProps) {
     // Cleanup: desuscribirse al cambiar la lista
     return () => {
       processingFiles.forEach(file => {
-        unsubscribeFromTask(`process_${file.id}`);
+        unsubscribeFromTask(file.task_id || `process_${file.id}`);
       });
     };
   }, [files, loadFiles]);
@@ -239,7 +245,7 @@ export default function FilesTable({ apiUrl = API_URL }: FilesTableProps) {
     }
   };
 
-  const handleDownload = (uuid: string, type: 'excel' | 'pdf' | 'imagen') => {
+  const handleDownload = (uuid: string, type: 'excel' | 'pdf' | 'imagen' | 'inventario') => {
     const url = `${apiUrl}/descargar-${type}/${uuid}`;
     window.open(url, '_blank');
   };
@@ -414,12 +420,16 @@ export default function FilesTable({ apiUrl = API_URL }: FilesTableProps) {
                 <tbody className="bg-white divide-y divide-gray-200">
                   {files.map((file) => {
                     const latestResult = file.processing_results?.[0];
-                    const hasResults = latestResult && latestResult.status === 'completed';
+                    const hasResults = Boolean(latestResult);
 
                     return (
                       <tr key={file.id} className="hover:bg-gray-50">
                         <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                           {file.filename}
+                          {latestResult && <div className="text-xs text-gray-500">
+                            {latestResult.motor === 'secuencial-1' ? 'Secuencial' : 'Histórico'}
+                            {latestResult.desperdicio_porcentaje != null && ` · Desperdicio: ${latestResult.desperdicio_porcentaje.toFixed(3)}% en masa`}
+                          </div>}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                           {file.document_number || '-'}
@@ -469,11 +479,16 @@ export default function FilesTable({ apiUrl = API_URL }: FilesTableProps) {
                         <td className="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-2">
                           {hasResults && latestResult && (
                             <>
+                              {latestResult.inventory_path && <Button size="sm" variant="outline"
+                                onClick={() => handleDownload(latestResult.storage_uuid, 'inventario')}>
+                                Inventario final
+                              </Button>}
                               <Button
                                 size="sm"
                                 variant="outline"
                                 onClick={() => handleDownload(latestResult.storage_uuid, 'excel')}
                                 title="Descargar Excel"
+                                disabled={!latestResult.excel_path}
                               >
                                 <Download className="w-4 h-4 mr-1" />
                                 Excel
@@ -483,6 +498,7 @@ export default function FilesTable({ apiUrl = API_URL }: FilesTableProps) {
                                 variant="outline"
                                 onClick={() => handleDownload(latestResult.storage_uuid, 'pdf')}
                                 title="Descargar PDF"
+                                disabled={!latestResult.pdf_path}
                               >
                                 <Download className="w-4 h-4 mr-1" />
                                 PDF
@@ -492,6 +508,7 @@ export default function FilesTable({ apiUrl = API_URL }: FilesTableProps) {
                                 variant="outline"
                                 onClick={() => handleDownload(latestResult.storage_uuid, 'imagen')}
                                 title="Descargar Imagen"
+                                disabled={!latestResult.graph_image_path && !latestResult.image_path}
                               >
                                 <Download className="w-4 h-4 mr-1" />
                                 IMG

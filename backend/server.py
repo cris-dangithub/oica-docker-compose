@@ -29,6 +29,9 @@ import pandas as pd
 
 from models import db, UploadedFile, ProcessingResult
 from celery_worker import celery_app, process_file_task
+from cutting.domain import normalize, default_catalog
+from cutting.io import read_rows
+from cutting.estimation import estimate
 
 
 # ============================================================================
@@ -82,6 +85,54 @@ def validate_perfil(perfil):
     """Valida que el perfil sea uno de los permitidos."""
     perfiles_validos = ['rapido', 'balanceado', 'profundo']
     return perfil in perfiles_validos
+
+
+def uploaded_configuration():
+    """Validar todo antes de guardar datos o encolar trabajos."""
+    catalog = json.loads(request.form['catalogo']) if 'catalogo' in request.form else default_catalog()
+    if not isinstance(catalog, list) or any(not isinstance(row, dict) for row in catalog):
+        raise ValueError('El catálogo debe ser una lista de registros')
+    fields = ('diametro', 'longitud_m', 'cantidad')
+    catalog = [{key: row.get(key) for key in fields} for row in catalog]
+    inventory_file = request.files.get('inventario')
+    inventory = read_rows(inventory_file, inventory_file.filename) if inventory_file else []
+    # No persistir columnas ajenas al contrato (fechas, fórmulas o anotaciones).
+    inventory = [{key: row.get(key) for key in fields} for row in inventory]
+    source = request.files['file']
+    try:
+        rows = read_rows(source, source.filename)
+        problem = normalize(rows, catalog, inventory)
+    finally:
+        source.seek(0)
+    seed = int(request.form.get('semilla', '0'))
+    return {'catalog': catalog, 'inventory': inventory, 'seed': seed,
+            'visuals': request.form.get('visuales', 'true') == 'true'}, problem
+
+
+@app.route('/catalogo', methods=['GET'])
+def commercial_catalog():
+    return jsonify(default_catalog())
+
+
+@app.route('/estimate', methods=['POST'])
+def estimate_upload():
+    if 'file' not in request.files:
+        return jsonify({'error': 'Falta la cartilla'}), 400
+    try:
+        config, problem = uploaded_configuration()
+        perfil = request.form.get('perfil', 'balanceado')
+        if not validate_perfil(perfil):
+            raise ValueError('Perfil inválido')
+        env_key = redis_client.get('cutting_environment_key')
+        previous = ProcessingResult.query.filter_by(perfil_usado=perfil, result_status='completed').order_by(
+            ProcessingResult.id.desc()).limit(200).all()
+        samples = [r.metricas.get('pipeline_seconds') for r in previous
+                   if r.execution_config and r.execution_config.get('input_hash') == problem['hash']
+                   and r.execution_config.get('environment_key') == env_key
+                   and r.execution_config.get('visuals', True) == config['visuals']]
+        return jsonify(estimate(samples))
+    except (ValueError, KeyError, TypeError) as error:
+        return jsonify({'error': str(error)}), 400
 
 
 # ============================================================================
@@ -142,6 +193,10 @@ def upload_file():
         }), 400
     
     # Obtener metadata del archivo
+    try:
+        execution_config, _ = uploaded_configuration()
+    except (ValueError, KeyError, TypeError) as error:
+        return jsonify({'error': str(error)}), 400
     filename = secure_filename(file.filename)
     # Auto-rellenar document_number desde filename (sin extensión) para compatibilidad
     document_number = os.path.splitext(filename)[0]
@@ -158,15 +213,20 @@ def upload_file():
             file_name=filename,
             file_path=temp_path,
             file_extension=os.path.splitext(filename)[1][1:],  # Sin el punto
-            document_number=document_number
+            document_number=document_number,
+            execution_config=execution_config,
+            active_profile=perfil,
+            processing_status='pending'
         )
         db.session.add(uploaded_file)
+        db.session.flush()
+        uploaded_file.active_task_id = f'process_{uploaded_file.id}'
         db.session.commit()
         
         # Encolar tarea en Celery
         task = process_file_task.apply_async(
             args=[uploaded_file.id, perfil],
-            task_id=f"process_{uploaded_file.id}"
+            task_id=uploaded_file.active_task_id
         )
         
         return jsonify({
@@ -178,6 +238,10 @@ def upload_file():
         
     except Exception as e:
         db.session.rollback()
+        if 'uploaded_file' in locals() and uploaded_file.id:
+            uploaded_file.processing_status = 'error_processing'
+            uploaded_file.status_details = 'No se pudo encolar; puede reprocesar el archivo'
+            db.session.commit()
         return jsonify({
             'error': 'Error al procesar archivo',
             'details': str(e)
@@ -252,8 +316,8 @@ def list_files():
         file_dict = f.to_dict(include_results=True)
         
         # Si está en procesamiento, obtener progreso actual de Redis
-        if f.processing_status in ['validating', 'processing', 'generating_artifacts']:
-            task_id = f'process_{f.id}'
+        if f.processing_status in ['pending', 'validating', 'processing', 'generating_artifacts']:
+            task_id = f.active_task_id or f'process_{f.id}'
             try:
                 progress_data = redis_client.get(f'task_progress:{task_id}')
                 if progress_data:
@@ -302,7 +366,9 @@ def delete_file(file_id):
     Elimina archivo y todas sus versiones asociadas.
     Borra directorios UUID del filestore.
     """
-    uploaded_file = UploadedFile.query.get_or_404(file_id)
+    uploaded_file = UploadedFile.query.filter_by(id=file_id).with_for_update().first_or_404()
+    if uploaded_file.processing_status in ('pending', 'validating', 'processing', 'generating_artifacts'):
+        return jsonify({'error': 'No se puede eliminar una ejecución activa'}), 409
     
     try:
         # Eliminar directorios de versiones
@@ -352,7 +418,9 @@ def reprocess_file(file_id):
             "message": "Archivo encolado para reprocesamiento"
         }
     """
-    uploaded_file = UploadedFile.query.get_or_404(file_id)
+    uploaded_file = UploadedFile.query.filter_by(id=file_id).with_for_update().first_or_404()
+    if uploaded_file.processing_status in ('pending', 'validating', 'processing', 'generating_artifacts'):
+        return jsonify({'error': 'Este archivo ya tiene una ejecución activa'}), 409
     
     # Validar que el archivo original exista
     if not uploaded_file.file_path or not os.path.exists(uploaded_file.file_path):
@@ -365,7 +433,7 @@ def reprocess_file(file_id):
     perfil_actual = uploaded_file.results[0].perfil_usado if uploaded_file.results else 'balanceado'
 
     # Obtener nuevo perfil
-    data = request.get_json()
+    data = request.get_json(silent=True) or {}
     nuevo_perfil = data.get('perfil', perfil_actual)
 
     if not validate_perfil(nuevo_perfil):
@@ -376,17 +444,20 @@ def reprocess_file(file_id):
 
     estado_anterior = uploaded_file.processing_status
     detalle_anterior = uploaded_file.status_details
+    task_anterior, perfil_anterior = uploaded_file.active_task_id, uploaded_file.active_profile
     try:
         # Persistir antes de publicar: una actualización puede interrumpir la
         # tarea incluso si el worker todavía no comenzó a procesarla.
         uploaded_file.processing_status = 'pending'
         uploaded_file.status_details = 'Archivo encolado para reprocesamiento'
+        uploaded_file.active_task_id = f'reprocess_{uploaded_file.id}_{datetime.now().timestamp()}'
+        uploaded_file.active_profile = nuevo_perfil
         db.session.commit()
 
         # Encolar nueva tarea
         task = process_file_task.apply_async(
             args=[uploaded_file.id, nuevo_perfil],
-            task_id=f"reprocess_{uploaded_file.id}_{datetime.now().timestamp()}"
+            task_id=uploaded_file.active_task_id
         )
         
         return jsonify({
@@ -400,11 +471,20 @@ def reprocess_file(file_id):
         db.session.rollback()
         uploaded_file.processing_status = estado_anterior
         uploaded_file.status_details = detalle_anterior
+        uploaded_file.active_task_id, uploaded_file.active_profile = task_anterior, perfil_anterior
         db.session.commit()
         return jsonify({
             'error': 'Error al reprocesar archivo',
             'details': str(e)
         }), 500
+
+
+@app.route('/descargar-inventario/<uuid>', methods=['GET'])
+def download_inventory(uuid):
+    result = ProcessingResult.query.filter_by(storage_uuid=uuid).first_or_404()
+    if not result.inventory_path or not os.path.isfile(result.inventory_path):
+        return jsonify({'error': 'Esta versión no tiene inventario final'}), 404
+    return send_file(result.inventory_path, as_attachment=True, download_name='inventario_final.xlsx')
 
 
 @app.route('/descargar-excel/<uuid>', methods=['GET'])
@@ -491,10 +571,16 @@ def get_task_status(task_id):
                 response['progress'] = task.info.get('progress', 0)
                 response['message'] = task.info.get('status', '')
                 response['phase'] = task.info.get('phase', '')
+                for key in ('elapsed_seconds', 'estimated_total_seconds', 'remaining_seconds', 'calibration', 'samples'):
+                    response[key] = task.info.get(key)
         elif task.state == 'SUCCESS':
             response['progress'] = 100
             response['message'] = 'Procesamiento completado'
             response['result'] = task.result
+            if isinstance(task.result, dict) and task.result.get('status') == 'error_generation':
+                response['state'] = 'error_generation'
+                response['message'] = 'Plan validado; error al generar artefactos'
+                response['error'] = True
         elif task.state == 'FAILURE':
             response['message'] = str(task.info) if task.info else 'Error en procesamiento'
             response['error'] = True

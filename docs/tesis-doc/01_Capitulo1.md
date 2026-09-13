@@ -1,30 +1,26 @@
-# Diseño y desarrollo de una aplicación web con Inteligencia Artificial para la distribución eficiente de barras de acero comercial de 6, 9 y 12 metros en Colombia, con desperdicios admisibles mediante el enfoque basado en patrones de corte y nesting.
+# Desarrollo y evaluación de una aplicación local para la planificación secuencial de cortes de acero mediante algoritmos genéticos e inventario reutilizable
+
+## Resumen
+
+Se desarrolla una aplicación local para planificar cortes unidimensionales de acero por etapas, con inventario comercial y adicional y transferencia de sobrantes entre etapas. El algoritmo genético utiliza una representación por órdenes y evalúa saldos agrupados, mientras un validador independiente comprueba demanda, capacidad e inventario. El modelo ideal no considera pérdida por corte ni longitud mínima reutilizable. Se evalúan dos cartillas de 92 y 67.443 piezas mediante heurísticas de referencia y cinco semillas por perfil genético. En el caso principal, el motor produjo planes válidos en menos de diez segundos en el entorno ensayado, con menor desperdicio por masa que las referencias implementadas. Estos resultados no incluyen generación de artefactos ni constituyen garantía de optimalidad, validación física o generalización a otras obras.
 
 ## Abstract
 
-Es el mismo resumen, pero traducido al inglés. Es posible incluir el resumen en otro idioma diferente al español o al inglés, si se considera como importante dentro del tema tratado en la investigación, por ejemplo: un trabajo dedicado a problemas lingüísticos del mandarín seguramente estaría mejor con un resumen en mandarín.
+This work develops a local application for sequential one-dimensional steel cutting with commercial and additional stock and reuse of remaining material across execution stages. A genetic algorithm represents orders rather than individual pieces and evaluates grouped stock balances. An independent validator checks demand, capacity and inventory conservation. The ideal model assumes zero cutting loss and no minimum reusable length. Two schedules containing 92 and 67,443 pieces are evaluated against adapted heuristics using five seeds per genetic profile. On the larger case, the optimization engine produced feasible plans in less than ten seconds in the tested environment, with lower mass-based residual percentages than the implemented baselines. These measurements exclude artifact generation and do not establish optimality, physical validation or generalization to other construction projects.
 
-### Keywords:
-
-## Lista de figuras
-
-> Nota: Si es requerido, se pueden incluir lista de ilustraciones, graficas, diagramas, dibujos o fotografías. Tenga presente que estas lista deben ser generadas de forma automatizada utilizando las opciones que proporciona el software de procesamiento de texto.
-
-## Lista de tablas
-
-> Nota: Si es requerido, se puede incluir la lista de cuadros, en caso de que se utilicen en el desarrollo del proyecto de grado o trabajo de investigación. Tenga presente que estas lista deben ser generadas de forma automatizada utilizando las opciones que proporciona el software de procesamiento de texto.
+Palabras clave: corte unidimensional; acero; algoritmo genético; inventario; planificación por etapas.
 
 ## Capítulo 1
 
 ### 1. Introducción
 
-Actualmente, los ingenieros civiles dedican mucho tiempo al análisis y planificación de proyectos, incluyendo la evaluación de opciones para actividades específicas, como la compra de acero tras un análisis geométrico. Esta tarea puede ser engorrosa y llevar a una pérdida de tiempo valioso que podría dedicarse a otras áreas del proyecto. Sin embargo, esta actividad es importante porque influye directamente en los costos de una obra. Realizando una comparativa estimada, se tiene que el costo de 1 kg de acero para el presente año (2025) oscila entre los $3.500 y $4.500 COP; por ende, a mayores desperdicios generados de acero, se generan más costos y horas trabajadas. Por esta razón, muchos ingenieros buscan optimizar su tiempo mediante herramientas eficientes, lo que ha llevado a la creación de este aplicativo.
+La planificación de cortes transforma una cartilla de despiece en una asignación de piezas a barras disponibles. Para que el plan sea utilizable debe conservar cantidades, longitudes y diámetros, y respetar la disponibilidad temporal del material. La sola reducción de cantidad de barras no mide adecuadamente el aprovechamiento cuando las longitudes y diámetros son diferentes.
 
-La idea de desarrollar esta herramienta surge de la necesidad de contar con soluciones más precisas y confiables, debido a la posibilidad de errores humanos en el proceso de selección de opciones. Este aplicativo ayudará a los ingenieros civiles y campos relacionados a seleccionar las opciones más favorables para la adquisición de barras de refuerzo de 6, 9 y 12 metros con desperdicios mínimos, al funcionar de manera automática y ahorrar tiempo valioso
-
-El desarrollo de este software representa una innovación en el campo de la ingeniería de software y la construcción. Introducir una herramienta especializada que optimice el proceso de diseño y reduzca el desperdicio de material es un avance tecnológico importante. Esto fomentaría la búsqueda de soluciones tecnológicas más eficientes en otros campos de la ingeniería y la construcción, impulsando así la innovación en el desarrollo de software en general. Esto promovería la colaboración entre desarrolladores de software y expertos en otros campos, como ingenieros estructurales y profesionales de la construcción. La experiencia adquirida en este proyecto de integración de tecnologías se podría aplicar a otros proyectos de software que requieran la interacción de sistemas diversos. Además, este aplicativo también tiene un impacto positivo en la educación, ya que los estudiantes de asignaturas relacionadas con construcción de edificaciones, presupuestos y programación, podrán tener una experiencia mejorada y adquirir conocimientos necesarios para la planificación y desarrollo de proyectos de manera eficiente y con buenas prácticas ingenieriles en mente.
+Este proyecto aborda esa planificación mediante una aplicación local que permite configurar el catálogo comercial, incorporar inventario adicional y trasladar sobrantes entre etapas del mismo proyecto. Su evaluación distingue la corrección de los planes, el porcentaje de desperdicio final por masa y el tiempo de cálculo. No se atribuyen ahorros económicos, mejoras de productividad de operarios o beneficios ambientales sin mediciones específicas.
 
 ### 1.1 Antecedentes
+
+> Material heredado pendiente de revisión bibliográfica: deben verificarse autores, fuentes originales y alcance de las comparaciones de las tablas. Estas reseñas no sustentan por sí solas la elección del algoritmo ni demuestran resultados de OICA.
 
 La industria de la construcción comenzó a enfrentar desafíos de eficiencia y manejo de recursos, décadas atrás. El desperdicio de barras de acero se manifiesta en diversas formas, desde la sobrecompra de material debido a estimaciones inexactas hasta la generación de residuos debido a cortes ineficientes durante la fase de construcción. Esto ha resultado en costos económicos significativos, así como en un impacto ambiental negativo debido a la extracción y producción adicional de acero.
 
@@ -54,32 +50,40 @@ A nivel nacional, la gestión ineficiente de las barras de acero ha sido un prob
 
 ### 1.2 Justificación
 
-La adopción de herramientas tecnológicas en el desarrollo de las labores de planeación de proyectos puede contribuir enormemente en una mejor gestión del capital y de los recursos empleados en su construcción.
+Una cartilla de despiece indica qué piezas requiere la obra, pero no determina por sí sola su asignación a barras comerciales y existencias disponibles. Cuando la ejecución se divide en etapas, esa asignación también debe conservar los sobrantes que podrán utilizarse más adelante y evitar contabilizar una misma barra como material nuevo en cada etapa.
 
-Este proyecto busca optimizar la planeación de compra del acero de refuerzo longitudinal mediante un aplicativo web que calcule la cantidad de barras de acero demandada teniendo en cuenta las longitudes comerciales de las mismas en Colombia haciendo uso de algoritmos que estimen una combinación óptima.
+La contribución propuesta consiste en una herramienta local cuyo plan de corte sea verificable por pedido, diámetro, etapa y barra de origen. El algoritmo genético busca mejorar el aprovechamiento del material; su uso se justifica mediante comparación experimental con heurísticas sometidas a las mismas restricciones, sin presumir optimalidad ni superioridad universal.
 
-La propuesta se centra en la optimización de barras de acero mediante la planificación de los desperdicios generados en obra, abordando tanto beneficios económicos como ambientales derivados de la reducción de material desechado. Con un enfoque en la planeación, se busca desarrollar una herramienta que agilice el análisis de compra del acero, lo que contribuirá a mejorar la productividad y el aprovechamiento de recursos, promoviendo así una gestión más eficiente y sostenible en proyectos civiles.
+El valor para ingeniería civil se evaluará por la satisfacción de la cartilla, la conservación del inventario, el desperdicio final por masa y el tiempo requerido para producir un plan. La reducción potencial de compras, costos o impacto ambiental requiere información adicional de precios, operación y ejecución real; no se presenta como resultado demostrado por esta investigación.
 
 ### 1.3 Objetivos
 
 #### 1.3.1 Objetivo general
 
-- Desarrollar una solución tecnológica accesible vía web que, mediante la aplicación de algoritmos inteligentes de optimización de cortes (nesting), permita al sector de la construcción en Colombia lograr una distribución más eficiente de barras de acero de diferentes longitudes, reduciendo significativamente los costos asociados a los desperdicios de material.
+Desarrollar y evaluar una aplicación local para planificar cortes unidimensionales de acero por etapas, utilizando algoritmos genéticos e inventario reutilizable, con el propósito de reducir el porcentaje de material no aprovechado al finalizar el proyecto.
 
-- Implementar una aplicación web que integre técnicas de Inteligencia Artificial para optimizar la distribución de barras de acero comercial de 6, 9 y 12 metros en Colombia, a través de un enfoque basado en patrones de corte y algoritmos de nesting, con el fin de minimizar desperdicios dentro de márgenes admisibles y mejorar la eficiencia en los procesos de corte y utilización del material.
+> Reformulación autorizada por el autor el 13 de septiembre de 2026, pendiente de revisión formal con el director. No se afirma aprobación institucional del nuevo título.
 
 #### 1.3.2 Objetivos específicos
 
-- Calcular la eficiencia en el análisis de la cantidad de barras de acero necesarias para cada longitud de compra.
+1. Formalizar la demanda por pedido, diámetro y etapa, la disponibilidad de barras comerciales y adicionales, y la transferencia de sobrantes entre etapas.
+2. Implementar un algoritmo genético con evaluación del desperdicio final por masa y un validador independiente de demanda, capacidad y disponibilidad.
+3. Incorporar importación y exportación compatibles de inventario, planes de corte trazables y seguimiento del tiempo de procesamiento.
+4. Evaluar corrección, desperdicio, tiempo y variabilidad del algoritmo usando las cartillas 001 y 002, comparándolo con heurísticas sometidas a las mismas restricciones.
+5. Documentar los resultados reproducibles y los límites del modelo, distinguiendo planificación ideal de ejecución física en obra.
 
-- Estimar el tiempo de duración de la actividad de análisis de compra de acero mientras se aumenta la cantidad de opciones viables al considerar niveles aceptables de desperdicios generados.
+#### 1.3.3 Alcance y pregunta evaluable
 
-- Registrar la reutilización de los desperdicios de barras de acero de proyectos anteriores como complemento a optimizar los recursos dispuestos para la ejecución de proyectos futuros.
+¿En qué medida el algoritmo genético mejora el porcentaje final de material no aprovechado respecto de heurísticas de referencia, y qué costo temporal añade, para las cartillas 001 y 002 bajo un mismo modelo secuencial?
 
-- Desarrollar un sistema de análisis de compra que minimice los errores y limitaciones del análisis manual en la optimización de barras de acero para proyectos civiles, mediante la implementación de herramientas automatizadas y metodologías eficientes.
+El caso principal es 002: 67.443 piezas, 137 órdenes, cinco diámetros y 13 etapas. El caso 001 contiene 92 piezas y 16 órdenes. Los ejemplos históricos de 683 piezas no forman parte de esta evaluación. No se infieren resultados generales para toda obra a partir de dos cartillas.
 
-- Evaluar la eficiencia de los algoritmos empleados en la aplicación haciendo comparativas con proyectos reales de la construcción.
+Los grupos se ejecutan en orden numérico; los sobrantes disponibles de grupos anteriores pueden abastecer grupos posteriores del mismo diámetro. El catálogo predeterminado de 6, 9 y 12 m es configurable, y puede complementarse con existencias finitas importadas. El inventario de salida es una proyección del plan: su disponibilidad física debe comprobarse antes de emplearlo en otro proyecto.
+
+El modelo supone pérdida por corte cero, ausencia de longitud mínima reutilizable, material compatible dentro de cada diámetro y longitudes de despiece suministradas como dato de entrada. No calcula diseño estructural, ganchos, anclajes, traslapos, degradación, manejo o transporte. No certifica cumplimiento normativo ni cuantifica ahorros monetarios o ambientales sin datos específicos.
+
+El indicador principal es el porcentaje de masa sobrante al finalizar el proyecto sobre la masa de las barras efectivamente utilizadas, contando cada barra original una sola vez. La rapidez deseada es aproximadamente un minuto y, preferiblemente, no más de cinco minutos de optimización; estos valores son objetivos de evaluación, no abortos temporales ni garantías universales.
 
 ### 1.4 Estructura del documento
 
-En el presente documento, se enlista los capítulos correspondientes del 1 al 5, de los cuales, como ya se evidenció anteriormente, el capítulo 1 abordó todo lo relacionado a introducción, justificación y objetivos del proyecto; en el capitulo 2 se verá lo correspondiente al marco teórico, se enunciará una investigación
+El capítulo 1 delimita el problema, los objetivos y el alcance. El capítulo 2 presenta el modelo de corte, los conceptos utilizados y sus límites. El capítulo 3 describe la implementación y el protocolo de evaluación. El capítulo 4 presenta los resultados reproducibles de las cartillas 001 y 002 y las limitaciones del piloto. La revisión bibliográfica, la validación con el director y el cierre formal del documento siguen pendientes.

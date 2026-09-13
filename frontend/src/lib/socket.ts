@@ -162,6 +162,10 @@ export function disconnectSocket(): void {
  * Tipo de datos de actualización de tarea.
  */
 export interface TaskUpdate {
+  elapsed_seconds?: number;
+  estimated_total_seconds?: [number, number] | null;
+  remaining_seconds?: [number, number] | null;
+  calibration?: string;
   task_id: string;
   state: 'uploaded' | 'validating' | 'validated' | 'processing' | 
          'generating_artifacts' | 'completed' | 'SUCCESS' | 'FAILURE' |
