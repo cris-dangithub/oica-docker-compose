@@ -24,7 +24,7 @@
 | INF-008 | Alcance | Media | [VALIDADA] | Etapas sucesivas e inventario importable/exportable |
 | INF-009 | Técnica | Alta | [VALIDADA] | AG inviable para datasets reales por expansión de cantidades — BUG-003 corregido |
 | INF-010 | Técnica | Alta | [VALIDADA] | Inicialización de población cuelga en datasets medianos por búsqueda exhaustiva O(N^k) — BUG-004 corregido |
-| INF-012 | Datos y metodología | Alta | [VALIDADA] | Corpus 001/002, modelo ideal y desperdicio final por masa |
+| INF-012 | Datos y metodología | Alta | [VALIDADA] | Corpus 001/002, pérdida configurable y desperdicio final por masa |
 | INF-011 | Arquitectura | Alta | [VALIDADA] | Monorepo, producción VPS, CI/CD y desarrollo nativo |
 
 ---
@@ -645,8 +645,9 @@ Alta
 
 ### Respuesta asumida
 No es una suposición: decisiones explícitas del usuario. Usar 001 y 002, conservar
-el AG, desperdicio final por masa, etapas sucesivas, pérdida de corte cero y todo
-sobrante positivo disponible; duración 1–5 minutos deseable, sin aborto a cinco minutos.
+el AG, desperdicio final por masa y etapas sucesivas; duración 1–5 minutos deseable,
+sin aborto a cinco minutos. La ampliación aprobada permite pérdida y mínimo
+reutilizable configurables; ambos desactivados conservan el modelo ideal anterior.
 
 ### Justificación
 Respuestas del usuario durante la planificación aprobada el 2026-09-13.
@@ -675,6 +676,18 @@ El desperdicio es todo lo que sobra al finalizar el proyecto respecto de las bar
 utilizadas, tanto comerciales como adicionales. Medir por masa, con detalle en metros.
 Los casos 001 y 002 son las bases experimentales. El título puede reformularse con el director.
 
+Ampliación aprobada: ambos checks activos para nuevas cargas UI; disco nominal
+1 mm o cizalla idealizada 0 mm, editables. Mínimo automático fijo igual a la menor
+demanda de cada diámetro de toda la cartilla, o un mínimo manual común en metros.
+Descarte inmediato tras cada operación por defecto, o al terminar la etapa.
+Igualdad con el mínimo permite reutilizar. Inventario inicial inferior se excluye
+y se informa aparte; con mínimo automático los diámetros sin demanda se conservan.
+Se evalúa todo el proyecto conocido, sin premiar usos futuros hipotéticos.
+La pérdida, el descarte y el saldo final forman el numerador; cada barra usada
+entra al denominador una sola vez. En empate se reduce la pérdida irrecuperable.
+Una pieza igual al saldo no necesita corte; en otro caso se exige el kerf completo.
+No hay refrentado implícito, diseño estructural ni mínimo normativo universal validado.
+
 
 ### Evidencia de ejecución para INF-008 e INF-012 — 2026-09-13
 
@@ -682,3 +695,9 @@ La integración local verificó 002 desde Chrome y auditó ambas versiones en BD
 La reimportación real consumió inventario exportado sin catálogo comercial y mantuvo
 el saldo esperado. No modifica las decisiones validadas ni sustituye revisión del
 director o validación física. Evidencia: `tests/benchmarks/2026-09-13-integracion-local.json`.
+
+Ampliación H: 136 ensayos de cuatro escenarios y 12 controles pasan; E2E de
+secuencial-2 activado localmente con 002 id 38 y 001 id 39, dos versiones auditadas
+por caso. Los parámetros y referencias persisten idénticos al reprocesar. Evidencia:
+`tests/benchmarks/2026-09-13-fisico-integracion-local.json`. Esto valida la ejecución
+del modelo configurable, no convierte sus defaults en parámetros medidos en obra.

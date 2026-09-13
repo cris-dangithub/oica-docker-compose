@@ -13,6 +13,98 @@ def row(order, length, quantity=1, group=1, diam='#3'):
 
 
 class SequentialTests(unittest.TestCase):
+    def test_perdida_exacta_y_capacidad_insuficiente(self):
+        options = {'perdida_mm': '1', 'minimo_activo': False}
+        for size, pieces, expected in [(1, 1, 0), (2.001, 2, .001)]:
+            p = normalize([row('a', 1, pieces)], [{'diametro': '#3', 'longitud_m': size, 'cantidad': 1}], options=options)
+            r = optimize(p)
+            self.assertAlmostEqual(r['metrics']['perdida_corte_kg'], expected)
+            self.assertEqual(r['metrics']['sobrante_final_kg'], 0)
+        p = normalize([row('a', 1, 2)], [{'diametro': '#3', 'longitud_m': 2, 'cantidad': 1}], options=options)
+        with self.assertRaises(Infeasible):
+            optimize(p)
+        p = normalize([row('a', 1)], [{'diametro': '#3', 'longitud_m': 1.0005, 'cantidad': 1}], options=options)
+        with self.assertRaises(Infeasible):
+            optimize(p)
+
+    def test_descarte_por_operacion_y_fin_etapa(self):
+        catalog = [{'diametro': '#3', 'longitud_m': 3, 'cantidad': None}]
+        opts = {'perdida_activa': False, 'modo_minimo': 'manual', 'minimo_m': '2.5'}
+        a = optimize(normalize([row('a', 1, 2)], catalog, options=opts))
+        b = optimize(normalize([row('a', 1, 2)], catalog, options={**opts, 'descarte': 'fin_etapa'}))
+        self.assertEqual(a['metrics']['barras'], 2)
+        self.assertEqual(a['metrics']['descartado_kg'], 4)
+        self.assertEqual(b['metrics']['barras'], 1)
+        self.assertEqual(b['metrics']['descartado_kg'], 1)
+        c = optimize(normalize([row('a', 1), row('b', 1, group=2)], catalog,
+                               options={**opts, 'descarte': 'fin_etapa'}))
+        self.assertEqual(c['metrics']['barras'], 2)
+
+    def test_minimo_fijo_igualdad_y_exclusion(self):
+        opts = {'perdida_activa': False}
+        p = normalize([row('a', 2), row('b', 1, group=3)],
+                      [{'diametro': '#3', 'longitud_m': 3, 'cantidad': 1}],
+                      [{'diametro': '#3', 'longitud_m': .9, 'cantidad': 10},
+                       {'diametro': '#8', 'longitud_m': .1, 'cantidad': 1}], opts)
+        self.assertEqual(p['resolved_parameters']['minimos_por_diametro_m'], {'#3': '1'})
+        self.assertEqual(len(p['excluded_inventory']), 1)
+        r = optimize(p)
+        self.assertEqual(r['metrics']['barras'], 1)
+        self.assertEqual(r['metrics']['desperdicio_porcentaje'], 0)
+        self.assertEqual(r['inventory'], [{'diametro': '#8', 'longitud_m': '0.1', 'cantidad': 1}])
+
+    def test_parametros_invalidos_y_compatibilidad(self):
+        from cutting.parameters import parse
+        self.assertEqual(parse({'proceso': 'cizalla'})['perdida_mm'], '0')
+        for patch in [{'perdida_mm': '-1'}, {'perdida_mm': 'NaN'}, {'minimo_m': 0},
+                      {'minimo_m': 'Infinity'}, {'minimo_activo': 'false'}, {'descarte': 'otro'}, {'xxx': 1}]:
+            with self.subTest(patch=patch), self.assertRaises(ValueError):
+                normalize([row('a', 1)], options=patch)
+        legacy = optimize(normalize([row('a', 2, 5)]))
+        off = optimize(normalize([row('a', 2, 5)], options={'perdida_activa': False, 'minimo_activo': False}))
+        self.assertEqual(legacy['bars'], off['bars'])
+
+    def test_objetivo_global_y_balance_no_premian_sobrantes_hipoteticos(self):
+        catalog = [{'diametro': '#3', 'longitud_m': l, 'cantidad': None} for l in (6, 9)]
+        opts = {'perdida_activa': False}
+        a = optimize(normalize([row('a', 4)], catalog, options=opts))
+        b = optimize(normalize([row('a', 4), row('b', 4, group=2)], catalog, options=opts))
+        self.assertEqual(a['metrics']['masa_inicial_kg'], 6)
+        self.assertEqual(b['metrics']['masa_inicial_kg'], 9)
+        for r in (a, b):
+            m = r['metrics']
+            self.assertAlmostEqual(m['masa_inicial_kg'], m['piezas_kg'] + m['perdida_corte_kg']
+                                   + m['descartado_kg'] + m['sobrante_final_kg'])
+
+    def test_huellas_separan_condiciones_y_validador_rechaza_perdida_alterada(self):
+        data = [row('a', 1, 2)]
+        hashes = {normalize(data, options={'perdida_activa': k, 'minimo_activo': t})['hash']
+                  for k in (True, False) for t in (True, False)}
+        self.assertEqual(len(hashes), 4)
+        p = normalize(data, options={})
+        r = optimize(p)
+        r['bars'][0]['kerf'] += 1
+        with self.assertRaises(ValueError):
+            validate(p, r['bars'], r['inventory'])
+
+    def test_reglas_agrupadas_con_validador_independiente(self):
+        import random
+        rng = random.Random(723)
+        for case in range(100):
+            data = [row(i, rng.randint(1, 9) / 10, rng.randint(1, 40), rng.randint(1, 4)) for i in range(8)]
+            p = normalize(data, [{'diametro': '#3', 'longitud_m': 3, 'cantidad': None}], options={
+                'perdida_mm': str(rng.choice([0, 1, 30])), 'minimo_m': str(rng.choice([.1, .8, 2.5])),
+                'modo_minimo': 'manual', 'descarte': rng.choice(['inmediato', 'fin_etapa'])})
+            genome = tuple((rng.random(), rng.randrange(3)) for _ in data)
+            a, _ = decode(p['orders'], p['stock'], genome, rules=p['rules'])
+            b, bars = decode(p['orders'], p['stock'], genome, record=True, rules=p['rules'])
+            self.assertEqual(a, b, f'Caso {case}')
+            from collections import Counter
+            from decimal import Decimal
+            inv = Counter((b['diametro'], b['remaining']) for b in bars if b['remaining'])
+            inventory = [{'diametro': d, 'longitud_m': str(Decimal(l) / p['scale']), 'cantidad': q} for (d, l), q in inv.items()]
+            validate(p, bars, inventory)
+
     def test_evaluacion_agrupada_equivale_a_barras_individuales(self):
         import random
         rng = random.Random(102)

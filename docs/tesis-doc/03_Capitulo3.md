@@ -24,7 +24,9 @@ La ausencia de columna de grupos equivale a una sola etapa. Si existe, cada pedi
 
 El catálogo comercial permite longitudes y cantidades por diámetro; una cantidad nula significa disponibilidad ilimitada. El inventario adicional es finito y se carga con columnas `diametro`, `longitud_m`, `cantidad`. Las existencias pueden usarse desde la primera etapa.
 
-Una barra utilizada conserva identidad de origen. Su saldo puede abastecer etapas posteriores hasta agotarse. Los inventarios de candidatos genéticos no comparten estado mutable. El inventario final combina existencias finitas no utilizadas con saldos positivos y se exporta en el mismo esquema de entrada.
+Una barra utilizada conserva identidad de origen. Su saldo puede abastecer etapas posteriores hasta agotarse o descartarse por mínimo. Los inventarios de candidatos genéticos no comparten estado mutable. El inventario final combina existencias finitas elegibles no utilizadas con saldos reutilizables y se exporta en el mismo esquema de entrada. El inventario inicial bajo el mínimo se registra aparte, sin cargarlo como desperdicio generado.
+
+Las condiciones se guardan al cargar la cartilla: activación de pérdida, proceso, pérdida uniforme en milímetros, activación de mínimo, modo automático/manual y momento del descarte. La UI inicia ambos checks activos, disco 1 mm, mínimo automático e inmediato. Clientes API que omiten el objeto conservan el escenario ideal. La escala entera incluye la precisión de la pérdida y del mínimo. El umbral automático se calcula por diámetro sobre toda la demanda y no cambia entre etapas.
 
 Cada reprocesamiento conserva la configuración original. El inventario final es proyectado; importar sus valores en otro proyecto requiere verificar disponibilidad física. La aplicación no registra automáticamente cortes realmente ejecutados en obra.
 
@@ -54,6 +56,13 @@ El presupuesto de cinco minutos es un objetivo de desempeño. No se usa como abo
 6. Presentar mediana y rango por perfil. No seleccionar únicamente la mejor semilla.
 7. Comprobar integración y reportes de forma separada, sin incluir su tiempo en la comparación del motor.
 
+Para `secuencial-2` se repite la comparación en cuatro escenarios: ambos checks
+desactivados, solo pérdida, solo mínimo y ambos activos. Se usa disco 1 mm y
+mínimo automático inmediato cuando corresponda. Las referencias y el AG reciben
+exactamente las mismas condiciones. Cizalla y descarte al fin de etapa se revisan
+como controles adicionales. Se informa por separado masa en piezas, corte,
+descarte y reutilizable final, sin presentar el material excluido como desperdicio.
+
 Los comandos y contratos de API se documentan en `docs/CORTE_SECUENCIAL.md`. Los resúmenes de mediciones viven en `tests/benchmarks/`; cada línea identifica código y entrada. El ensayo previo por barras individuales es un diagnóstico de rendimiento y no se mezcla con el ensayo final de evaluación agrupada.
 
 ## 3.7 Seguimiento y estimación temporal
@@ -64,6 +73,6 @@ Si una ejecución excede ese rango, la aplicación lo comunica y evita mostrar u
 
 ## 3.8 Artefactos y límites de validación
 
-Excel contiene barras raíz, cortes por etapa/pedido, inventario y métricas. PDF y PNG muestran muestras acotadas y remiten al Excel para el plan completo. El error de generación de archivos se distingue del error del algoritmo: un plan válido no se anuncia como una entrega íntegra si falló un artefacto.
+Excel contiene barras raíz, cortes por etapa/pedido, inventario, métricas, descartes, inventario inicial excluido y parámetros con referencias. PDF y PNG muestran muestras acotadas y remiten al Excel para el plan completo. El error de generación de archivos se distingue del error del algoritmo: un plan válido no se anuncia como una entrega íntegra si falló un artefacto.
 
 Las pruebas HTTP/worker aisladas emplean SQLite en memoria y un broker simulado, con generación real de archivos pequeños. No sustituyen la verificación final de migraciones PostgreSQL, Celery, Redis, WebSocket y frontend con las imágenes de la entrega. La reproducibilidad en una segunda máquina y la revisión con el director deben documentarse antes de presentar la tesis.

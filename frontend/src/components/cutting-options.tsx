@@ -15,6 +15,7 @@ export interface Timing {
    estimated_total_seconds?: [number, number] | null;
    remaining_seconds?: [number, number] | null;
    calibration?: string;
+   parametros_corte?: { minimos_por_diametro_m: Record<string, string> };
 }
 
 export function TimingInfo({ timing }: { timing: Timing | null }) {
@@ -27,6 +28,8 @@ export function TimingInfo({ timing }: { timing: Timing | null }) {
       {timing?.remaining_seconds && <p>Tiempo restante estimado: {range(timing.remaining_seconds)}</p>}
       {timing?.calibration === 'fuera_del_rango_observado' && <p>La ejecución superó el rango observado; continúa procesando.</p>}
       <p>La espera en cola no forma parte de la estimación.</p>
+      {timing?.parametros_corte && <p>Mínimos reutilizables: {Object.entries(timing.parametros_corte.minimos_por_diametro_m)
+         .map(([diameter, length]) => `${diameter}: ${length} m`).join('; ') || 'desactivados'}.</p>}
    </div>;
 }
 
@@ -59,6 +62,6 @@ export function CuttingOptions({ catalog, onCatalog, onInventory, visuals, onVis
       </label>
       <p className="text-sm">Columnas: diametro, longitud_m, cantidad. Puede importar el inventario final de otro proyecto después de verificar las existencias físicas.</p>
       <label className="block"><input type="checkbox" checked={visuals} onChange={e => onVisuals(e.target.checked)} /> Generar PDF y gráfica de muestra, además del Excel completo</label>
-      <p className="text-sm">Los grupos se procesan en orden y comparten sus sobrantes disponibles. Modelo ideal sin pérdida por corte ni longitud mínima de sobrante.</p>
+      <p className="text-sm">Los grupos se procesan en orden y comparten sus sobrantes disponibles según las condiciones de corte.</p>
    </fieldset>;
 }

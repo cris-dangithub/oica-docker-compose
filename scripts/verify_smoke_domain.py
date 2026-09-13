@@ -36,7 +36,8 @@ for file_id, patterns, orders, excel, pdf, png, inventory, metrics in rows:
     for pattern in patterns:
         diameter = identifier(pattern['diametro'])
         cuts = pattern['cortes_realizados']
-        assert math.isclose(sum(cuts) + pattern['desperdicio_resultante'],
+        assert math.isclose(sum(cuts) + pattern['desperdicio_resultante']
+                            + pattern.get('perdida_corte_m', 0) + pattern.get('descartado_m', 0),
                             pattern['barra_origen_longitud'], abs_tol=0.001)
         assert pattern['desperdicio_resultante'] >= -0.001
         assert len(cuts) == len(pattern['piezas_obtenidas'])
@@ -47,7 +48,7 @@ for file_id, patterns, orders, excel, pdf, png, inventory, metrics in rows:
     for name, signature in ((excel, b'PK'), (pdf, b'%PDF'), (png, b'\x89PNG')):
         with Path(name).open('rb') as artifact:
             assert artifact.read(len(signature)) == signature, name
-    if metrics.get('motor') == 'secuencial-1':
+    if metrics.get('motor') in ('secuencial-1', 'secuencial-2'):
         assert metrics['valido'] and metrics['piezas'] == sum(expected.values())
         assert len({p['bar_id'] for p in patterns}) == len(patterns)
         for pattern in patterns:

@@ -224,9 +224,14 @@ def process_file_task(self, uploaded_file_id, perfil):
             db.session.commit()
             config = record.execution_config or {}
             rows = read_rows(record.file_path)
-            problem = normalize(rows, config.get('catalog'), config.get('inventory'))
+            problem = normalize(rows, config.get('catalog'), config.get('inventory'), config.get('parametros_corte'))
+            if config.get('parametros_resueltos'):
+                # Conservar referencias de la carga original aunque cambie la ficha publicada.
+                problem['resolved_parameters'] = config['parametros_resueltos']
             snapshot = {**config, 'input_hash': problem['hash'], 'file_sha256': file_hash(record.file_path),
-                        'environment_key': env_key, 'seed': config.get('seed', 0)}
+                        'environment_key': env_key, 'seed': config.get('seed', 0),
+                        'parametros_corte': problem['parameters'],
+                        'parametros_resueltos': config.get('parametros_resueltos', problem['resolved_parameters'])}
             # Solo muestras del mismo problema, perfil, código y entorno.
             previous = ProcessingResult.query.filter_by(perfil_usado=perfil, result_status='completed').order_by(
                 ProcessingResult.id.desc()).limit(200).all()
@@ -265,7 +270,7 @@ def process_file_task(self, uploaded_file_id, perfil):
                 metricas=result['metrics'], execution_config=snapshot,
                 perfil_usado=perfil, processing_time_seconds=time.perf_counter() - started,
                 result_status='error_generation' if artifact_error else 'completed',
-                error_message=artifact_error, pdf_template_version='secuencial-1', **files)
+                error_message=artifact_error, pdf_template_version=result['metrics']['motor'], **files)
             db.session.add(saved)
             record.processing_status = saved.result_status
             record.status_details = ('Plan validado; error en artefactos: ' + artifact_error)[:255] if artifact_error else 'Plan y artefactos completados'

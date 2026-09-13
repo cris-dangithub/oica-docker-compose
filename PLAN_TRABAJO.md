@@ -2,7 +2,7 @@
 
 > **Última actualización:** 2026-09-13
 > **Estado global:** Motor secuencial y aplicación local validados; cierre académico pendiente
-> **Bloque activo:** G — Caso 002, planificación secuencial e inventario
+> **Bloque activo:** H — Pérdida de corte y mínimo reutilizable configurables
 
 ---
 
@@ -239,3 +239,33 @@ carga técnica de reimportación. La VPS queda fuera de este cierre local.
 
 Publicación G autorizada por el usuario el 2026-09-13: rama nueva, commit, push
 y PR hacia production. No fusionar ni hacer push directo a production.
+
+Actualización: PR #1 fusionado por el usuario; `production` local sincronizada con
+origin en 33a5328. El usuario informa publicación en producción. El siguiente bloque
+propuesto es cierre académico y reproducibilidad; todavía no autoriza implementar
+nuevas funcionalidades ni modificar los supuestos del modelo.
+
+## Bloque H — Ampliación aprobada tras G
+
+La aprobación posterior «Implement the plan» reemplaza la restricción de alcance
+del párrafo anterior. Decisiones funcionales explícitas consolidadas en INF-012.
+
+| Tarea | Dependencia | Aceptación | Estado |
+|---|---|---|---|
+| H1 Contrato y referencias | Aprobación del usuario | Defaults editables, sin atribuirlos a una ley | Implementado |
+| H2 Normalización y balance | H1 | Precisión exacta, exclusión inicial y validador independiente | Implementado y pruebas pasan |
+| H3 Evaluación agrupada | H2 | Kerf y descarte por operación/etapa; objetivo global | Implementado; diferencial 100 casos pasa |
+| H4 API e instantáneas | H2 | Compatibilidad, parámetros en ETA y reproceso preservado | Integración aislada pasa |
+| H5 UI y artefactos | H3/H4 | Checks, trazabilidad y cuatro categorías de material | Implementado; tipos/lint pasan |
+| H6 Evaluación 001/002 | H3 | Cuatro escenarios, cinco semillas/perfil y controles | Completada: 136 ensayos + 12 controles válidos; artefactos finales 001/002 pasan |
+| H7 Coherencia académica | H6 | Capítulos y resultados sin extrapolación física | Capítulos 1–4 actualizados; revisión del director pendiente |
+| H8 E2E de imágenes nuevas | H5/H6 y presupuesto de disco | Carga, WS, descargas, reproceso y auditoría | Completado: imágenes nuevas saludables, Chrome 002 id 38 y HTTP/WS 001 id 39; cuatro versiones auditadas |
+| H9 Entrega revisable | H7/H8 | Diff y descripción de PR; sin merge automático | Commit 01c4dcc y push completados; creación de PR falla HTTP 401, pendiente gh auth login |
+
+H6 cerrado: proceso de matriz con salida 0, 136 combinaciones únicas, 92/67.443
+piezas exactas, una huella de código y balances auditados. Borrador de entrega:
+`.claude/context/PR_BLOQUE_H.md`. No dejar la matriz como «en curso» al reanudar.
+
+H8 cerrado tras autorización de reintento: C: 8,3 GB libres antes y después,
+dependencias reutilizadas, build y 83 pruebas en imagen nueva pasan. Sin pendiente
+de reconstrucción local. Permanecen revisión académica y publicación no solicitada.

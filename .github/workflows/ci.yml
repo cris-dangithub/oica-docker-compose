@@ -56,7 +56,7 @@ jobs:
         run: docker compose up -d --no-build --wait --wait-timeout 240
       - name: Regresión secuencial 002 sin artefactos
         run: |
-          python3 -B scripts/check_cutting_container.py --container oica-ci-celery_worker-1 --dataset tests/data/002/002-ingeBigTest.xlsx --seeds 1 --profiles rapido
+          python3 -B scripts/check_cutting_container.py --container oica-ci-celery_worker-1 --dataset tests/data/002/002-ingeBigTest.xlsx --seeds 1 --profiles rapido --matrix
       - name: Migraciones repetibles y flujo completo
         run: |
           docker compose run --rm --no-deps migrate
