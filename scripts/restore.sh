@@ -24,7 +24,7 @@ with tarfile.open(sys.argv[1]) as archive:
         if path.is_absolute() or '..' in path.parts or not (item.isfile() or item.isdir()):
             raise SystemExit('Archivo de respaldo con entradas no permitidas')
 PY
-dc "$release" pull db redis backend celery_worker frontend nginx migrate
+pull_release "$release"
 maintenance_on
 # Un fallo posterior al borrado conserva el modo mantenimiento para recuperar.
 trap 'maintenance_on' ERR
@@ -40,7 +40,8 @@ dc "$release" run --rm --no-deps -T --entrypoint tar backend -C /usr/src/app/dat
 dc "$release" run --rm --no-deps -T backend python scripts/interrupt_jobs.py
 dc "$release" up -d --no-build --wait --wait-timeout 240 backend celery_worker frontend
 maintenance_off
-dc "$release" up -d --no-build --wait --wait-timeout 120 nginx
+start_proxy "$release"
+check_proxy "$release"
 ln -sfn "$release" "$ROOT/current"
 trap - ERR
 echo 'Respaldo restaurado. Las tareas incompletas requieren reprocesamiento.'

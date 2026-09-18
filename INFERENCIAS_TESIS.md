@@ -25,6 +25,7 @@
 | INF-009 | Técnica | Alta | [VALIDADA] | AG inviable para datasets reales por expansión de cantidades — BUG-003 corregido |
 | INF-010 | Técnica | Alta | [VALIDADA] | Inicialización de población cuelga en datasets medianos por búsqueda exhaustiva O(N^k) — BUG-004 corregido |
 | INF-012 | Datos y metodología | Alta | [VALIDADA] | Corpus 001/002, pérdida configurable y desperdicio final por masa |
+| INF-013 | Arquitectura | Media | [VALIDADA] | Proxy seleccionable container/host; VPS en otro ambiente |
 | INF-011 | Arquitectura | Alta | [VALIDADA] | Monorepo, producción VPS, CI/CD y desarrollo nativo |
 
 ---
@@ -701,3 +702,34 @@ secuencial-2 activado localmente con 002 id 38 y 001 id 39, dos versiones audita
 por caso. Los parámetros y referencias persisten idénticos al reprocesar. Evidencia:
 `tests/benchmarks/2026-09-13-fisico-integracion-local.json`. Esto valida la ejecución
 del modelo configurable, no convierte sus defaults en parámetros medidos en obra.
+
+
+## INF-013
+
+### Categoría
+Arquitectura
+### Prioridad
+Media
+### Pregunta inferida
+¿El modo sin Nginx Docker conserva los demás contenedores y utiliza Nginx del host?
+### Respuesta asumida
+Sí: dos modos seleccionables por env, sin cambiar el dominio ni la aplicación.
+### Justificación
+El usuario pidió activar/desactivar Nginx Docker y preparar el Nginx de la VPS;
+luego separó explícitamente trabajo de repositorio y VPS y autorizó ejecutarlo.
+### Impacto
+- `compose.host-nginx.yaml`, `scripts/compose.sh`, `scripts/ops-common.sh`
+- `scripts/deploy.sh`, `scripts/restore.sh`, scripts TLS y workflow CI
+- `config/nginx/host.conf.example`, `docs/DEPLOYMENT.md`
+### Riesgo si la asunción es incorrecta
+Medio: el modo host necesita un proxy externo configurado y certificado válido.
+### Fecha
+2026-09-18
+### Inferencias relacionadas
+INF-011
+### Puede consolidarse con
+Ninguna: extiende el modo de operación de INF-011.
+### Estado
+[VALIDADA]
+### Respuesta del usuario
+«ejecuta entonces», con trabajo del VPS delegado al ambiente con acceso SSH.

@@ -26,6 +26,53 @@ COMPOSE_PROJECT_NAME=oica-test-local HTTP_PORT=8080 ALLOWED_ORIGINS=http://local
 
 Usar siempre las mismas variables en los siguientes comandos de ese proyecto.
 
+## Elegir Nginx en contenedor o en el host
+
+La opción `OICA_PROXY_MODE` acepta `container` (predeterminado) o `host`.
+En local se configura en `.env` y se usa el envoltorio:
+
+```bash
+bash scripts/compose.sh up -d --wait
+# También admite config, logs, ps y down.
+```
+
+`./init.sh` respeta el selector, pero además construye imágenes. El comando directo
+`docker compose up` usa siempre la configuración base: **no lee este selector**.
+El envoltorio requiere Python 3 y ejecuta Compose desde la raíz del repositorio.
+
+En la VPS se configura en `/opt/oica/shared/production.env`; el siguiente
+**despliegue normal** aplica el modo, sin nuevos secretos en GitHub:
+
+```dotenv
+OICA_PROXY_MODE=host
+OICA_FRONTEND_PORT=13000
+OICA_BACKEND_PORT=15000
+OICA_PUBLIC_URL=https://oica.cris-munoz.me
+```
+
+Con `host`, los servicios publican únicamente `127.0.0.1:13000` (frontend) y
+`127.0.0.1:15000` (API). Se omite Nginx Docker y se detiene su contenedor anterior.
+El Nginx instalado en la máquina debe estar configurado **antes de la transición**;
+ver `config/nginx/host.conf.example`. Mantener `ALLOWED_ORIGINS` alineado con el
+origen público. `OICA_PUBLIC_URL` sirve para verificar `/api/health` al desplegar;
+no cambia DNS ni configura Nginx. Las variables exportadas prevalecen sobre el env.
+
+El Nginx externo mantiene `/api/` sin prefijo hacia Flask, Socket.IO y el marcador
+`/opt/oica/shared/maintenance/enabled`. Verificar que sus workers puedan consultar
+el marcador sin abrir acceso a los secretos de `shared`; los permisos restrictivos
+del bootstrap pueden impedirlo. La plantilla es orientativa y no se instala sola.
+Certificados y renovación quedan a cargo del host: `renew-tls.sh` omite Docker en
+este modo y `bootstrap-tls.sh` rechaza la emisión standalone. No ejecutar perfiles
+`container-proxy`/`tls` ni seleccionar explícitamente Nginx/Certbot en modo host.
+
+El primer cambio requiere coordinar el sitio externo y liberar 80/443 del proxy
+OICA; puede producir una interrupción breve. Para volver a `container`, liberar
+esos puertos sin detener sitios ajenos y preparar los certificados Docker antes
+de desplegar. Si el Nginx compartido necesita 80/443, conservar `host`.
+Los volúmenes se preservan en despliegues normales. Rollback en modo host exige
+una entrega que incluya `compose.host-nginx.yaml`; usar el workflow actualizado
+o los scripts de la entrega actual, nunca scripts de una entrega antigua.
+
 ## Desarrollo sin Docker (Linux/WSL)
 
 Prerequisitos: Python **3.12**, Node **22**, Ubuntu/Debian y sudo para la preparación inicial. En Ubuntu 24.04 Python 3.12 está disponible en apt. En distribuciones anteriores instalar Python 3.12 previamente; el script no agrega repositorios de terceros. Si usas nvm, ejecutar `nvm install 22` y `nvm use 22`.

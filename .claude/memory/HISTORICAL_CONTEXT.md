@@ -131,3 +131,11 @@ imágenes se construyeron con dependencias en caché y completaron E2E local.
 002 id 38 tiene balanceado/profundo y 001 id 39 dos versiones rápidas; las cuatro
 pasan auditoría desde JSON/Excel. Los históricos se conservaron. Sin commit/push
 ni operación de VPS. El bloqueo de almacenamiento ya no deja pendiente el build H.
+
+
+## 2026-09-18 — Proxy externo opcional
+
+Por solicitud del usuario, OICA admite Nginx Docker o Nginx del host conservando
+el resto de contenedores. Esta sesión implementa solo repositorio; operación VPS
+queda en otro ambiente con SSH. Prompt raíz ignorado y excluido de publicación. El usuario autoriza commit, push
+y PR del código hacia production; rama feat/nginx-host-opcional. VPS pendiente.

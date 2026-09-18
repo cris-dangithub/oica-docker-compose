@@ -20,7 +20,7 @@ if [[ $action == rollback ]]; then
     fi
 fi
 # Una entrega fallida al descargar no interrumpe el servicio actual.
-dc "$release" pull db redis backend celery_worker frontend nginx migrate
+pull_release "$release"
 maintenance_on
 changed_schema=false
 reset_started=false
@@ -32,7 +32,7 @@ recover() {
     if [[ $reset_started == false && -n $previous && $changed_schema == false ]]; then
         if dc "$previous" up -d --no-build --wait --wait-timeout 180 db redis backend celery_worker frontend; then
             maintenance_off
-            dc "$previous" up -d --no-build --wait --wait-timeout 120 nginx || maintenance_on
+            { start_proxy "$previous" && check_proxy "$previous"; } || maintenance_on
             echo 'Se intentó recuperar la entrega anterior. Revisar salud y logs.'
         fi
     else
@@ -59,12 +59,8 @@ dc "$release" run --rm --no-deps -T migrate
 # Compose requiere también que su servicio migrate quede terminado exitosamente.
 dc "$release" up -d --no-build --wait --wait-timeout 240 backend celery_worker frontend
 maintenance_off
-dc "$release" up -d --no-build --wait --wait-timeout 120 nginx
-if [[ $TLS == true ]]; then
-    dc "$release" exec -T nginx wget -q --no-check-certificate -O /dev/null https://127.0.0.1/api/health
-else
-    dc "$release" exec -T nginx wget -q -O /dev/null http://127.0.0.1/api/health
-fi
+start_proxy "$release"
+check_proxy "$release"
 if [[ -n $previous && $previous != "$release" ]]; then ln -sfn "$previous" "$ROOT/previous"; fi
 ln -sfn "$release" "$ROOT/current"
 trap - ERR

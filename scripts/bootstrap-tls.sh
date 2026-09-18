@@ -4,6 +4,8 @@ set -Eeuo pipefail
 ROOT=${OICA_ROOT:-/opt/oica}
 email=${1:?Uso: bootstrap-tls.sh correo@example.com}
 [[ -d $ROOT/shared ]] || { echo 'Ejecuta bootstrap-vps.sh primero'; exit 1; }
+mode=$(python3 "$(dirname -- "${BASH_SOURCE[0]}")/proxy_config.py" "$ROOT/shared/production.env" OICA_PROXY_MODE)
+[[ $mode != host ]] || { echo 'En modo host configura TLS y renovación en el Nginx de la VPS.'; exit 1; }
 exec 9>"$ROOT/operation.lock"
 flock -w 60 9
 if ss -ltnH 'sport = :80' | read -r _; then echo 'Puerto 80 ocupado; no se detendrá ningún servicio automáticamente.'; exit 1; fi

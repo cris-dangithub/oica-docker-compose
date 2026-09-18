@@ -1,13 +1,35 @@
-# Estado actual — 2026-09-13
+# Estado actual — 2026-09-18
+
+## Bloque I — Proxy Docker o Nginx del host
+
+Implementación lista para revisión. El usuario autorizó commit, push y PR hacia
+production el 2026-09-18; rama de entrega `feat/nginx-host-opcional`, basada en
+production 89dbedd. Sin intervención en VPS.
+Selector `OICA_PROXY_MODE=container|host` en `.env` local (usar
+`bash scripts/compose.sh up -d --wait`) o shared/production.env para el pipeline.
+Override host publica solo loopback 13000/15000. Operación, restauración,
+rollback y renovación TLS adaptados; empaquetado CI incluye el override.
+Plantilla host y guía añadidas. `PROMPT_VPS_NGINX.md` creado en raíz, ignorado
+por Git y Docker. Se preservan todos los cambios ajenos, incluida la eliminación
+previa de docs/METODOLOGIA.md.
+
+Validación: 16 tests de operación con Docker/curl simulados pasan; Compose real
+config valida servicios y puertos en ambos modos y producción host; sintaxis
+Bash correcta. Sin builds, descargas ni cambios al stack local. C: dispone de
+4,7 GB: evitar operaciones voluminosas. No se ha probado Nginx host en ejecución.
+Pendiente operativo: configuración del sitio/certificados externos,
+permisos mínimos del marcador y transición/validación E2E en la otra instancia.
+Riesgo operativo en `.claude/diagnostics/2026-09-18-proxy-host.md`.
 
 ## Bloque H completado localmente — pérdida por corte y mínimo reutilizable
 
 El usuario aprobó implementar la ampliación. Rama de trabajo:
 `feat/perdida-corte-reutilizacion`, basada en production 33a5328. El usuario autorizó
 commit, push y PR hacia production. Commit de implementación `01c4dcc` publicado
-por SSH con seguimiento remoto. `gh pr create` falló con HTTP 401 Bad credentials:
-el PR no está creado; requiere renovar autenticación mediante `gh auth login`.
-No fusionar ni desplegar esta ampliación. Conservados cambios ajenos.
+por SSH con seguimiento remoto. Tras renovar autenticación, se creó y verificó
+el PR #2, abierto hacia production desde feat/perdida-corte-reutilizacion:
+https://github.com/cris-dangithub/oica-docker-compose/pull/2
+PR #2 ya fusionado en production (89dbedd); el trabajo del proxy continúa en feat/nginx-host-opcional. Conservados cambios ajenos.
 
 Implementados parámetros canónicos HTTP, UI con ambos checks activos por defecto,
 disco nominal 1 mm/cizalla idealizada 0 mm editables, mínimo automático fijo por
