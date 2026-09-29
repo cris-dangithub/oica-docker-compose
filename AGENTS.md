@@ -36,6 +36,12 @@ Docker mantiene seis servicios: Nginx, frontend, backend, celery_worker, db (Pos
 
 Documentación, comentarios, interfaz y commits en español.
 
+## Sistema visual
+
+Antes de modificar UI o estilos del frontend, leer
+`docs/oica-redesign/AI-DESIGN-RULES.md` y el estado vigente en
+`docs/oica-redesign/STATE.md`.
+
 ---
 
 ## Contexto académico

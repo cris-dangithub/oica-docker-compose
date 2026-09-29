@@ -1,8 +1,8 @@
 # Plan de Trabajo — OICA Tesis
 
-> **Última actualización:** 2026-09-18
-> **Estado global:** Motor secuencial y aplicación local validados; cierre académico pendiente
-> **Bloque activo:** I — Selección de proxy Docker/host; validación VPS pendiente
+> **Última actualización:** 2026-09-29
+> **Estado global:** Motor secuencial validado; dirección visual aprobada y Design System v1 en preparación
+> **Bloque activo:** J — Rediseño visual y Design System de OICA
 
 ---
 
@@ -18,6 +18,7 @@
 | E | Actualización del documento de tesis | Capítulos 1–4 reformulados; revisión académica pendiente | ALTA |
 | F | Producción, CI/CD y desarrollo nativo | 🔄 Código implementado; cierre pendiente | ALTA |
 | G | Corte secuencial, inventarios y caso 002 | Completado en localhost; cierre académico pendiente | ALTA |
+| J | Rediseño visual y Design System | Dirección B aprobada; implementación code-first autorizada | ALTA |
 
 ---
 
@@ -283,3 +284,30 @@ de reconstrucción local. Permanecen revisión académica y publicación no soli
 Aceptación final: HTTPS/API/Socket.IO/artefactos y mantenimiento operativos con
 host, otros sitios intactos y actualización normal sin Nginx Docker ni pérdida
 de volúmenes. Este criterio requiere pruebas en VPS, aún no realizadas.
+
+## Bloque J — Rediseño visual y Design System
+
+**Objetivo:** reemplazar el lenguaje visual actual por un sistema coherente,
+accesible, responsive, mantenible y sincronizado entre Figma y código, sin alterar
+la funcionalidad ni los contratos del optimizador.
+
+- [x] Verificar capacidades, conexión y skills de Figma.
+- [x] Crear estado persistente en `docs/oica-redesign/`.
+- [x] Inventariar frontend, rutas, estados, estilos y componentes.
+- [x] Levantar/validar OICA y capturar baseline desktop/tablet/mobile.
+- [x] Ejecutar auditoría inicial de accesibilidad con axe-core.
+- [x] Clasificar componentes KEEP/REFACTOR/MERGE/REPLACE/REMOVE.
+- [x] Crear archivo `OICA — Product Design` y tres exploraciones visuales.
+- [x] Aprobar dirección: B Industrial Clarity con rasgos de precisión de A.
+- [x] Fijar arquitectura de tokens, foundations y alcance de componentes v1.
+- [x] Autorizar implementación code-first y sincronización posterior de Figma.
+- [x] Crear foundations, tokens y primitives del Design System v1 en código.
+- [ ] Crear patrones de producto y pantallas en Figma.
+- [x] Migrar tokens, componentes y pantallas en código (todas las rutas, 2026-09-29).
+- [ ] Completar QA visual, responsive, accesibilidad y regresión.
+- [ ] Limpiar únicamente CSS/componentes/assets demostrablemente obsoletos.
+
+**Limitación operativa:** el plan Figma Starter agotó el cupo MCP. La inspección
+y consulta de librerías fueron rechazadas antes de ejecutar cambios. Por decisión
+del usuario se continúa code-first con la especificación versionada y se
+sincronizará Figma después; Figma sigue siendo un criterio final.

@@ -2,20 +2,28 @@
 import { API_URL } from '@/lib/api';
 /**
  * Componente de tabla de archivos procesados con filtros y acciones.
- * 
+ *
  * Features:
  * - 4 filtros: búsqueda, estado, perfil, rango de fechas
- * - 3 botones de descarga por archivo (Excel, PDF, Imagen)
- * - Botón de eliminar
- * - Botón de reprocesar
+ * - Descargas por archivo (Excel, PDF, Imagen, Inventario final)
+ * - Eliminar y reprocesar con diálogos de confirmación
  * - Paginación
  * - Actualizaciones en tiempo real vía WebSocket para archivos en procesamiento
+ * - Tabla en desktop y tarjetas en mobile/tablet
  */
 
 
 import React, { useState, useEffect, useCallback } from 'react';
-import { Download, Trash2, RefreshCw, Search, Filter } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import Link from 'next/link';
+import { Download, FileSpreadsheet, FolderOpen, Plus, RefreshCw, Search, SlidersHorizontal, Trash2 } from 'lucide-react';
+import { Alert } from '@/components/ui/alert';
+import { Badge } from '@/components/ui/badge';
+import { Button, buttonVariants } from '@/components/ui/button';
+import { Card } from '@/components/ui/card';
+import { Dialog } from '@/components/ui/dialog';
+import { Field, Input, Select } from '@/components/ui/form-controls';
+import { Progress } from '@/components/ui/progress';
+import { cn } from '@/lib/utils';
 import { subscribeToTask, unsubscribeFromTask, TaskUpdate } from '@/lib/socket';
 
 interface ProcessingResult {
@@ -54,6 +62,8 @@ interface FilesTableProps {
   apiUrl?: string;
 }
 
+type Tone = 'neutral' | 'info' | 'success' | 'warning' | 'error';
+
 const STATUS_LABELS: Record<string, string> = {
   pending: 'En cola',
   uploaded: 'Cargado',
@@ -67,39 +77,72 @@ const STATUS_LABELS: Record<string, string> = {
   error_generation: 'Error: Generación',
 };
 
-const STATUS_COLORS: Record<string, string> = {
-  uploaded: 'bg-blue-100 text-blue-800',
-  validating: 'bg-yellow-100 text-yellow-800',
-  validated: 'bg-green-100 text-green-800',
-  processing: 'bg-purple-100 text-purple-800',
-  generating_artifacts: 'bg-indigo-100 text-indigo-800',
-  completed: 'bg-green-500 text-white',
-  error_validation: 'bg-red-100 text-red-800',
-  error_processing: 'bg-red-100 text-red-800',
-  error_generation: 'bg-red-100 text-red-800',
+const STATUS_TONES: Record<string, Tone> = {
+  pending: 'info',
+  uploaded: 'neutral',
+  validating: 'info',
+  validated: 'neutral',
+  processing: 'info',
+  generating_artifacts: 'info',
+  completed: 'success',
+  error_validation: 'error',
+  error_processing: 'error',
+  error_generation: 'error',
 };
+
+const PERFILES = [
+  { value: 'rapido', label: 'Rápido' },
+  { value: 'balanceado', label: 'Balanceado' },
+  { value: 'profundo', label: 'Profundo' },
+];
+
+const PERFIL_LABELS: Record<string, string> = Object.fromEntries(PERFILES.map(p => [p.value, p.label]));
+
+const isInProgress = (status: string) =>
+  status === 'processing' || status === 'validating' || status === 'generating_artifacts';
+
+// El backend rechaza eliminar/reprocesar mientras hay una ejecución activa (409).
+const isActive = (status: string) => status === 'pending' || isInProgress(status);
+
+const responseError = async (response: Response, fallback: string) => {
+  const data = await response.json().catch(() => null);
+  return data?.details ? `${data.error ?? fallback}: ${data.details}` : (data?.error ?? fallback);
+};
+
+const formatDate = (value: string) =>
+  new Date(value).toLocaleDateString('es-CO', { day: '2-digit', month: 'short', year: 'numeric' });
+
+const kg = (value?: number) => (value != null ? `${value.toFixed(3)} kg` : '—');
 
 export default function FilesTable({ apiUrl = API_URL }: FilesTableProps) {
   const [files, setFiles] = useState<UploadedFile[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  
+
   // Map para rastrear progreso en tiempo real de archivos en procesamiento
   const [fileProgress, setFileProgress] = useState<Map<number, number>>(new Map());
   const [pulsing, setPulsing] = useState<Set<number>>(new Set());
-  
+
   // Filtros
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('');
   const [perfilFilter, setPerfilFilter] = useState('');
   const [dateFrom, setDateFrom] = useState('');
   const [dateTo, setDateTo] = useState('');
-  
+
   // Paginación
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [total, setTotal] = useState(0);
   const perPage = 20;
+
+  // Diálogos y avisos (sustituyen confirm/prompt/alert nativos)
+  const [pendingDelete, setPendingDelete] = useState<UploadedFile | null>(null);
+  const [pendingReprocess, setPendingReprocess] = useState<UploadedFile | null>(null);
+  const [newPerfil, setNewPerfil] = useState('balanceado');
+  const [busy, setBusy] = useState(false);
+  const [dialogError, setDialogError] = useState<string | null>(null);
+  const [notice, setNotice] = useState<{ tone: 'success' | 'error'; text: string } | null>(null);
 
   const loadFiles = useCallback(async () => {
     setLoading(true);
@@ -118,7 +161,7 @@ export default function FilesTable({ apiUrl = API_URL }: FilesTableProps) {
       if (dateTo) params.append('date_to', dateTo);
 
       const response = await fetch(`${apiUrl}/files?${params.toString()}`);
-      
+
       if (!response.ok) {
         throw new Error(`Error ${response.status}: ${response.statusText}`);
       }
@@ -127,7 +170,7 @@ export default function FilesTable({ apiUrl = API_URL }: FilesTableProps) {
       setFiles(data.files);
       setTotal(data.total);
       setTotalPages(data.pages);
-      
+
       // Inicializar fileProgress con el progreso actual del backend
       const progressMap = new Map<number, number>();
       data.files.forEach((file: UploadedFile) => {
@@ -149,21 +192,21 @@ export default function FilesTable({ apiUrl = API_URL }: FilesTableProps) {
   useEffect(() => {
     loadFiles();
   }, [loadFiles]);
-  
+
   // Suscribirse a actualizaciones en tiempo real de archivos en procesamiento
   useEffect(() => {
-    const processingFiles = files.filter(file => 
+    const processingFiles = files.filter(file =>
       file.status === 'pending' || file.status === 'processing' ||
       file.status === 'validating' ||
       file.status === 'generating_artifacts'
     );
-    
+
     // Suscribirse a cada archivo en procesamiento
     processingFiles.forEach(file => {
       const taskId = file.task_id || `process_${file.id}`;
       subscribeToTask(taskId, (data: TaskUpdate) => {
         console.log(`[FilesTable] Update para file ${file.id}:`, data);
-        
+
         // Activar parpadeo
         setPulsing(prev => new Set(prev).add(file.id));
         setTimeout(() => {
@@ -173,12 +216,12 @@ export default function FilesTable({ apiUrl = API_URL }: FilesTableProps) {
             return newSet;
           });
         }, 300);
-        
+
         // Actualizar progreso
         setFileProgress(prev => new Map(prev).set(file.id, data.progress || 0));
-        
+
         // Si completó o falló, recargar tabla después de 2 segundos
-        if (data.state === 'SUCCESS' || data.state === 'FAILURE' || 
+        if (data.state === 'SUCCESS' || data.state === 'FAILURE' ||
             data.state === 'completed' || data.state.startsWith('error_')) {
           setTimeout(() => {
             loadFiles();
@@ -186,7 +229,7 @@ export default function FilesTable({ apiUrl = API_URL }: FilesTableProps) {
         }
       });
     });
-    
+
     // Cleanup: desuscribirse al cambiar la lista
     return () => {
       processingFiles.forEach(file => {
@@ -195,56 +238,71 @@ export default function FilesTable({ apiUrl = API_URL }: FilesTableProps) {
     };
   }, [files, loadFiles]);
 
-  const handleDelete = async (fileId: number) => {
-    if (!confirm('¿Estás seguro de eliminar este archivo y todas sus versiones?')) {
-      return;
-    }
+  const openDelete = (file: UploadedFile) => {
+    setDialogError(null);
+    setPendingDelete(file);
+  };
+
+  const openReprocess = (file: UploadedFile) => {
+    setDialogError(null);
+    setNewPerfil(file.perfil || 'balanceado');
+    setPendingReprocess(file);
+  };
+
+  const handleDelete = async () => {
+    if (!pendingDelete) return;
+    setBusy(true);
+    setDialogError(null);
 
     try {
-      const response = await fetch(`${apiUrl}/file/${fileId}`, {
+      const response = await fetch(`${apiUrl}/file/${pendingDelete.id}`, {
         method: 'DELETE',
       });
 
       if (!response.ok) {
-        throw new Error('Error al eliminar archivo');
+        throw new Error(await responseError(response, 'Error al eliminar archivo'));
       }
 
+      setNotice({ tone: 'success', text: `Se eliminó «${pendingDelete.filename}» y todas sus versiones.` });
+      setPendingDelete(null);
       // Recargar lista
       loadFiles();
     } catch (err) {
-      alert(`Error: ${err instanceof Error ? err.message : 'Error inesperado'}`);
+      setDialogError(err instanceof Error ? err.message : 'Error inesperado');
+    } finally {
+      setBusy(false);
     }
   };
 
-  const handleReprocess = async (fileId: number, currentPerfil: string) => {
-    const newPerfil = prompt(
-      `Selecciona nuevo perfil (actual: ${currentPerfil || 'ninguno'}):\n\nOpciones: rapido, balanceado, profundo`,
-      currentPerfil || 'balanceado'
-    );
-
-    if (!newPerfil || !['rapido', 'balanceado', 'profundo'].includes(newPerfil)) {
-      alert('Perfil inválido. Opciones válidas: rapido, balanceado, profundo');
-      return;
-    }
+  const handleReprocess = async () => {
+    if (!pendingReprocess) return;
+    setBusy(true);
+    setDialogError(null);
 
     try {
-      const response = await fetch(`${apiUrl}/reprocess/${fileId}`, {
+      const response = await fetch(`${apiUrl}/reprocess/${pendingReprocess.id}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ perfil: newPerfil }),
       });
 
       if (!response.ok) {
-        throw new Error('Error al reprocesar archivo');
+        throw new Error(await responseError(response, 'Error al reprocesar archivo'));
       }
 
       const data = await response.json();
-      alert(`Archivo encolado para reprocesamiento. Task ID: ${data.task_id}`);
-      
+      setNotice({
+        tone: 'success',
+        text: `«${pendingReprocess.filename}» quedó en cola con perfil ${PERFIL_LABELS[newPerfil]}. Tarea: ${data.task_id}`,
+      });
+      setPendingReprocess(null);
+
       // Recargar después de 2 segundos
       setTimeout(() => loadFiles(), 2000);
     } catch (err) {
-      alert(`Error: ${err instanceof Error ? err.message : 'Error inesperado'}`);
+      setDialogError(err instanceof Error ? err.message : 'Error inesperado');
+    } finally {
+      setBusy(false);
     }
   };
 
@@ -262,284 +320,326 @@ export default function FilesTable({ apiUrl = API_URL }: FilesTableProps) {
     setPage(1);
   };
 
+  const activeFilters = [searchTerm, statusFilter, perfilFilter, dateFrom, dateTo].filter(Boolean).length;
+
+  const renderStatus = (file: UploadedFile) => {
+    const progress = fileProgress.get(file.id) || 0;
+    return (
+      <div className="space-y-2">
+        <Badge tone={STATUS_TONES[file.status] || 'neutral'}>
+          {STATUS_LABELS[file.status] || file.status}
+        </Badge>
+        {/* Barra de progreso en tiempo real para archivos en procesamiento */}
+        {isInProgress(file.status) && (
+          <Progress
+            value={progress}
+            label={`Progreso de ${file.filename}`}
+            hideLabel
+            className={cn('max-w-48 transition-opacity duration-fast', pulsing.has(file.id) ? 'opacity-60' : 'opacity-100')}
+          />
+        )}
+      </div>
+    );
+  };
+
+  const renderPerfil = (file: UploadedFile) => file.perfil ? (
+    <Badge tone="info">{PERFIL_LABELS[file.perfil] || file.perfil}</Badge>
+  ) : (
+    <span className="text-sm italic text-content-muted">Sin procesar</span>
+  );
+
+  const renderMetrics = (result?: ProcessingResult) => {
+    if (!result) return null;
+    return (
+      <div className="mt-1 space-y-1 text-xs text-content-muted">
+        <p>
+          <span className="font-mono">{result.motor?.startsWith('secuencial-') ? result.motor : 'Histórico'}</span>
+          {' · '}v{result.version_number}
+        </p>
+        {result.motor === 'secuencial-2' && (
+          <p className="font-mono tabular-nums">
+            Corte {kg(result.perdida_corte_kg)} · Descartado {kg(result.descartado_kg)} · Reutilizable final {kg(result.sobrante_final_kg)}
+          </p>
+        )}
+      </div>
+    );
+  };
+
+  const renderWaste = (result?: ProcessingResult) => result?.desperdicio_porcentaje != null ? (
+    <span className="font-mono text-sm font-semibold tabular-nums text-content">
+      {result.desperdicio_porcentaje.toFixed(3)}%
+      <span className="block text-xs font-normal text-content-muted">en masa</span>
+    </span>
+  ) : (
+    <span className="text-sm text-content-muted">—</span>
+  );
+
+  const renderActions = (file: UploadedFile, align: 'start' | 'end') => {
+    const latestResult = file.processing_results?.[0];
+    return (
+      <div className={cn('flex gap-2', align === 'end' ? 'items-center justify-end' : 'flex-wrap justify-start')}>
+        {latestResult && (
+          <div role="group" aria-label={`Descargas de ${file.filename}`} className={cn('flex gap-2', align === 'start' && 'flex-wrap')}>
+            <Button
+              size="sm"
+              variant="outline"
+              onClick={() => handleDownload(latestResult.storage_uuid, 'excel')}
+              disabled={!latestResult.excel_path}
+              aria-label={`Descargar Excel de ${file.filename}`}
+            >
+              <Download className="h-4 w-4" aria-hidden="true" />
+              Excel
+            </Button>
+            <Button
+              size="sm"
+              variant="outline"
+              onClick={() => handleDownload(latestResult.storage_uuid, 'pdf')}
+              disabled={!latestResult.pdf_path}
+              aria-label={`Descargar PDF de ${file.filename}`}
+            >
+              <Download className="h-4 w-4" aria-hidden="true" />
+              PDF
+            </Button>
+            <Button
+              size="sm"
+              variant="outline"
+              onClick={() => handleDownload(latestResult.storage_uuid, 'imagen')}
+              disabled={!latestResult.graph_image_path && !latestResult.image_path}
+              aria-label={`Descargar imagen de ${file.filename}`}
+            >
+              <Download className="h-4 w-4" aria-hidden="true" />
+              Imagen
+            </Button>
+            {latestResult.inventory_path && (
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={() => handleDownload(latestResult.storage_uuid, 'inventario')}
+                aria-label={`Descargar inventario final de ${file.filename}`}
+              >
+                <Download className="h-4 w-4" aria-hidden="true" />
+                Inventario
+              </Button>
+            )}
+          </div>
+        )}
+        <div className={cn('flex gap-1', align === 'end' && 'border-l border-line pl-2')}>
+          <Button
+            size="icon"
+            variant="ghost"
+            className="h-8 w-8"
+            onClick={() => openReprocess(file)}
+            disabled={isActive(file.status)}
+            aria-label={`Reprocesar ${file.filename}`}
+            title={isActive(file.status) ? 'Disponible al terminar la ejecución' : 'Reprocesar'}
+          >
+            <RefreshCw className="h-4 w-4" aria-hidden="true" />
+          </Button>
+          <Button
+            size="icon"
+            variant="ghost"
+            className="h-8 w-8 hover:bg-status-error-bg hover:text-content-error"
+            onClick={() => openDelete(file)}
+            disabled={isActive(file.status)}
+            aria-label={`Eliminar ${file.filename}`}
+            title={isActive(file.status) ? 'Disponible al terminar la ejecución' : 'Eliminar'}
+          >
+            <Trash2 className="h-4 w-4" aria-hidden="true" />
+          </Button>
+        </div>
+      </div>
+    );
+  };
+
+  const firstItem = total === 0 ? 0 : (page - 1) * perPage + 1;
+
   return (
+    <>
     <div className="w-full space-y-6">
       {/* Filtros */}
-      <div className="bg-white p-6 rounded-lg shadow">
-        <div className="flex items-center gap-2 mb-4">
-          <Filter className="w-5 h-5 text-gray-600" />
-          <h3 className="text-lg font-semibold">Filtros</h3>
+      <Card className="p-5 sm:p-6">
+        <div className="mb-5 flex items-center justify-between gap-4">
+          <div className="flex items-center gap-2">
+            <SlidersHorizontal className="h-5 w-5 text-content-brand" aria-hidden="true" />
+            <h2 className="text-base font-semibold text-content">Filtros</h2>
+            {activeFilters > 0 && <Badge tone="info">{activeFilters} activos</Badge>}
+          </div>
+          <Button onClick={resetFilters} variant="ghost" size="sm" disabled={activeFilters === 0}>
+            Limpiar filtros
+          </Button>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-          {/* Búsqueda */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Buscar
-            </label>
+        <div className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-5">
+          <Field label="Buscar" htmlFor="filter-search" className="col-span-2 lg:col-span-1">
             <div className="relative">
-              <input
-                type="text"
+              <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-content-muted" aria-hidden="true" />
+              <Input
+                id="filter-search"
+                type="search"
                 value={searchTerm}
                 onChange={(e) => {
                   setSearchTerm(e.target.value);
                   setPage(1);
                 }}
-                placeholder="Nombre o documento..."
-                className="w-full px-3 py-2 border rounded-md pl-10"
+                placeholder="Nombre o documento"
+                className="pl-9"
               />
-              <Search className="absolute left-3 top-2.5 w-4 h-4 text-gray-400" />
             </div>
-          </div>
+          </Field>
 
-          {/* Estado */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Estado
-            </label>
-            <select
+          <Field label="Estado" htmlFor="filter-status">
+            <Select
+              id="filter-status"
               value={statusFilter}
               onChange={(e) => {
                 setStatusFilter(e.target.value);
                 setPage(1);
               }}
-              className="w-full px-3 py-2 border rounded-md"
             >
               <option value="">Todos</option>
               <option value="uploaded">Cargado</option>
               <option value="validating">Validando</option>
               <option value="processing">Procesando</option>
               <option value="completed">Completado</option>
-              <option value="error_validation">Error Validación</option>
-              <option value="error_processing">Error Procesamiento</option>
-            </select>
-          </div>
+              <option value="error_validation">Error de validación</option>
+              <option value="error_processing">Error de procesamiento</option>
+            </Select>
+          </Field>
 
-          {/* Perfil */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Perfil
-            </label>
-            <select
+          <Field label="Perfil" htmlFor="filter-perfil">
+            <Select
+              id="filter-perfil"
               value={perfilFilter}
               onChange={(e) => {
                 setPerfilFilter(e.target.value);
                 setPage(1);
               }}
-              className="w-full px-3 py-2 border rounded-md"
             >
               <option value="">Todos</option>
-              <option value="rapido">Rápido</option>
-              <option value="balanceado">Balanceado</option>
-              <option value="profundo">Profundo</option>
-            </select>
-          </div>
+              {PERFILES.map(p => <option key={p.value} value={p.value}>{p.label}</option>)}
+            </Select>
+          </Field>
 
-          {/* Fecha Desde */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Fecha Desde
-            </label>
-            <input
+          <Field label="Desde" htmlFor="filter-from">
+            <Input
+              id="filter-from"
               type="date"
               value={dateFrom}
               onChange={(e) => {
                 setDateFrom(e.target.value);
                 setPage(1);
               }}
-              className="w-full px-3 py-2 border rounded-md"
             />
-          </div>
+          </Field>
 
-          {/* Fecha Hasta */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Fecha Hasta
-            </label>
-            <input
+          <Field label="Hasta" htmlFor="filter-to">
+            <Input
+              id="filter-to"
               type="date"
               value={dateTo}
               onChange={(e) => {
                 setDateTo(e.target.value);
                 setPage(1);
               }}
-              className="w-full px-3 py-2 border rounded-md"
             />
-          </div>
-
-          {/* Botón Limpiar */}
-          <div className="flex items-end">
-            <Button
-              onClick={resetFilters}
-              variant="outline"
-              className="w-full"
-            >
-              Limpiar Filtros
-            </Button>
-          </div>
+          </Field>
         </div>
-      </div>
+      </Card>
 
-      {/* Tabla */}
-      <div className="bg-white rounded-lg shadow overflow-hidden">
-        {loading ? (
-          <div className="p-8 text-center text-gray-500">
-            Cargando archivos...
+      {notice && (
+        <Alert tone={notice.tone} className="items-start">
+          <div className="flex flex-wrap items-start justify-between gap-3">
+            <p className="break-words">{notice.text}</p>
+            <button type="button" className="text-xs font-semibold underline underline-offset-4" onClick={() => setNotice(null)}>
+              Descartar
+            </button>
+          </div>
+        </Alert>
+      )}
+
+      {/* Resultados */}
+      <Card className="overflow-hidden">
+        <div className="flex flex-wrap items-center justify-between gap-3 border-b border-line px-5 py-4 sm:px-6">
+          <h2 className="text-base font-semibold text-content">
+            Proyectos <span className="font-mono text-sm font-normal text-content-muted">({total})</span>
+          </h2>
+          <Button variant="ghost" size="sm" onClick={loadFiles} disabled={loading}>
+            <RefreshCw className={cn('h-4 w-4', loading && 'animate-spin')} aria-hidden="true" />
+            Actualizar
+          </Button>
+        </div>
+
+        <div aria-live="polite" aria-busy={loading}>
+        {loading && files.length === 0 ? (
+          <div className="flex items-center justify-center gap-3 p-10 text-sm text-content-muted">
+            <RefreshCw className="h-4 w-4 animate-spin" aria-hidden="true" />
+            Cargando proyectos…
           </div>
         ) : error ? (
-          <div className="p-8 text-center text-red-600">
-            Error: {error}
+          <div className="p-5 sm:p-6">
+            <Alert tone="error" title="No fue posible cargar los proyectos">
+              <p>{error}</p>
+              <Button size="sm" variant="outline" className="mt-3" onClick={loadFiles}>Reintentar</Button>
+            </Alert>
           </div>
         ) : files.length === 0 ? (
-          <div className="p-8 text-center text-gray-500">
-            No se encontraron archivos
+          <div className="flex flex-col items-center px-6 py-12 text-center">
+            <span className="mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-surface-interactive text-content-brand">
+              <FolderOpen className="h-6 w-6" aria-hidden="true" />
+            </span>
+            <p className="font-semibold text-content">
+              {activeFilters ? 'Ningún proyecto coincide con los filtros' : 'Aún no hay proyectos'}
+            </p>
+            <p className="mt-1 max-w-sm text-sm text-content-muted">
+              {activeFilters
+                ? 'Ajusta o limpia los filtros para ver más resultados.'
+                : 'Sube una cartilla de trabajo para crear la primera optimización.'}
+            </p>
+            {activeFilters ? (
+              <Button variant="outline" className="mt-5" onClick={resetFilters}>Limpiar filtros</Button>
+            ) : (
+              <Link href="/subir-cartilla" className={buttonVariants({ className: 'mt-5' })}>
+                <Plus className="h-4 w-4" aria-hidden="true" />
+                Nueva optimización
+              </Link>
+            )}
           </div>
         ) : (
           <>
-            <div className="overflow-x-auto">
-              <table className="w-full">
-                <thead className="bg-gray-50">
-                  <tr>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Archivo
-                    </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Documento
-                    </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Perfil
-                    </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Estado
-                    </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Fecha
-                    </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Acciones
-                    </th>
+            {/* Desktop: tabla */}
+            <div className="hidden overflow-x-auto lg:block">
+              <table className="w-full text-left">
+                <caption className="sr-only">Proyectos procesados</caption>
+                <thead className="border-b border-line bg-surface-subtle">
+                  <tr className="text-xs font-semibold text-content-muted">
+                    <th scope="col" className="px-6 py-3">Proyecto</th>
+                    <th scope="col" className="px-4 py-3">Perfil</th>
+                    <th scope="col" className="px-4 py-3">Estado</th>
+                    <th scope="col" className="px-4 py-3">Desperdicio</th>
+                    <th scope="col" className="px-6 py-3 text-right">Acciones</th>
                   </tr>
                 </thead>
-                <tbody className="bg-white divide-y divide-gray-200">
+                <tbody className="divide-y divide-line">
                   {files.map((file) => {
                     const latestResult = file.processing_results?.[0];
-                    const hasResults = Boolean(latestResult);
-
                     return (
-                      <tr key={file.id} className="hover:bg-gray-50">
-                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                          {file.filename}
-                          {latestResult && <div className="text-xs text-gray-500">
-                            {latestResult.motor?.startsWith('secuencial-') ? latestResult.motor : 'Histórico'}
-                            {latestResult.desperdicio_porcentaje != null && ` · Desperdicio: ${latestResult.desperdicio_porcentaje.toFixed(3)}% en masa`}
-                            {latestResult.motor === 'secuencial-2' && <div>
-                              Corte: {latestResult.perdida_corte_kg?.toFixed(3)} kg · Descartado: {latestResult.descartado_kg?.toFixed(3)} kg · Reutilizable final: {latestResult.sobrante_final_kg?.toFixed(3)} kg
-                            </div>}
-                          </div>}
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                          {file.document_number || '-'}
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                          {file.perfil ? (
-                            <span className="capitalize px-2 py-1 bg-blue-50 text-blue-700 rounded-md">
-                              {file.perfil}
-                            </span>
-                          ) : (
-                            <span className="text-gray-400 italic">Sin procesar</span>
-                          )}
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap">
-                          <div className="space-y-1">
-                            <span className={`px-2 py-1 text-xs font-semibold rounded-full ${
-                              STATUS_COLORS[file.status] || 'bg-gray-100 text-gray-800'
-                            }`}>
-                              {STATUS_LABELS[file.status] || file.status}
-                            </span>
-                            
-                            {/* Barra de progreso en tiempo real para archivos en procesamiento */}
-                            {(file.status === 'processing' || file.status === 'validating' || file.status === 'generating_artifacts') && (
-                              <div className="mt-2 w-full">
-                                <div className="flex items-center justify-between text-xs text-gray-500 mb-1">
-                                  <span>Progreso</span>
-                                  <span>{fileProgress.get(file.id) || 0}%</span>
-                                </div>
-                                <div className="w-full bg-gray-200 rounded-full h-2 overflow-hidden">
-                                  <div
-                                    className="bg-blue-600 h-2 transition-all ease-out"
-                                    style={{ 
-                                      width: `${fileProgress.get(file.id) || 0}%`,
-                                      opacity: pulsing.has(file.id) ? 0.5 : 1,
-                                      transitionDuration: '500ms, 150ms',
-                                      transitionProperty: 'width, opacity'
-                                    }}
-                                  />
-                                </div>
-                              </div>
-                            )}
+                      <tr key={file.id} className="align-top transition-colors duration-fast hover:bg-surface-subtle">
+                        <td className="min-w-64 px-6 py-4">
+                          <div className="flex items-start gap-3">
+                            <FileSpreadsheet className="mt-0.5 h-5 w-5 shrink-0 text-content-brand" aria-hidden="true" />
+                            <div className="min-w-0">
+                              <p className="break-all text-sm font-semibold text-content">{file.filename}</p>
+                              <p className="font-mono text-xs text-content-muted">
+                                Doc. {file.document_number || '—'} · {formatDate(file.created_at)}
+                              </p>
+                              {renderMetrics(latestResult)}
+                            </div>
                           </div>
                         </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                          {new Date(file.created_at).toLocaleDateString()}
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-2">
-                          {hasResults && latestResult && (
-                            <>
-                              {latestResult.inventory_path && <Button size="sm" variant="outline"
-                                onClick={() => handleDownload(latestResult.storage_uuid, 'inventario')}>
-                                Inventario final
-                              </Button>}
-                              <Button
-                                size="sm"
-                                variant="outline"
-                                onClick={() => handleDownload(latestResult.storage_uuid, 'excel')}
-                                title="Descargar Excel"
-                                disabled={!latestResult.excel_path}
-                              >
-                                <Download className="w-4 h-4 mr-1" />
-                                Excel
-                              </Button>
-                              <Button
-                                size="sm"
-                                variant="outline"
-                                onClick={() => handleDownload(latestResult.storage_uuid, 'pdf')}
-                                title="Descargar PDF"
-                                disabled={!latestResult.pdf_path}
-                              >
-                                <Download className="w-4 h-4 mr-1" />
-                                PDF
-                              </Button>
-                              <Button
-                                size="sm"
-                                variant="outline"
-                                onClick={() => handleDownload(latestResult.storage_uuid, 'imagen')}
-                                title="Descargar Imagen"
-                                disabled={!latestResult.graph_image_path && !latestResult.image_path}
-                              >
-                                <Download className="w-4 h-4 mr-1" />
-                                IMG
-                              </Button>
-                            </>
-                          )}
-                          
-                          <Button
-                            size="sm"
-                            variant="outline"
-                            onClick={() => handleReprocess(file.id, file.perfil)}
-                            title="Reprocesar"
-                          >
-                            <RefreshCw className="w-4 h-4" />
-                          </Button>
-                          
-                          <Button
-                            size="sm"
-                            variant="destructive"
-                            onClick={() => handleDelete(file.id)}
-                            title="Eliminar"
-                          >
-                            <Trash2 className="w-4 h-4" />
-                          </Button>
-                        </td>
+                        <td className="px-4 py-4">{renderPerfil(file)}</td>
+                        <td className="px-4 py-4">{renderStatus(file)}</td>
+                        <td className="px-4 py-4">{renderWaste(latestResult)}</td>
+                        <td className="whitespace-nowrap px-6 py-4">{renderActions(file, 'end')}</td>
                       </tr>
                     );
                   })}
@@ -547,17 +647,49 @@ export default function FilesTable({ apiUrl = API_URL }: FilesTableProps) {
               </table>
             </div>
 
-            {/* Paginación */}
-            <div className="bg-gray-50 px-6 py-4 flex items-center justify-between border-t">
-              <div className="text-sm text-gray-700">
-                Mostrando <span className="font-medium">{(page - 1) * perPage + 1}</span> a{' '}
-                <span className="font-medium">
-                  {Math.min(page * perPage, total)}
-                </span>{' '}
-                de <span className="font-medium">{total}</span> resultados
-              </div>
+            {/* Mobile/tablet: tarjetas */}
+            <ul className="divide-y divide-line lg:hidden" aria-label="Proyectos procesados">
+              {files.map((file) => {
+                const latestResult = file.processing_results?.[0];
+                return (
+                  <li key={file.id} className="space-y-4 p-5 sm:p-6">
+                    <div className="flex items-start justify-between gap-3">
+                      <div className="min-w-0">
+                        <p className="break-all text-sm font-semibold text-content">{file.filename}</p>
+                        <p className="font-mono text-xs text-content-muted">
+                          Doc. {file.document_number || '—'} · {formatDate(file.created_at)}
+                        </p>
+                      </div>
+                      {renderPerfil(file)}
+                    </div>
+                    <div className="grid grid-cols-2 gap-3 rounded-md bg-surface-subtle p-3">
+                      <div>
+                        <p className="mb-1 text-xs font-semibold text-content-muted">Estado</p>
+                        {renderStatus(file)}
+                      </div>
+                      <div>
+                        <p className="mb-1 text-xs font-semibold text-content-muted">Desperdicio</p>
+                        {renderWaste(latestResult)}
+                      </div>
+                    </div>
+                    {renderMetrics(latestResult)}
+                    {renderActions(file, 'start')}
+                  </li>
+                );
+              })}
+            </ul>
 
-              <div className="flex space-x-2">
+            {/* Paginación */}
+            <nav
+              aria-label="Paginación de proyectos"
+              className="flex flex-col gap-3 border-t border-line bg-surface-subtle px-5 py-4 sm:flex-row sm:items-center sm:justify-between sm:px-6"
+            >
+              <p className="text-sm text-content-muted">
+                Mostrando <span className="font-mono font-semibold text-content">{firstItem}–{Math.min(page * perPage, total)}</span>{' '}
+                de <span className="font-mono font-semibold text-content">{total}</span>
+              </p>
+
+              <div className="flex items-center gap-2">
                 <Button
                   onClick={() => setPage((p) => Math.max(1, p - 1))}
                   disabled={page === 1}
@@ -566,11 +698,9 @@ export default function FilesTable({ apiUrl = API_URL }: FilesTableProps) {
                 >
                   Anterior
                 </Button>
-                
-                <span className="px-4 py-2 text-sm">
-                  Página {page} de {totalPages}
+                <span className="px-2 font-mono text-sm text-content-muted" aria-current="page">
+                  {page} / {totalPages}
                 </span>
-                
                 <Button
                   onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
                   disabled={page >= totalPages}
@@ -580,10 +710,52 @@ export default function FilesTable({ apiUrl = API_URL }: FilesTableProps) {
                   Siguiente
                 </Button>
               </div>
-            </div>
+            </nav>
           </>
         )}
-      </div>
+        </div>
+      </Card>
     </div>
+
+      {/* Fuera del contenedor space-y: sus márgenes anularían el centrado del modal. */}
+      <Dialog
+        open={pendingDelete !== null}
+        onClose={() => !busy && setPendingDelete(null)}
+        title="Eliminar proyecto"
+        description={pendingDelete && <>Se eliminarán <strong className="break-all text-content">{pendingDelete.filename}</strong> y todas sus versiones. Esta acción no se puede deshacer.</>}
+        footer={<>
+          <Button variant="outline" onClick={() => setPendingDelete(null)} disabled={busy}>Cancelar</Button>
+          <Button variant="destructive" onClick={handleDelete} loading={busy}>
+            <Trash2 className="h-4 w-4" aria-hidden="true" />
+            Eliminar
+          </Button>
+        </>}
+      >
+        {dialogError && <Alert tone="error">{dialogError}</Alert>}
+      </Dialog>
+
+      <Dialog
+        open={pendingReprocess !== null}
+        onClose={() => !busy && setPendingReprocess(null)}
+        title="Reprocesar proyecto"
+        description={pendingReprocess && <>Se creará una nueva versión de <strong className="break-all text-content">{pendingReprocess.filename}</strong>. Perfil actual: {PERFIL_LABELS[pendingReprocess.perfil] || 'ninguno'}.</>}
+        footer={<>
+          <Button variant="outline" onClick={() => setPendingReprocess(null)} disabled={busy}>Cancelar</Button>
+          <Button onClick={handleReprocess} loading={busy}>
+            <RefreshCw className="h-4 w-4" aria-hidden="true" />
+            Reprocesar
+          </Button>
+        </>}
+      >
+        <div className="space-y-4">
+          <Field label="Perfil de optimización" htmlFor="reprocess-perfil">
+            <Select id="reprocess-perfil" value={newPerfil} onChange={e => setNewPerfil(e.target.value)} disabled={busy}>
+              {PERFILES.map(p => <option key={p.value} value={p.value}>{p.label}</option>)}
+            </Select>
+          </Field>
+          {dialogError && <Alert tone="error">{dialogError}</Alert>}
+        </div>
+      </Dialog>
+    </>
   );
 }
