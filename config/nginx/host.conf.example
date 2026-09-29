@@ -1,0 +1,61 @@
+# Ejemplo para incluir dentro del bloque http del Nginx del host.
+# Ajustar certificados, puertos y permisos de acceso al marcador antes de instalar.
+# Web, API y Socket.IO comparten origen.
+map $http_upgrade $oica_connection_upgrade {
+    default upgrade;
+    '' close;
+}
+limit_req_zone $binary_remote_addr zone=oica_uploads:10m rate=6r/m;
+server {
+    listen 443 ssl;
+    ssl_certificate /etc/letsencrypt/live/oica.cris-munoz.me/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/oica.cris-munoz.me/privkey.pem;
+    ssl_protocols TLSv1.2 TLSv1.3;
+    server_name oica.cris-munoz.me;
+    client_max_body_size 16m;
+    set $api 127.0.0.1:15000;
+    set $web 127.0.0.1:13000;
+    location = /api { return 308 /api/; }
+    location ~ ^/api/(upload|reprocess/[^/]+)$ {
+        if (-f /opt/oica/shared/maintenance/enabled) { return 503; }
+        limit_req zone=oica_uploads burst=5 nodelay;
+        limit_req_status 429;
+        rewrite ^/api/(.*)$ /$1 break;
+        proxy_pass http://$api;
+        proxy_set_header Host $http_host;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+    location /api/ {
+        if (-f /opt/oica/shared/maintenance/enabled) { return 503; }
+        rewrite ^/api/(.*)$ /$1 break;
+        proxy_pass http://$api;
+        proxy_set_header Host $http_host;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+    location /socket.io/ {
+        if (-f /opt/oica/shared/maintenance/enabled) { return 503; }
+        proxy_pass http://$api;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection $oica_connection_upgrade;
+        proxy_set_header Host $http_host;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_read_timeout 120s;
+        proxy_buffering off;
+    }
+    location / {
+        if (-f /opt/oica/shared/maintenance/enabled) { return 503; }
+        proxy_pass http://$web;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection $oica_connection_upgrade;
+        proxy_set_header Host $http_host;
+    }
+}
+
+server {
+    listen 80;
+    server_name oica.cris-munoz.me;
+    location /.well-known/acme-challenge/ { root /var/www/certbot; }
+    location / { return 301 https://$host$request_uri; }
+}

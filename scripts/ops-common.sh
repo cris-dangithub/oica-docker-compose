@@ -17,6 +17,11 @@ flock -w 3600 9 || { echo 'Otra operación sigue activa.'; exit 1; }
 export OICA_SHARED_DIR="$SHARED" MAINTENANCE_DIR="$SHARED/maintenance"
 [[ -f $SHARED/production.env ]] || { echo 'Falta shared/production.env; ejecuta bootstrap-vps.sh.'; exit 1; }
 TLS=${OICA_TLS:-true}
+OPS_DIR=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)
+PROXY_MODE=$(python3 "$OPS_DIR/proxy_config.py" "$SHARED/production.env" OICA_PROXY_MODE)
+PUBLIC_URL=$(python3 "$OPS_DIR/proxy_config.py" "$SHARED/production.env" OICA_PUBLIC_URL)
+# Ningún perfil heredado debe habilitar el proxy o Certbot en modo host.
+[[ $PROXY_MODE != host ]] || export COMPOSE_PROFILES=''
 release_path() {
     [[ $1 =~ ^[a-f0-9]{40}(-[0-9]+)?$ ]] || { echo 'Se requiere un SHA completo.' >&2; return 1; }
     printf '%s/%s\n' "$RELEASES" "$1"
@@ -25,7 +30,32 @@ dc() {
     local release=$1; shift
     local args=(--project-name "$PROJECT" --env-file "$SHARED/production.env" --env-file "$release/images.env" -f "$release/docker-compose.yaml")
     [[ $TLS != true ]] || args+=(-f "$release/compose.production.yaml")
+    if [[ $PROXY_MODE == host ]]; then
+        # La entrega anterior puede preceder al soporte de proxy externo.
+        args+=(-f "$OPS_DIR/../compose.host-nginx.yaml")
+    fi
     docker compose "${args[@]}" "$@"
+}
+pull_release() {
+    local services=(db redis backend celery_worker frontend migrate)
+    [[ $PROXY_MODE != container ]] || services+=(nginx)
+    dc "$1" pull "${services[@]}"
+}
+start_proxy() {
+    if [[ $PROXY_MODE == container ]]; then
+        dc "$1" up -d --no-build --wait --wait-timeout 120 nginx
+    else
+        dc "$1" stop nginx
+    fi
+}
+check_proxy() {
+    if [[ $PROXY_MODE == host ]]; then
+        curl --fail --silent --show-error --max-time 20 "${PUBLIC_URL%/}/api/health" >/dev/null
+    elif [[ $TLS == true ]]; then
+        dc "$1" exec -T nginx wget -q --no-check-certificate -O /dev/null https://127.0.0.1/api/health
+    else
+        dc "$1" exec -T nginx wget -q -O /dev/null http://127.0.0.1/api/health
+    fi
 }
 maintenance_on() { touch "$SHARED/maintenance/enabled"; chmod 644 "$SHARED/maintenance/enabled"; }
 maintenance_off() { rm -f -- "$SHARED/maintenance/enabled"; }
@@ -53,6 +83,9 @@ compatible_schema() { cmp -s "$1/schema.sha256" "$2/schema.sha256"; }
 verify_release() {
     local release=$1
     [[ -f $release/images.env && -f $release/schema.sha256 ]] || { echo 'Entrega incompleta'; return 1; }
+    if [[ $PROXY_MODE == host && ! -f $release/compose.host-nginx.yaml ]]; then
+        echo 'Esta entrega no soporta OICA_PROXY_MODE=host.'; return 1
+    fi
     # No permitir referencias flotantes ni valores ejecutables en el manifiesto.
     python3 - "$release/images.env" <<'PY'
 import re, sys

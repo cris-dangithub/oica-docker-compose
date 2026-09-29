@@ -1,0 +1,11 @@
+# Se añade después del Compose base y, en VPS, del de producción.
+# Los perfiles no se activan: el proxy y TLS pertenecen al servidor.
+services:
+  backend:
+    ports:
+      - '127.0.0.1:${OICA_BACKEND_PORT:-15000}:5000'
+  frontend:
+    ports:
+      - '127.0.0.1:${OICA_FRONTEND_PORT:-13000}:3000'
+  nginx:
+    profiles: [container-proxy]

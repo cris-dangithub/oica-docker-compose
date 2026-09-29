@@ -72,7 +72,7 @@ jobs:
         if: inputs.publish && github.ref == 'refs/heads/production'
         run: |
           mkdir -p delivery
-          cp -r scripts config docker-compose.yaml compose.production.yaml delivery/
+          cp -r scripts config docker-compose.yaml compose.production.yaml compose.host-nginx.yaml delivery/
           prefix="ghcr.io/${GITHUB_REPOSITORY,,}"
           : > delivery/images.env
           for role in backend worker frontend; do

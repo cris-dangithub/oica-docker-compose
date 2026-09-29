@@ -12,6 +12,6 @@ if [[ ! -f $ROOT/shared/production.env ]]; then
     umask 077
     password=$(openssl rand -hex 32)
     secret=$(openssl rand -hex 32)
-    printf 'POSTGRES_DB=oica_db\nPOSTGRES_USER=oica_user\nPOSTGRES_PASSWORD=%s\nSECRET_KEY=%s\nALLOWED_ORIGINS=https://oica.cris-munoz.me\nHTTP_PORT=80\nWORKER_CONCURRENCY=1\n' "$password" "$secret" > "$ROOT/shared/production.env"
+    printf 'POSTGRES_DB=oica_db\nPOSTGRES_USER=oica_user\nPOSTGRES_PASSWORD=%s\nSECRET_KEY=%s\nALLOWED_ORIGINS=https://oica.cris-munoz.me\nHTTP_PORT=80\nOICA_PROXY_MODE=container\nOICA_FRONTEND_PORT=13000\nOICA_BACKEND_PORT=15000\nOICA_PUBLIC_URL=https://oica.cris-munoz.me\nWORKER_CONCURRENCY=1\n' "$password" "$secret" > "$ROOT/shared/production.env"
 fi
 echo 'Estructura y secretos preparados. Configura GHCR, SSH y ejecuta bootstrap-tls.sh CORREO antes del primer despliegue.'

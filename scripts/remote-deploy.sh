@@ -33,5 +33,14 @@ if [[ ! -d $root/releases/$release_id ]]; then
 fi
 REMOTE
 fi
-# shellcheck disable=SC2029
-ssh "${ssh_args[@]}" "$target" "OICA_ROOT='$root' bash '$root/releases/$sha/scripts/deploy.sh' '$action' '$sha' 'BORRAR OICA PRODUCTION' '$backup'"
+# Para rollback usar el operador actual: valida compatibilidad del modo de proxy
+# incluso si la entrega de destino es anterior a esta funcionalidad.
+ssh "${ssh_args[@]}" "$target" bash -s -- "$root" "$sha" "$action" "$backup" <<'REMOTE'
+set -Eeuo pipefail
+root=$1; sha=$2; action=$3; backup=$4
+operator="$root/releases/$sha/scripts/deploy.sh"
+if [[ $action == rollback && -f $root/current/scripts/proxy_config.py ]]; then
+    operator="$root/current/scripts/deploy.sh"
+fi
+OICA_ROOT="$root" bash "$operator" "$action" "$sha" 'BORRAR OICA PRODUCTION' "$backup"
+REMOTE

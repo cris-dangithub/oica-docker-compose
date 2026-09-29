@@ -5,6 +5,7 @@ import os
 from pathlib import Path
 import subprocess
 import tempfile
+import tarfile
 import unittest
 
 REPO = Path(__file__).resolve().parents[2]
@@ -28,6 +29,9 @@ if os.environ.get('FAIL_PULL')=='1' and 'pull' in sys.argv: sys.exit(12)
 if os.environ.get('FAIL_BACKUP')=='1' and any('pg_dump' in arg for arg in sys.argv): sys.exit(13)
 ''')
         fake.chmod(0o755)
+        curl = self.root/'bin/curl'
+        curl.write_text('#!/bin/sh\nexit "${FAIL_CURL:-0}"\n')
+        curl.chmod(0o755)
         self.log = self.root/'docker.log'
         self.env = {**os.environ, 'PATH':str(self.root/'bin')+':'+os.environ['PATH'],
                     'OICA_ROOT':str(self.root), 'OICA_PROJECT':'oica-test-ops',
@@ -44,6 +48,7 @@ if os.environ.get('FAIL_BACKUP')=='1' and any('pg_dump' in arg for arg in sys.ar
         (path/'config/backend/migrations/001.sql').write_text(schema)
         (path/'schema.sha256').write_text(hashlib.sha256(schema.encode()).hexdigest()+'  config/backend/migrations/001.sql\n')
         (path/'images.env').write_text('\n'.join(f'{key}_IMAGE=ghcr.io/example/oica-{key.lower()}@sha256:'+('1'*64) for key in ('BACKEND','WORKER','FRONTEND'))+'\n')
+        (path/'compose.host-nginx.yaml').write_text('services: {}\n')
         return path
 
     def run_op(self, *args, extra=None):
@@ -51,6 +56,70 @@ if os.environ.get('FAIL_BACKUP')=='1' and any('pg_dump' in arg for arg in sys.ar
 
     def calls(self):
         return [json.loads(line) for line in self.log.read_text().splitlines()] if self.log.exists() else []
+
+    def host_mode(self):
+        (self.root/'shared/production.env').write_text(
+            'POSTGRES_PASSWORD=test\nOICA_PROXY_MODE=host\nOICA_PUBLIC_URL=https://example.test\n')
+
+    def test_host_deploy_never_starts_or_pulls_nginx(self):
+        self.host_mode()
+        result = self.run_op('deploy', SHA)
+        self.assertEqual(result.returncode, 0, result.stderr + result.stdout)
+        self.assertTrue(any('stop' in c and 'nginx' in c for c in self.calls()))
+        for call in self.calls():
+            if 'pull' in call or 'up' in call:
+                self.assertNotIn('nginx', call)
+            self.assertTrue(any(arg.endswith('/compose.host-nginx.yaml') for arg in call))
+
+    def test_host_failed_public_health_keeps_maintenance(self):
+        self.host_mode()
+        result = self.run_op('deploy', SHA, extra={'FAIL_CURL': '22'})
+        self.assertNotEqual(result.returncode, 0)
+        self.assertTrue((self.root/'shared/maintenance/enabled').exists())
+        self.assertFalse((self.root/'current').exists())
+
+    def test_host_old_release_rejected_before_interruption(self):
+        self.host_mode()
+        (self.root/'releases'/SHA/'compose.host-nginx.yaml').unlink()
+        result = self.run_op('deploy', SHA)
+        self.assertNotEqual(result.returncode, 0)
+        self.assertEqual(self.calls(), [])
+        self.assertFalse((self.root/'shared/maintenance/enabled').exists())
+
+    def test_host_renewal_does_not_use_docker(self):
+        self.host_mode()
+        result = subprocess.run(['bash', str(REPO/'scripts/renew-tls.sh')],
+                                env=self.env, capture_output=True, text=True, timeout=10)
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertEqual(self.calls(), [])
+
+    def test_host_restore_never_starts_nginx(self):
+        self.host_mode()
+        release = self.root/'releases'/SHA
+        backup = self.root/'backups'/('20260918T120000Z-' + SHA)
+        backup.mkdir(parents=True)
+        (backup/'database.dump').write_bytes(b'dump simulado')
+        with tarfile.open(backup/'filestore.tar.gz', 'w:gz'):
+            pass
+        for name in ('images.env', 'schema.sha256'):
+            (backup/name).write_bytes((release/name).read_bytes())
+        names = ('database.dump', 'filestore.tar.gz', 'images.env', 'schema.sha256')
+        (backup/'SHA256SUMS').write_text(''.join(
+            hashlib.sha256((backup/name).read_bytes()).hexdigest()+'  '+name+'\n' for name in names))
+        (backup/'COMPLETE').touch()
+        result = subprocess.run(['bash', str(REPO/'scripts/restore.sh'), backup.name,
+                                 'RESTAURAR OICA PRODUCTION'], env=self.env,
+                                capture_output=True, text=True, timeout=10)
+        self.assertEqual(result.returncode, 0, result.stderr + result.stdout)
+        self.assertEqual((self.root/'current').resolve(), release)
+        for call in self.calls():
+            if 'up' in call or 'pull' in call:
+                self.assertNotIn('nginx', call)
+
+    def test_invalid_mode_rejected_before_docker(self):
+        result = self.run_op('deploy', SHA, extra={'OICA_PROXY_MODE': 'typo'})
+        self.assertNotEqual(result.returncode, 0)
+        self.assertEqual(self.calls(), [])
 
     def test_reset_requires_exact_confirmation(self):
         result=self.run_op('reset',SHA,'incorrecta','false')

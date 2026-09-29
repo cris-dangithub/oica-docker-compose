@@ -15,6 +15,8 @@ docker compose up
 
 Un push a `production` ejecuta las verificaciones y despliega en la VPS mediante GitHub Actions. Es necesario configurar primero SSH, GHCR y el dominio. El workflow manual permite reconstruir OICA con borrado de datos y respaldo opcional.
 
+El proxy se elige con `OICA_PROXY_MODE=container|host`; ver [configuración de ambos modos](docs/DEPLOYMENT.md#elegir-nginx-en-contenedor-o-en-el-host).
+
 Consultar **[la guía de instalación, despliegue y recuperación](docs/DEPLOYMENT.md)** para configurar `oica.cris-munoz.me`, secretos, HTTPS, backups y rollback.
 
 - `backend/`: aplicación Python y algoritmo genético.
