@@ -139,3 +139,14 @@ Por solicitud del usuario, OICA admite Nginx Docker o Nginx del host conservando
 el resto de contenedores. Esta sesión implementa solo repositorio; operación VPS
 queda en otro ambiente con SSH. Prompt raíz ignorado y excluido de publicación. El usuario autoriza commit, push
 y PR del código hacia production; rama feat/nginx-host-opcional. VPS pendiente.
+
+## 2026-09-29 — Dirección visual de OICA
+
+Después de Discovery, auditoría AS-IS y tres exploraciones comparables, el usuario
+aprobó B — Industrial Clarity con métricas monoespaciadas y precisión geométrica
+de A. Se fijaron arquitectura de tokens y alcance de componentes v1 sin cambiar
+todavía el frontend. El archivo `OICA — Product Design` se conserva como fuente
+visual, pero el plan Starter agotó el cupo MCP: inspección y consulta de librerías
+posteriores a la aprobación fueron rechazadas antes de ejecutarse. Reanudar Phase
+0 en ese archivo cuando se renueve el cupo; no crear otro archivo ni saltar a
+componentes/código sin foundations verificadas.

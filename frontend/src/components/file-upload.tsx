@@ -6,7 +6,12 @@ import { PhysicalOptions, PhysicalParameters, ParameterMetadata } from './physic
 import { useState, useCallback, useEffect, useRef } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { Button } from '@/components/ui/button';
-import { Upload, CheckCircle, AlertCircle, WifiOff } from 'lucide-react';
+import { Alert } from '@/components/ui/alert';
+import { Badge } from '@/components/ui/badge';
+import { Card } from '@/components/ui/card';
+import { Field, Select } from '@/components/ui/form-controls';
+import { Progress } from '@/components/ui/progress';
+import { ArrowRight, CheckCircle2, Clock3, FileSpreadsheet, Layers3, Upload } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { subscribeToTask, unsubscribeFromTask, TaskUpdate, onConnectionStatusChange } from '@/lib/socket';
 
@@ -59,7 +64,7 @@ export function FileUpload() {
       }
    }, []);
 
-   const { getRootProps, getInputProps, isDragActive } = useDropzone({
+   const { getRootProps, getInputProps, isDragActive, open } = useDropzone({
       onDrop,
       accept: {
          'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet': ['.xlsx'],
@@ -67,6 +72,8 @@ export function FileUpload() {
       },
       maxFiles: 1,
       multiple: false,
+      // El foco va al botón interno; el contenedor queda como zona de clic/arrastre.
+      noKeyboard: true,
    });
 
    // Limpieza al desmontar
@@ -289,163 +296,220 @@ export function FileUpload() {
          error_validation: 'Error en validación',
          error_processing: 'Error en procesamiento',
          error_generation: 'Error generando archivos',
+         // Estados en mayúscula emitidos por el worker (celery_worker.publish_progress) y por Celery.
+         PENDING: 'En cola',
+         STARTED: 'Iniciando',
+         VALIDATING: 'Validando contenido',
+         VALIDATED: 'Validación completada',
+         PROCESSING: 'Procesando con algoritmo genético',
+         GENERATING: 'Generando archivos de resultados',
+         SUCCESS: '¡Procesamiento completado!',
+         FAILURE: 'Procesamiento interrumpido',
       };
       return labels[state] || state;
    };
 
+   const diameterCount = new Set(catalog.map(row => row.diametro).filter(Boolean)).size;
+
    return (
-      <div className="container mx-auto px-4 py-16 max-w-3xl">
-         <div className="text-center mb-12">
-            <h1 className="text-4xl font-bold mb-4 text-black">
-               Análisis Geométrico de aceros
-            </h1>
-            <p className="text-gray-600 text-lg">
-               Planifica cortes por etapas con algoritmos genéticos y reutiliza
-               los sobrantes disponibles para reducir el desperdicio final.
+      <div className="mx-auto w-full max-w-wide px-4 py-10 sm:px-6 sm:py-12 lg:px-8">
+         <header className="mb-8 max-w-narrow">
+            <p className="mb-2 font-mono text-xs font-semibold uppercase tracking-widest text-content-brand">
+               Nueva optimización
             </p>
-         </div>
+            <h1 className="text-3xl font-semibold tracking-tight text-content sm:text-4xl">
+               Configurar optimización
+            </h1>
+            <p className="mt-3 text-base leading-7 text-content-muted sm:text-lg">
+               Planifica cortes por etapas, reutiliza los sobrantes disponibles y conserva
+               la trazabilidad de cada decisión del modelo.
+            </p>
+         </header>
 
-         <div
-            {...getRootProps()}
-            className={`border-2 border-dashed rounded-lg p-12 flex flex-col items-center justify-center transition-colors ${
-               isDragActive
-                  ? 'border-green-500 bg-green-50'
-                  : 'border-gray-300 hover:border-green-500'
-            }`}
-         >
-            <input {...getInputProps()} />
-
-            <Button
-               size="lg"
-               className="bg-green-700 hover:bg-green-900 mb-4 text-lg px-8 py-6 h-auto rounded-2xl"
-            >
-               <Upload className="mr-2 h-5 w-5" />
-               Seleccionar archivo XLSX/CSV
-            </Button>
-
-            <p className="text-gray-500">o arrastra y suelta el archivo aquí</p>
-
-            {files.length > 0 && (
-               <div className="mt-6 w-full">
-                  <h3 className="font-medium mb-2 text-gray-400">
-                     Archivo seleccionado:
-                  </h3>
-                  <ul className="space-y-2">
-                     {files.map((file, index) => (
-                        <li
-                           key={index}
-                           className="bg-gray-200 text-gray-400 p-3 rounded-lg text-sm flex items-center"
-                        >
-                           {file.name}
-                        </li>
-                     ))}
-                  </ul>
-               </div>
-            )}
-         </div>
-
-         <div className="mt-8 text-center">
-            {/* Mostrar nombre de archivo seleccionado como identificador */}
-            {files.length > 0 && (
-               <div className="mb-4 p-4 bg-blue-50 border border-blue-200 rounded-lg">
-                  <p className="text-sm text-gray-600 mb-1">Archivo seleccionado:</p>
-                  <p className="text-lg font-semibold text-blue-700">
-                     {files[0].name}
-                  </p>
-                  <p className="text-xs text-gray-500 mt-1">
-                     Este nombre se usará como identificador
-                  </p>
-               </div>
-            )}
-
-            {/* Selector de perfil */}
-            <div className="mb-4">
-               <label className="block mb-2 font-semibold text-gray-700">
-                  Perfil de optimización
-               </label>
-               <select
-                  value={perfil}
-                  onChange={e => setPerfil(e.target.value)}
-                  className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 text-black"
-                  disabled={loadingSendButton}
+         <div className="grid gap-6 lg:grid-cols-3 lg:items-start">
+            <section className="space-y-6 lg:col-span-2" aria-label="Configuración de optimización">
+               <Card
+                  {...getRootProps()}
+                  className={`flex min-h-56 cursor-pointer flex-col items-center justify-center border-2 border-dashed p-6 text-center transition-colors duration-standard sm:p-10 ${
+                     isDragActive
+                        ? 'border-line-focus bg-surface-interactive'
+                        : 'border-line-strong hover:border-line-focus hover:bg-surface-interactive'
+                  }`}
                >
-                  <option value="rapido">Rápido (procesamiento rápido)</option>
-                  <option value="balanceado">Balanceado (recomendado)</option>
-                  <option value="profundo">Profundo (mayor búsqueda, sin garantía de mejora)</option>
-               </select>
-            </div>
+                  <input {...getInputProps({ 'aria-label': 'Archivo de cartilla (XLSX o CSV)' })} />
+                  <span className="mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-surface-interactive text-content-brand">
+                     <Upload className="h-6 w-6" aria-hidden="true" />
+                  </span>
+                  <p className="font-mono text-xs font-semibold uppercase tracking-widest text-content-brand">
+                     Cartilla de trabajo
+                  </p>
+                  <h2 className="mt-2 text-lg font-semibold text-content">
+                     {files.length ? 'Archivo listo para configurar' : 'Arrastra la cartilla o selecciona un archivo'}
+                  </h2>
+                  <p className="mt-2 text-sm text-content-muted">Formatos XLSX o CSV · un archivo por proyecto</p>
+                  <Button
+                     type="button"
+                     variant="outline"
+                     className="mt-5"
+                     disabled={loadingSendButton}
+                     onClick={event => { event.stopPropagation(); open(); }}
+                  >
+                     <FileSpreadsheet className="h-4 w-4" aria-hidden="true" />
+                     {files.length ? 'Cambiar cartilla' : 'Seleccionar cartilla'}
+                  </Button>
+               </Card>
 
-            <CuttingOptions catalog={catalog} onCatalog={setCatalog} onInventory={setInventory}
-               visuals={visuals} onVisuals={setVisuals} disabled={loadingSendButton || estimating} />
-            {parameters && metadata && <PhysicalOptions value={parameters} metadata={metadata}
-               onChange={setParameters} disabled={loadingSendButton || estimating} />}
-            <Button variant="outline" className="mr-3" disabled={!parameters || !files.length || loadingSendButton || estimating}
-               onClick={estimateTime}>{estimating ? 'Consultando...' : 'Estimar tiempo'}</Button>
-            {timing && !loadingSendButton && <TimingInfo timing={timing} />}
-            <Button
-               size="lg"
-               onClick={handleSend}
-               className="bg-blue-600 hover:bg-blue-800 text-lg px-8 py-4 rounded-lg"
-               disabled={
-                  !parameters || files.length === 0 || loadingSendButton
-               }
-            >
-               {loadingSendButton ? 'Procesando...' : 'Enviar'}
-            </Button>
+               {files.length > 0 && (
+                  <Alert tone="info" title="Cartilla seleccionada">
+                     <p className="break-all font-medium">{files[0].name}</p>
+                     <p className="mt-1 text-xs">El nombre identificará este proyecto en el historial.</p>
+                  </Alert>
+               )}
 
-            {/* Barra de progreso */}
-            {loadingSendButton && (
-               <div className="mt-6 w-full">
-                  {/* Indicador de conexión WebSocket */}
-                  {!isConnected && (
-                     <div className="mb-3 flex items-center justify-center text-orange-600 text-sm">
-                        <WifiOff className="w-4 h-4 mr-2" />
-                        <span>WebSocket desconectado - usando polling de respaldo</span>
-                     </div>
-                  )}
-                  
-                  <div className="flex items-center justify-between mb-2">
-                     <span className="text-sm font-medium text-gray-700">
-                        {getStateLabel(processingState)}
-                     </span>
-                     <span className="text-sm font-medium text-gray-700">
-                        {progress}%
-                     </span>
-                  </div>
-                  
-                  <div className="w-full bg-gray-200 rounded-full h-3 overflow-hidden">
-                     <div
-                        className="bg-blue-600 h-3 transition-all ease-out"
-                        style={{ 
-                           width: `${progress}%`,
-                           opacity: isPulsing ? 0.5 : 1,
-                           transition: 'width 0.5s ease-out, opacity 0.15s ease-in-out'
-                        }}
+               <Card className="p-5 sm:p-6">
+                  <Field
+                     label="Perfil de optimización"
+                     htmlFor="optimization-profile"
+                     description="Balanceado ofrece la mejor relación entre tiempo y exploración para la mayoría de cartillas."
+                  >
+                     <Select
+                        id="optimization-profile"
+                        value={perfil}
+                        onChange={event => setPerfil(event.target.value)}
+                        disabled={loadingSendButton}
+                        aria-describedby="optimization-profile-description"
+                     >
+                        <option value="rapido">Rápido — menor tiempo de procesamiento</option>
+                        <option value="balanceado">Balanceado — recomendado</option>
+                        <option value="profundo">Profundo — mayor búsqueda, sin garantía de mejora</option>
+                     </Select>
+                  </Field>
+               </Card>
+
+               <CuttingOptions
+                  catalog={catalog}
+                  onCatalog={setCatalog}
+                  onInventory={setInventory}
+                  visuals={visuals}
+                  onVisuals={setVisuals}
+                  disabled={loadingSendButton || estimating}
+               />
+
+               {parameters && metadata ? (
+                  <PhysicalOptions
+                     value={parameters}
+                     metadata={metadata}
+                     onChange={setParameters}
+                     disabled={loadingSendButton || estimating}
+                  />
+               ) : (
+                  <Card className="p-5 text-sm text-content-muted">Cargando condiciones físicas…</Card>
+               )}
+
+               {backendError && <Alert tone="error" title="No fue posible continuar">{backendError}</Alert>}
+
+               {timing && !loadingSendButton && <TimingInfo timing={timing} />}
+
+               {loadingSendButton && (
+                  <Card className={`p-5 sm:p-6 ${isPulsing ? 'opacity-80' : 'opacity-100'} transition-opacity duration-fast`}>
+                     {!isConnected && (
+                        <Alert tone="warning" className="mb-5">
+                           WebSocket desconectado; OICA está usando el sondeo de respaldo.
+                        </Alert>
+                     )}
+                     <Progress
+                        value={progress}
+                        label={getStateLabel(processingState) || 'Preparando procesamiento'}
+                        detail={statusMessage || undefined}
                      />
+                     <TimingInfo timing={timing} />
+                     {(processingState === 'completed' || processingState === 'SUCCESS') && (
+                        <div className="mt-4 flex items-center gap-2 text-sm font-semibold text-content-success">
+                           <CheckCircle2 className="h-5 w-5" aria-hidden="true" />
+                           Redirigiendo a resultados…
+                        </div>
+                     )}
+                  </Card>
+               )}
+
+               <div className="flex flex-col-reverse gap-3 border-t border-line pt-6 sm:flex-row sm:justify-end">
+                  <Button
+                     variant="outline"
+                     disabled={!parameters || !files.length || loadingSendButton || estimating}
+                     onClick={estimateTime}
+                  >
+                     <Clock3 className="h-4 w-4" aria-hidden="true" />
+                     {estimating ? 'Consultando…' : 'Estimar tiempo'}
+                  </Button>
+                  <Button
+                     size="lg"
+                     onClick={handleSend}
+                     disabled={!parameters || files.length === 0 || loadingSendButton}
+                  >
+                     {loadingSendButton ? 'Procesando…' : 'Iniciar optimización'}
+                     {!loadingSendButton && <ArrowRight className="h-4 w-4" aria-hidden="true" />}
+                  </Button>
+               </div>
+            </section>
+
+            <aside className="lg:sticky lg:top-24" aria-label="Resumen de ejecución">
+               <Card className="overflow-hidden">
+                  <div className="border-b border-line p-5 sm:p-6">
+                     <p className="font-mono text-xs font-semibold uppercase tracking-widest text-content-brand">
+                        Antes de comenzar
+                     </p>
+                     <div className="mt-2 flex items-start justify-between gap-4">
+                        <h2 className="text-xl font-semibold text-content">Resumen de ejecución</h2>
+                        <Badge tone={files.length ? 'success' : 'neutral'}>
+                           {files.length ? 'Configurando' : 'Borrador'}
+                        </Badge>
+                     </div>
+                     <p className="mt-3 text-sm leading-6 text-content-muted">
+                        OICA procesará los grupos en orden y conservará los saldos reutilizables.
+                     </p>
                   </div>
 
-                  {statusMessage && (
-                     <p className="mt-2 text-sm text-gray-600">
-                        {statusMessage}
+                  <div className="grid grid-cols-3 gap-2 border-b border-line p-5 sm:p-6">
+                     {[
+                        { value: String(diameterCount).padStart(2, '0'), label: 'diámetros' },
+                        { value: String(catalog.length).padStart(2, '0'), label: 'longitudes' },
+                        { value: visuals ? 'ON' : 'OFF', label: 'visuales' },
+                     ].map(metric => (
+                        <div key={metric.label} className="rounded-md border border-line bg-surface-interactive p-3">
+                           <p className="font-mono text-lg font-semibold tabular-nums text-content-brand">{metric.value}</p>
+                           <p className="mt-1 text-xs text-content-muted">{metric.label}</p>
+                        </div>
+                     ))}
+                  </div>
+
+                  <div className="p-5 sm:p-6">
+                     <p className="mb-4 font-mono text-xs font-semibold uppercase tracking-widest text-content-muted">
+                        Secuencia de trabajo
                      </p>
-                  )}
-                  <TimingInfo timing={timing} />
-
-                  {(processingState === 'completed' || processingState === 'SUCCESS') && (
-                     <div className="mt-4 flex items-center justify-center text-green-600">
-                        <CheckCircle className="w-5 h-5 mr-2" />
-                        <span>Redirigiendo a resultados...</span>
+                     <ol className="space-y-3">
+                        {[
+                           ['01', 'Validar cartilla', 'estructura y demanda'],
+                           ['02', 'Optimizar cortes', 'por diámetro y etapa'],
+                           ['03', 'Generar resultados', 'Excel, PDF e inventario'],
+                        ].map(([number, title, detail]) => (
+                           <li key={number} className="flex gap-3 rounded-md bg-surface-subtle p-3">
+                              <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md border border-status-info-border bg-status-info-bg font-mono text-xs font-semibold text-status-info-text">
+                                 {number}
+                              </span>
+                              <div>
+                                 <p className="text-sm font-semibold text-content">{title}</p>
+                                 <p className="mt-1 font-mono text-xs text-content-muted">{detail}</p>
+                              </div>
+                           </li>
+                        ))}
+                     </ol>
+                     <div className="mt-5 flex items-start gap-3 border-t border-line pt-5 text-xs leading-5 text-content-muted">
+                        <Layers3 className="mt-0.5 h-4 w-4 shrink-0 text-content-brand" aria-hidden="true" />
+                        Los parámetros quedan guardados con cada versión para asegurar trazabilidad.
                      </div>
-                  )}
-               </div>
-            )}
-
-            {backendError && (
-               <div className="mt-4 flex items-center justify-center text-red-600 font-semibold">
-                  <AlertCircle className="w-5 h-5 mr-2" />
-                  {backendError}
-               </div>
-            )}
+                  </div>
+               </Card>
+            </aside>
          </div>
       </div>
    );

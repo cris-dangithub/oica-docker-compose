@@ -1,4 +1,44 @@
-# Estado actual — 2026-09-18
+# Estado actual — 2026-09-29
+
+## Bloque J — Rediseño visual OICA
+
+Discovery, auditoría AS-IS y tres direcciones visuales completadas sin cambiar
+el lenguaje visual del frontend. Stack local saludable en http://localhost; se
+capturaron rutas principales en desktop/tablet/mobile y se contrastó producción.
+La auditoría Playwright/axe confirmó navegación y tabla móviles incompletas,
+contraste insuficiente, controles sin nombre accesible, metadata/lang genéricos y
+la imagen rota de la landing. Evidencia y estado persistente en
+`docs/oica-redesign/`; riesgos en
+`.claude/diagnostics/2026-09-29-redesign-ui-audit.md`.
+
+El usuario aprobó **B — Industrial Clarity**, incorporando métricas
+monoespaciadas y precisión geométrica de A. La decisión está registrada como
+ADR-UI-004; foundations, paleta con pares AA, dimensiones y alcance v1 están
+fijados en `docs/oica-redesign/DESIGN-SYSTEM.md` y `COMPONENT-MAP.md`. El ledger
+de Figma es `FIGMA-STATE.json`.
+
+**Code-first en curso (ADR-UI-006).** Migrados: tokens CSS/Tailwind, primitives
+(`components/ui/`), `Navbar` responsive, `layout.tsx` (`lang="es"`, metadata,
+`<main>`) y **todas las pantallas**: `/subir-cartilla`, `/archivos` (tabla/tarjetas
+responsive, diálogos propios), inicio, tutorial y contacto. Tutorial corregido
+(RIESGO-AC-007: se quitó "Método Búfalo" sin respaldo; masa #4 = 0,994 kg/m). QA 2026-09-29: typecheck, lint y build OK; axe-core
+0 violaciones en 1440/820/390 px; sin overflow. Codex inició la fase C2 y se
+cortó por límite de uso en C2.c; Claude Code la retomó y la cerró. Pendiente: limpieza
+legacy, rebuild Docker (pedir aprobación por espacio en C:) y Figma. E2E real 2026-09-29 OK (estimar, enviar, WebSocket,
+descargar, reprocesar, eliminar) con cartilla de prueba `qa-rediseno-*`, ya
+eliminada; la base conserva sus 6 proyectos. El stack Docker local sigue con
+la imagen anterior del frontend (no se reconstruyó).
+
+Figma está conectado con la cuenta propietaria. Archivo `OICA — Product Design`:
+https://www.figma.com/design/pQYp8TECtmWQLDcHISqfZP. Página de exploraciones
+con A Precision Engineering, B Industrial Clarity y C CAD Control Room. Dos
+lecturas posteriores a la aprobación —inspección programática y librerías— fueron
+rechazadas antes de ejecutarse porque el plan Starter mantiene agotado el límite
+MCP. **Bloqueo crítico:** renovar el cupo o ampliar el plan para completar Phase
+0 y crear variables/componentes en Figma. La segunda conexión listada requiere
+reautenticación y no se usó. No hubo escritura parcial en Figma ni despliegue. Con autorización explícita
+del usuario (2026-09-29) el rediseño se publicó en la rama
+`feat/rediseno-design-system` con PR hacia `production`. Se preservan todos los cambios ajenos existentes.
 
 ## Bloque I — Proxy Docker o Nginx del host
 

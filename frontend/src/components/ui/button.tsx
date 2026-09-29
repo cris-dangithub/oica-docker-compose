@@ -4,25 +4,28 @@ import { cva, type VariantProps } from 'class-variance-authority';
 import { cn } from '@/lib/utils';
 
 const buttonVariants = cva(
-   'inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50',
+   'inline-flex shrink-0 items-center justify-center gap-2 rounded-md border text-sm font-semibold transition-colors duration-standard ease-standard focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-line-focus focus-visible:ring-offset-2 focus-visible:ring-offset-surface disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50',
    {
       variants: {
          variant: {
-            default: 'bg-primary text-primary-foreground hover:bg-primary/90',
+            default:
+               'border-action-primary bg-action-primary text-action-primary-text shadow-raised hover:border-action-primary-hover hover:bg-action-primary-hover active:border-action-primary-active active:bg-action-primary-active',
             destructive:
-               'bg-destructive text-destructive-foreground hover:bg-destructive/90',
+               'border-action-danger bg-action-danger text-content-inverse shadow-raised hover:border-action-danger-hover hover:bg-action-danger-hover',
             outline:
-               'border border-input bg-background hover:bg-accent hover:text-accent-foreground',
+               'border-line-strong bg-action-secondary text-content hover:border-line-focus hover:bg-action-secondary-hover hover:text-content-brand',
             secondary:
-               'bg-secondary text-secondary-foreground hover:bg-secondary/80',
-            ghost: 'hover:bg-accent hover:text-accent-foreground',
-            link: 'text-primary underline-offset-4 hover:underline',
+               'border-line bg-surface-subtle text-content hover:border-line-strong hover:bg-surface-interactive',
+            ghost:
+               'border-transparent bg-transparent text-content-muted hover:bg-surface-interactive hover:text-content-brand',
+            link:
+               'h-auto border-transparent bg-transparent p-0 text-content-brand underline-offset-4 hover:underline',
          },
          size: {
-            default: 'h-10 px-4 py-2',
-            sm: 'h-9 rounded-md px-3',
-            lg: 'h-11 rounded-md px-8',
-            icon: 'h-10 w-10',
+            default: 'h-10 px-4',
+            sm: 'h-8 px-3 text-xs',
+            lg: 'h-12 px-6 text-base',
+            icon: 'h-10 w-10 px-0',
          },
       },
       defaultVariants: {
@@ -64,8 +67,9 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
             {...props}
          >
             {loading ? (
-               <span className="flex items-center justify-center">
+               <span className="flex items-center justify-center gap-2">
                   {loader || <DefaultLoader />}
+                  <span className="sr-only">Procesando</span>
                </span>
             ) : (
                children
@@ -78,10 +82,11 @@ Button.displayName = 'Button';
 
 const DefaultLoader: React.FC = () => (
    <svg
-      className="animate-spin h-5 w-5 text-current"
+      className="h-5 w-5 animate-spin text-current"
       xmlns="http://www.w3.org/2000/svg"
       fill="none"
       viewBox="0 0 24 24"
+      aria-hidden="true"
    >
       <circle
          className="opacity-25"

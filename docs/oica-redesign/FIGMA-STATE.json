@@ -1,0 +1,40 @@
+{
+  "runId": "oica-ds-v1-2026-09-29",
+  "fileKey": "pQYp8TECtmWQLDcHISqfZP",
+  "fileName": "OICA — Product Design",
+  "phase": "phase0",
+  "step": "figma-inspection-blocked-by-starter-limit",
+  "direction": "B — Industrial Clarity + precision traits from A",
+  "entities": {
+    "pages": {
+      "00 — Exploraciones": "3:2"
+    },
+    "frames": {
+      "Direcciones visuales — Configurar optimización": "3:3",
+      "A — Precision Engineering": "5:10",
+      "B — Industrial Clarity": "5:113",
+      "C — CAD Control Room": "5:216"
+    },
+    "collections": {},
+    "variables": {},
+    "styles": {},
+    "components": {},
+    "patterns": {},
+    "screens": {}
+  },
+  "completedSteps": [
+    "P0.a-codebase-analysis",
+    "P0.d-v1-scope-locked",
+    "P0.e-code-side-mapping-recorded",
+    "visual-direction-approved"
+  ],
+  "pendingValidations": [
+    "P0.b-figma-file-inspection",
+    "P0.c-library-discovery",
+    "P0.e-figma-side-conflict-audit",
+    "P0.f-final-gap-analysis"
+  ],
+  "blockers": [
+    "Figma MCP Starter plan call limit reached before Phase 0 inspection executed"
+  ]
+}
