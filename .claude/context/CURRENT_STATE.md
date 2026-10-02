@@ -1,6 +1,28 @@
-# Estado actual — 2026-09-29
+# Estado actual — 2026-10-02
 
-## Bloque J — Rediseño visual OICA
+## Bloque K — Alineación con el título fijo de la tesis (spec 001)
+
+El usuario fijó el título palabra por palabra («Diseño y desarrollo de una aplicación web con
+Inteligencia Artificial … con desperdicios admisibles mediante el enfoque basado en patrones de
+corte y nesting»). INF-014 quedó [VALIDADA] con sus decisiones: umbral admisible ingresado por el
+usuario, sin valor legal (no hay norma colombiana con un máximo); patrones de corte agregados y
+cota Gilmore–Gomory como métrica; nesting lineal; 001/002 de una obra colombiana confidencial y
+anonimizada.
+
+El usuario aportó los objetivos vigentes (distintos de los del 13 de septiembre) y aceptó ajustar
+su redacción. Cap. 1 §1.3 está actualizado con esa redacción, pendiente del director; el resto
+del documento sigue sin tocar.
+
+Spec Kit: `specs/001-alineacion-titulo-tesis/spec.md` (6 historias, FR-001–FR-029, SC-001–SC-010)
+con su checklist aprobada; `.specify/feature.json` apunta a ella. No hay código modificado.
+Siguiente paso: `/speckit-plan`. La cota necesitará probablemente una dependencia nueva: pedir
+aprobación antes de reconstruir imágenes (espacio en C:).
+
+**Pregunta pendiente del usuario:** datos de compra reales (facturas o remisiones, al menos kg
+por diámetro) de una obra colombiana para OE5. Mientras tanto, OE5 se evalúa con heurísticas y
+cota (RIESGO-AC-009). La spec también contempla crear `docs/tesis-doc/Referencias.md`.
+
+## Bloque J — Rediseño visual OICA (estado al 2026-09-29)
 
 Discovery, auditoría AS-IS y tres direcciones visuales completadas sin cambiar
 el lenguaje visual del frontend. Stack local saludable en http://localhost; se

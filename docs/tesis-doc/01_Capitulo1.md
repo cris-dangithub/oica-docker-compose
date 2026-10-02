@@ -60,21 +60,21 @@ El valor para ingeniería civil se evaluará por la satisfacción de la cartilla
 
 #### 1.3.1 Objetivo general
 
-Desarrollar y evaluar una aplicación local para planificar cortes unidimensionales de acero por etapas, utilizando algoritmos genéticos e inventario reutilizable, con el propósito de reducir el porcentaje de material no aprovechado al finalizar el proyecto.
+Desarrollar una aplicación web que integre técnicas de inteligencia artificial, específicamente un algoritmo genético, para optimizar la distribución de barras de acero comercial de 6, 9 y 12 metros en Colombia, mediante patrones de corte unidimensional y enfoque de nesting lineal, con el fin de reducir el desperdicio a niveles admisibles y mejorar la eficiencia del uso del material.
 
-> Reformulación autorizada por el autor el 13 de septiembre de 2026, pendiente de revisión formal con el director. No se afirma aprobación institucional del nuevo título.
+> Objetivos aportados por el autor; redacción ajustada el 2 de octubre de 2026 para que sean verificables, pendiente de revisión formal con el director. Sustituyen la reformulación del 13 de septiembre de 2026.
 
 #### 1.3.2 Objetivos específicos
 
-1. Formalizar la demanda por pedido, diámetro y etapa, la disponibilidad de barras comerciales y adicionales, y la transferencia de sobrantes entre etapas.
-2. Implementar un algoritmo genético con evaluación del desperdicio final por masa y un validador independiente de demanda, capacidad y disponibilidad.
-3. Incorporar importación y exportación compatibles de inventario, planes de corte trazables y seguimiento del tiempo de procesamiento.
-4. Evaluar corrección, desperdicio, tiempo y variabilidad del algoritmo usando las cartillas 001 y 002, comparándolo con heurísticas sometidas a las mismas restricciones.
-5. Documentar los resultados reproducibles y los límites del modelo, distinguiendo planificación ideal de ejecución física en obra.
+1. Calcular la cantidad de barras por diámetro y longitud comercial (6, 9 y 12 m) y el aprovechamiento del material del plan de corte.
+2. Medir el tiempo de procesamiento según el tamaño de la cartilla y el perfil de optimización (rápido, balanceado y profundo), y su relación con el desperdicio obtenido frente al nivel admisible definido por el usuario.
+3. Registrar la reutilización de los sobrantes de barras de acero de proyectos anteriores como complemento para optimizar los recursos dispuestos para la ejecución de proyectos futuros.
+4. Desarrollar un sistema de análisis de compra que genere planes de compra y corte verificados automáticamente (demanda, diámetro, capacidad y etapas), reduciendo las limitaciones del análisis manual.
+5. Evaluar la eficiencia del algoritmo genético con la cartilla de un proyecto real de construcción en Colombia, comparando su desperdicio con heurísticas de referencia y con la cota inferior por patrones de corte. La comparación con el desperdicio registrado en obra se incorporará si se obtienen esos datos.
 
 #### 1.3.3 Alcance y pregunta evaluable
 
-¿En qué medida el algoritmo genético mejora el porcentaje final de material no aprovechado respecto de heurísticas de referencia, y qué costo temporal añade, para las cartillas 001 y 002 bajo un mismo modelo secuencial?
+¿En qué medida el algoritmo genético reduce el porcentaje final de material no aprovechado respecto de heurísticas de referencia, qué tan lejos queda de la cota inferior por patrones de corte y qué costo temporal añade, para las cartillas 001 y 002 bajo un mismo modelo secuencial?
 
 El caso principal es 002: 67.443 piezas, 137 órdenes, cinco diámetros y 13 etapas. El caso 001 contiene 92 piezas y 16 órdenes. Los ejemplos históricos de 683 piezas no forman parte de esta evaluación. No se infieren resultados generales para toda obra a partir de dos cartillas.
 

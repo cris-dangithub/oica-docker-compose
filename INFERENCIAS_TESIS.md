@@ -27,7 +27,7 @@
 | INF-012 | Datos y metodología | Alta | [VALIDADA] | Corpus 001/002, pérdida configurable y desperdicio final por masa |
 | INF-013 | Arquitectura | Media | [VALIDADA] | Proxy seleccionable container/host; VPS en otro ambiente |
 | INF-011 | Arquitectura | Alta | [VALIDADA] | Monorepo, producción VPS, CI/CD y desarrollo nativo |
-| INF-014 | Académica | Alta | [PENDIENTE] | Título propuesto con IA/nesting/desperdicios admisibles no coincide con el modelo; alternativas |
+| INF-014 | Académica | Alta | [VALIDADA] | Título fijo con IA/nesting/desperdicios admisibles; se alinea la app (spec 001) y los objetivos reales |
 
 ---
 
@@ -793,6 +793,20 @@ INF-012 (autoriza reformular el título con el director), INF-011 (aplicación w
 ### Puede consolidarse con
 Ninguna: INF-012 solo deja abierta la reformulación; esta entrada evalúa la propuesta.
 ### Estado
-[PENDIENTE] — el usuario pidió registrarla; requiere revisión con el director.
+[VALIDADA] — 2026-10-02. La respuesta asumida (reformular el título) quedó descartada: el título
+es fijo y lo que se alinea es la aplicación y el documento.
 ### Respuesta del usuario
-Solicitó registrar la evaluación y las alternativas (2026-09-29). Título final pendiente.
+Solicitó registrar la evaluación y las alternativas (2026-09-29). El 2026-10-02 decidió:
+- El título es **fijo palabra por palabra**; la app y la tesis deben respaldar cada término.
+- Desperdicios admisibles: umbral porcentual opcional ingresado por el usuario, sin valor legal por
+  defecto (no se encontró norma colombiana con un máximo; en INVIAS/IDU el desperdicio va dentro
+  del precio unitario). Se reporta cumple/excede sin cambiar el motor.
+- Patrones de corte: salida «patrón × repeticiones» y cota inferior Gilmore–Gomory como métrica.
+- Nesting: nesting lineal (1D) con fuente; sin nesting 2D.
+- Cartillas 001/002: obra colombiana, datos confidenciales y anonimizados.
+- Objetivos vigentes aportados por el autor (distintos de los del 13 de septiembre). Aceptó ajustar
+  su redacción: «reducir el desperdicio a niveles admisibles», OE1 resumen de compra por longitud,
+  OE2 tiempo según cartilla y perfil, OE3 «sobrantes», OE4 planes verificados, OE5 con heurísticas
+  y cota (sin datos de compra real por ahora; ver RIESGO-AC-009).
+Cap. 1 §1.3 actualizado. Especificación: `specs/001-alineacion-titulo-tesis/spec.md`.
+Referencias propuestas: se documentarán en `docs/tesis-doc/Referencias.md` (FR-021).

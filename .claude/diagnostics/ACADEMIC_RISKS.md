@@ -164,4 +164,27 @@ título vigente dice «aplicación local», aunque la aplicación está desplega
 
 **Inferencias relacionadas:** INF-014, INF-012, INF-011
 
-**Estado:** [PENDIENTE — revisión con el director; no se modificó el documento]
+**Estado:** [EN MITIGACIÓN — 2026-10-02] El usuario fijó el título palabra por palabra y aportó
+los objetivos vigentes; se aceptó su redacción ajustada (Cap. 1 §1.3 actualizado). La alineación de
+la app con cada término se especifica en `specs/001-alineacion-titulo-tesis/spec.md`. Pendiente:
+implementar la spec, actualizar Cap. 2–4 y revisión del director.
+
+---
+
+## RIESGO-AC-009 — OE5 sin comparación con datos de compra de una obra real
+
+**Severidad:** MEDIA (afecta la evaluación del Cap. 4 y la defensa del objetivo 5)
+
+**Descripción:**
+El objetivo específico 5 pide evaluar la eficiencia con un proyecto real. La cartilla 002 es de una
+obra colombiana real, pero solo se tiene su demanda: no hay facturas, remisiones ni resumen de compra.
+Una búsqueda pública (2026-10-02) no encontró proyectos colombianos con cartilla y resumen de compra.
+Por decisión del usuario, por ahora OE5 se evalúa con heurísticas de referencia y con la cota inferior
+por patrones de corte (Gilmore–Gomory). No se debe afirmar que OICA supera el desperdicio real de obra.
+
+**Mitigación:** cota y brecha (spec 001, FR-012 a FR-017 y FR-025). Si el usuario consigue al menos
+los kg comprados por diámetro de una obra colombiana, se añade como comparación anonimizada.
+
+**Inferencias relacionadas:** INF-014, INF-012
+
+**Estado:** [PENDIENTE — dato de compra real a cargo del usuario]
