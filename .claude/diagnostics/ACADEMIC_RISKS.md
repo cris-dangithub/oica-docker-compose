@@ -172,9 +172,11 @@ Implementado y validado el 2026-10-02: la app respalda cada término del título
 cota, nesting lineal en el PNG, aviso NSR-10, resumen de compra y detalle web). Cap. 1–4 y
 `Referencias.md` están actualizados. Sigue **en mitigación** por:
 - revisión del director (objetivos e INF-015);
-- fuentes sin verificar: INVIAS 640 (cita literal), IDU (por localizar), fuente de «nesting
-  lineal», ediciones de Holland, Goldberg y Russell-Norvig. La Res. 472/2017 y la Res. 1257/2021
-  quedaron verificadas el 2026-10-02;
+- fuentes sin verificar: IDU (por localizar), fuente de «nesting lineal», páginas de Holland y
+  Goldberg, y la cita literal de Russell-Norvig.
+  - Ya verificadas: Res. 472/2017 y 1257/2021 (2026-10-02); INVIAS 2022 art. 640 y RECIAMUC
+    2022, con los PDF del autor (2026-10-03).
+  - Russell-Norvig tiene verificadas edición, sección y página;
 - la «pregunta textual del usuario» de cada ficha, que no quedó registrada.
 
 ---

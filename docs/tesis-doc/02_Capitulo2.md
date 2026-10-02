@@ -30,7 +30,7 @@ Cada referencia devuelve su mejor plan factible entre esas tres reglas. Esta ada
 
 ## 2.4 Algoritmo genético y representación
 
-El algoritmo genético es la técnica de Inteligencia Artificial de la aplicación. Pertenece a la computación evolutiva: busca soluciones evolucionando una población de candidatos mediante selección, cruce, mutación y elitismo (Holland, 1975; Goldberg, 1989; Russell y Norvig; *edición y páginas por verificar*, fichas REF-HOLLAND-1975, REF-GOLDBERG-1989 y REF-RUSSELL-NORVIG). Es el único optimizador que produce el plan. Las heurísticas de la sección 2.3 y la cota de la sección 2.7 sirven de referencia o de medida.
+El algoritmo genético es la técnica de Inteligencia Artificial de la aplicación. Pertenece a la computación evolutiva: busca soluciones evolucionando una población de candidatos mediante selección, cruce y mutación (Holland, 1975; Goldberg, 1989; Russell y Norvig, 2021, cap. 4, §4.1.4; *páginas de Holland y Goldberg y cita literal por verificar*, fichas REF-HOLLAND-1975, REF-GOLDBERG-1989 y REF-RUSSELL-NORVIG). La selección por torneo y el elitismo que se describen a continuación son decisiones de diseño del motor de OICA. Es el único optimizador que produce el plan. Las heurísticas de la sección 2.3 y la cota de la sección 2.7 sirven de referencia o de medida.
 
 La población contiene candidatos con genes por orden, no por pieza individual. Cada orden tiene una prioridad de colocación y una regla de elección de longitud. El decodificador respeta primero la etapa; la prioridad genética solo decide dentro de esa restricción.
 
@@ -87,11 +87,11 @@ El umbral se compara con el desperdicio por masa de la sección 2.2, que incluye
 No se identificó una norma colombiana que fije un porcentaje máximo de desperdicio de acero de refuerzo. El estado de cada fuente es:
 
 - **NSR-10, Título C** (*verificada*, fichas REF-NSR10-TABLA y REF-DECRETO926): su texto completo no contiene el término «desperdicio» (búsqueda del 2 de octubre de 2026 en la copia consultada). Solo se revisó el Título C.
-- **INVIAS, artículo 640** (*cita literal por verificar*, ficha REF-INVIAS-640): según resúmenes secundarios, mide el acero en kilogramos suministrados y colocados e incluye los desperdicios en el precio unitario.
+- **INVIAS, artículo 640** (2022; *verificada*, ficha REF-INVIAS-640): mide el acero en «kilogramo (kg) […] realmente suministrado y colocado en obra y debidamente aceptado por el interventor» (640.6), y dispone que «el precio unitario debe cubrir todos los costos por concepto de suministro, […] corte, desperdicios, doblamiento […]» (640.7). No fija un porcentaje máximo de desperdicio. Su Tabla 640-1 repite las masas por metro de la NSR-10.
 - **IDU** (*pendiente de localizar*, ficha REF-IDU-ACERO).
 - **Resolución 472 de 2017** de MinAmbiente, modificada por la Resolución 1257 de 2021 (*verificada* en textos compilados, ficha REF-RES472): trata los residuos de construcción y demolición. No usa el término «desperdicio»; su único porcentaje es una meta mínima de aprovechamiento de RCD para grandes generadores, no un máximo de desperdicio.
 
-Un contrato sí puede fijar un máximo en sus especificaciones particulares. Algunos resúmenes mencionan el 2 % o el 3 %, sin verificar. Por eso el umbral se deja al usuario.
+Un contrato sí puede fijar un máximo en sus especificaciones particulares. Por eso el umbral se deja al usuario.
 
-Como referencia empírica débil, existe un estudio de desperdicio de acero en una vivienda de dos plantas (Almendariz Rodríguez y Ortiz Aguirre, 2022; *cita literal por verificar*, ficha REF-RECIAMUC-2022). Es un solo caso, de una revista ecuatoriana; no se usa como umbral.
+Como referencia empírica débil, un estudio de una vivienda de dos plantas en Ecuador reporta un desperdicio total de acero de refuerzo del 6,77 %: compra de 4.860,412 kg frente a 4.552,288 kg pagados (Almendariz Rodríguez y Ortiz Aguirre, 2022, p. 38; *verificada*, ficha REF-RECIAMUC-2022). Es un solo caso, no colombiano, con una definición de desperdicio parecida pero no idéntica a la de OICA; no se usa como umbral.
 

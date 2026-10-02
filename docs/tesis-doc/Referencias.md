@@ -19,17 +19,17 @@ no quedó registrada en las sesiones: figura como «pendiente: pedir al autor» 
 |---|---|---|
 | REF-NSR10-TABLA | en Colombia | verificada |
 | REF-DECRETO926 | en Colombia | verificada (consulta del 2026-09-13 registrada en el Cap. 2) |
-| REF-INVIAS-640 | desperdicios admisibles | verificar cita literal |
+| REF-INVIAS-640 | desperdicios admisibles | verificada |
 | REF-IDU-ACERO | desperdicios admisibles | pendiente de localizar |
 | REF-RES472 | desperdicios admisibles | verificada (textos compilados) |
-| REF-RECIAMUC-2022 | desperdicios admisibles | verificar cita literal (datos bibliográficos confirmados) |
+| REF-RECIAMUC-2022 | desperdicios admisibles | verificada |
 | REF-APU | desperdicios admisibles | pendiente de localizar (fuente débil) |
 | REF-GG-1961 / REF-GG-1963 | patrones de corte | verificar cita literal (datos bibliográficos confirmados) |
 | REF-WASCHER-2007 | patrones de corte, nesting | verificar cita literal (datos bibliográficos confirmados) |
 | REF-BENJAORAN-2013 | distribución eficiente | verificada |
-| REF-RUSSELL-NORVIG | Inteligencia Artificial | verificar edición y páginas |
-| REF-HOLLAND-1975 | Inteligencia Artificial | verificar edición y páginas |
-| REF-GOLDBERG-1989 | Inteligencia Artificial | verificar edición y páginas |
+| REF-RUSSELL-NORVIG | Inteligencia Artificial | verificar cita literal (edición, sección y página verificadas) |
+| REF-HOLLAND-1975 | Inteligencia Artificial | verificar edición y páginas (datos bibliográficos confirmados) |
+| REF-GOLDBERG-1989 | Inteligencia Artificial | verificar edición y páginas (datos bibliográficos confirmados) |
 | REF-NESTING-LINEAL | nesting | pendiente de localizar |
 | REF-HILTI-ACD | (hipótesis física) | verificar cita literal |
 
@@ -57,6 +57,7 @@ no quedó registrada en las sesiones: figura como «pendiente: pedir al autor» 
 - **Evidencia adicional**: el texto completo del Título C en la copia consultada (35.395 líneas
   extraídas con `pdftotext`) no contiene el término «desperdicio» (2026-10-02). Solo se revisó
   el Título C, no los demás títulos de la NSR-10.
+- **Concordancia**: INVIAS 2022, Tabla 640-1 (p. 640-2), repite los mismos valores (REF-INVIAS-640).
 - **Pregunta textual del usuario que la originó**: pendiente: pedir al autor. La decisión se
   registró en INF-014 («en Colombia = masas nominales NSR-10 con aviso de discrepancia»), pero
   no la pregunta literal.
@@ -75,36 +76,41 @@ no quedó registrada en las sesiones: figura como «pendiente: pedir al autor» 
 
 ## REF-INVIAS-640 — Especificaciones generales de INVIAS, artículo 640 (acero de refuerzo)
 
-- **Cita completa**: Instituto Nacional de Vías (INVIAS). *Especificaciones Generales de
-  Construcción de Carreteras*, Capítulo 6, Artículo 640 «Acero de refuerzo». Edición por fijar
-  (2013 o 2022).
-- **Enlace**: no se obtuvo una copia oficial el 2026-10-02. Los espejos conocidos no
-  respondieron: `gerconcesion.co` agotó el tiempo de conexión y un pliego de Findeter devolvió
-  HTTP 403.
-- **Estado**: **verificar cita literal**.
-- **Contenido por confirmar**: según resúmenes secundarios (no verificados):
-  - la medida se hace en kilogramos de acero realmente suministrado y colocado, con las masas
-    unitarias del propio artículo;
-  - el precio unitario debe cubrir, entre otros, corte, desperdicios y doblamiento.
-
-  Si se confirma, el desperdicio va dentro del precio unitario y el artículo no fija un
-  porcentaje máximo.
-- **Motivo de la propuesta**: sustentar que en la obra pública colombiana el desperdicio de
-  acero no tiene un máximo normativo general y se presupuesta dentro del precio unitario. Por eso
-  OICA no propone un umbral por defecto (FR-002).
+- **Cita completa**: Instituto Nacional de Vías (INVIAS). (2022). *Especificaciones Generales de
+  Construcción de Carreteras*. Capítulo 6, «Estructuras y drenajes», Artículo 640-22 «Acero de
+  refuerzo»:
+  - 640.6 «Medida» y 640.7 «Forma de pago», pp. 640-8 a 640-10;
+  - Tabla 640-1, p. 640-2.
+- **Enlace**: portal oficial, <https://www.invias.gov.co/publicaciones/4154/documentos-tecnicos/>
+  (sección «Especificaciones generales de construcción de carreteras (2022)»; la descarga
+  requiere navegador). Copia local fuera del repositorio: `docs/tesis-doc/fuentes/`.
+- **Estado**: **verificada** (2026-10-03) con el PDF oficial descargado por el autor, de 1.344
+  páginas. La fe de erratas de 2022 no menciona el artículo 640.
+- **Contenido verificado**:
+  - **640.6 Medida**: «La unidad de medida debe ser el kilogramo (kg), aproximado al entero, de
+    acero de refuerzo para estructuras de concreto realmente suministrado y colocado en obra y
+    debidamente aceptado por el interventor». La medida de barras se basa en la masa calculada con
+    las Tablas 640-1 y 640-2.
+  - **640.6 Medida**: «No se deben medir cantidades en exceso de las indicadas en los documentos
+    del proyecto o las ordenadas por el interventor».
+  - **640.7 Forma de pago**: «El precio unitario debe cubrir todos los costos por concepto de
+    suministro, ensayos, transportes, almacenamiento, corte, desperdicios, doblamiento, limpieza,
+    colocación y fijación del refuerzo […]».
+  - El artículo **no fija un porcentaje máximo de desperdicio**: la palabra aparece una sola vez,
+    dentro de los costos que cubre el precio unitario.
+  - **Tabla 640-1** (masas por metro, barras en octavos de pulgada): valores idénticos a la
+    NSR-10, Tabla C.3.5.3-2, de n.º 2 (0,250 kg/m) a n.º 18 (20,240 kg/m).
+- **Motivo de la propuesta**: sustentar que en la obra pública colombiana el desperdicio de acero
+  no tiene un máximo normativo general y se presupuesta dentro del precio unitario. Por eso OICA no
+  propone un umbral por defecto (FR-002).
 - **Pregunta textual del usuario que la originó**: pendiente: pedir al autor.
-- **Término del título que respalda**: «desperdicios admisibles».
-- **Ubicación prevista en la tesis**: Cap. 2 (desperdicio admisible), Cap. 3 (umbral del usuario).
+- **Término del título que respalda**: «desperdicios admisibles», «en Colombia».
+- **Ubicación prevista en la tesis**: Cap. 2 §2.8.
 - **Advertencias**:
-  - Los resúmenes encontrados mencionan **especificaciones técnicas particulares** de algunos
-    contratos que fijan un «desperdicio máximo» del 2 % o del 3 %. Si se confirma, no son normas
-    generales sino condiciones de un contrato. Eso respalda el texto de la app («usa el que
-    exige tu contrato»), pero la tesis no debe afirmar que «nadie» fija un máximo: debe decir que
-    la norma general no lo fija y que un contrato sí puede hacerlo.
-  - Mientras siga sin verificar, la app no nombra a INVIAS en sus textos (FR-002) y la tesis no
-    la cita como verificada.
-  - **Acción**: pedir al autor la edición oficial del artículo 640 (PDF de invias.gov.co) o una
-    copia del pliego de un proyecto.
+  - Las especificaciones INVIAS rigen la obra vial nacional; no se extienden automáticamente a la
+    edificación.
+  - Unos resúmenes secundarios mencionan especificaciones particulares de contratos con un
+    «desperdicio máximo» del 2 % o 3 %. **No están verificados** y no se citan en la tesis.
 
 ---
 
@@ -174,21 +180,28 @@ no quedó registrada en las sesiones: figura como «pendiente: pedir al autor» 
 
 ## REF-RECIAMUC-2022 — Desperdicio de acero de refuerzo en una vivienda
 
-- **Cita completa**: Almendariz Rodríguez, C. y Ortiz Aguirre, I. (2022). Determinación de
+- **Cita completa**: Almendariz Rodríguez, C. E. y Ortiz Aguirre, I. J. (2022). Determinación de
   porcentaje de desperdicios del acero estructural de refuerzo en diversos elementos de hormigón
   armado perteneciente a la estructura de una vivienda de 2 plantas. *RECIAMUC*, 6(1), 25–39.
   <https://doi.org/10.26820/reciamuc/6.(1).enero.2022.25-39>
-- **Enlace**: <https://reciamuc.com/index.php/RECIAMUC/article/view/769>.
-- **Estado**: **verificar cita literal**. Los datos bibliográficos se confirmaron en Crossref el
-  2026-10-02; la página del artículo no respondió, así que los porcentajes no se comprobaron.
+- **Enlace**: <https://reciamuc.com/index.php/RECIAMUC/article/view/769>. Copia local en
+  `docs/tesis-doc/fuentes/`.
+- **Estado**: **verificada** (2026-10-03) con el PDF del artículo.
+- **Contenido verificado**: para una vivienda de 2 plantas, el peso de acero a pagar en planilla
+  es de 4.552,288 kg y la compra se determinó en 4.860,412 kg, con un desperdicio total del 6,77 %
+  (conclusiones, p. 38). Los desperdicios considerados son los sobrantes del material empleado.
 - **Motivo de la propuesta**: dar un orden de magnitud empírico del desperdicio de acero en obra.
 - **Pregunta textual del usuario que la originó**: pendiente: pedir al autor.
 - **Término del título que respalda**: «desperdicios admisibles».
-- **Ubicación prevista en la tesis**: Cap. 2 (desperdicio admisible), como referencia empírica.
+- **Ubicación prevista en la tesis**: Cap. 2 §2.8, como referencia empírica.
 - **Advertencias**:
   - Es una fuente **débil**: un solo caso de vivienda.
-  - La revista es ecuatoriana y el contexto del caso no es necesariamente colombiano.
-  - No usar su porcentaje como umbral normativo ni como valor por defecto de OICA (FR-002).
+  - Los autores son de la Universidad de Guayaquil (Ecuador); no es un caso colombiano.
+  - Su «desperdicio» (sobrantes sobre lo comprado) se parece al de OICA (sobrante + pérdida +
+    descarte), pero no es idéntico.
+  - El 7,7 % que aparece en el texto es el crecimiento del sector de la construcción en Perú, no
+    un desperdicio.
+  - No usar el 6,77 % como umbral normativo ni como valor por defecto de OICA (FR-002).
 
 ---
 
@@ -267,46 +280,65 @@ no quedó registrada en las sesiones: figura como «pendiente: pedir al autor» 
 
 ## REF-RUSSELL-NORVIG — Inteligencia Artificial como disciplina
 
-- **Cita completa**: Russell, S. y Norvig, P. *Artificial Intelligence: A Modern Approach*.
-  Pearson. Edición (4.ª, 2020/2021) y capítulo de búsqueda local y algoritmos genéticos por fijar.
-- **Enlace**: no aplica (libro).
-- **Estado**: **verificar edición y páginas**.
+- **Cita completa**: Russell, S. y Norvig, P. (2021). *Artificial Intelligence: A Modern Approach*
+  (4.ª ed.). Pearson. Capítulo 4, «Search in Complex Environments», sección 4.1.4,
+  «Evolutionary algorithms», p. 115.
+- **Enlace**: índice oficial del libro, <https://aima.cs.berkeley.edu/contents.html>.
+- **Estado**: **verificar cita literal**.
+  - Verificado el 2026-10-02 en el índice oficial: edición, capítulo, sección y página inicial.
+  - Los algoritmos evolutivos aparecen como una técnica de búsqueda dentro de un texto de
+    referencia de Inteligencia Artificial.
+  - Falta leer la sección para citar su contenido textual.
 - **Motivo de la propuesta**: respaldar que los algoritmos genéticos son una técnica de IA
   (búsqueda local y computación evolutiva).
 - **Pregunta textual del usuario que la originó**: pendiente: pedir al autor.
 - **Término del título que respalda**: «con Inteligencia Artificial».
 - **Ubicación prevista en la tesis**: Cap. 2 §2.4.
-- **Advertencias**: citar la edición que se consulte físicamente o en biblioteca, con capítulo y
-  página.
+- **Advertencias**:
+  - El índice oficial corresponde a la 4.ª edición de EE. UU.; la edición global puede tener otra
+    paginación.
+  - El año figura como 2020 o 2021 según la impresión; usar el de la página de créditos del
+    ejemplar consultado.
 
 ---
 
 ## REF-HOLLAND-1975 — Origen de los algoritmos genéticos
 
-- **Cita completa**: Holland, J. H. (1975). *Adaptation in Natural and Artificial Systems*.
-  University of Michigan Press. Edición y páginas por fijar.
-- **Enlace**: no aplica (libro).
-- **Estado**: **verificar edición y páginas**.
+- **Cita completa**: Holland, J. H. (1975). *Adaptation in Natural and Artificial Systems: An
+  Introductory Analysis with Applications to Biology, Control, and Artificial Intelligence*.
+  University of Michigan Press. Reimpresión: MIT Press, 1992.
+- **Enlace**: registros en Internet Archive (préstamo digital con cuenta gratuita):
+  <https://archive.org/details/adaptationinnatu0000holl> (1975) y
+  <https://archive.org/details/adaptationinnatu00holl> (MIT Press, 1992).
+- **Estado**: **verificar edición y páginas**. Los datos bibliográficos de ambas ediciones están
+  confirmados en el catálogo de Internet Archive (2026-10-02). Si se cita solo como origen de los
+  algoritmos genéticos, sin parafrasear un pasaje concreto, basta con la edición; para atribuirle
+  una idea puntual, hace falta la página.
 - **Motivo de la propuesta**: fuente original de los algoritmos genéticos.
 - **Pregunta textual del usuario que la originó**: pendiente: pedir al autor.
 - **Término del título que respalda**: «con Inteligencia Artificial».
 - **Ubicación prevista en la tesis**: Cap. 2 §2.4.
-- **Advertencias**: hay reimpresiones (MIT Press, 1992); usar la que se consulte.
+- **Advertencias**: citar la edición que se consulte (1975 o la reimpresión de 1992).
 
 ---
 
 ## REF-GOLDBERG-1989 — Algoritmos genéticos en búsqueda y optimización
 
 - **Cita completa**: Goldberg, D. E. (1989). *Genetic Algorithms in Search, Optimization, and
-  Machine Learning*. Addison-Wesley. Páginas por fijar.
-- **Enlace**: no aplica (libro).
-- **Estado**: **verificar edición y páginas**.
-- **Motivo de la propuesta**: referencia clásica de selección por torneo, cruce, mutación y
-  elitismo, que usa el motor de OICA.
+  Machine Learning*. Addison-Wesley.
+- **Enlace**: registro en Internet Archive (préstamo digital con cuenta gratuita):
+  <https://archive.org/details/geneticalgorithm0000gold>.
+- **Estado**: **verificar edición y páginas**. Los datos bibliográficos están confirmados en el
+  catálogo de Internet Archive (2026-10-02). Faltan las páginas del capítulo 1, donde se presenta
+  el algoritmo genético simple y sus operadores.
+- **Motivo de la propuesta**: referencia clásica de los operadores del algoritmo genético
+  (selección o reproducción, cruce y mutación) que usa el motor de OICA.
 - **Pregunta textual del usuario que la originó**: pendiente: pedir al autor.
 - **Término del título que respalda**: «con Inteligencia Artificial».
 - **Ubicación prevista en la tesis**: Cap. 2 §2.4.
-- **Advertencias**: verificar en el libro qué operadores describe antes de atribuirle cada uno.
+- **Advertencias**: la selección por torneo y el elitismo del motor no deben atribuirse a este
+  libro sin comprobar en qué páginas los trata; el capítulo 1 se centra en reproducción, cruce y
+  mutación.
 
 ---
 

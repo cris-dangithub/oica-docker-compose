@@ -16,3 +16,9 @@ __pycache__/
 
 .maintenance/
 /PROMPT_VPS_NGINX.md
+
+# Metadatos que Windows añade al copiar archivos descargados.
+*:Zone.Identifier
+
+# Especificaciones INVIAS 2022 completas (82 MB): solo copia local; se cita el portal oficial.
+docs/tesis-doc/fuentes/invias-2022-especificaciones.pdf
