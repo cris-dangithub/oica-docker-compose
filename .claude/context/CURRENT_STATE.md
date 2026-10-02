@@ -13,10 +13,74 @@ El usuario aportó los objetivos vigentes (distintos de los del 13 de septiembre
 su redacción. Cap. 1 §1.3 está actualizado con esa redacción, pendiente del director; el resto
 del documento sigue sin tocar.
 
-Spec Kit: `specs/001-alineacion-titulo-tesis/spec.md` (6 historias, FR-001–FR-029, SC-001–SC-010)
-con su checklist aprobada; `.specify/feature.json` apunta a ella. No hay código modificado.
-Siguiente paso: `/speckit-plan`. La cota necesitará probablemente una dependencia nueva: pedir
-aprobación antes de reconstruir imágenes (espacio en C:).
+Spec Kit: constitución v1.0.0 ratificada (`.specify/memory/constitution.md`; prevalece sobre
+AGENTS.md/CLAUDE.md). `specs/001-alineacion-titulo-tesis/` tiene spec, checklist, `plan.md`,
+`research.md`, `data-model.md`, `contracts/` (http-api, artefactos, ui) y `quickstart.md`.
+`.specify/feature.json` es local e ignorado: si falta, usar
+`SPECIFY_FEATURE_DIRECTORY=specs/001-alineacion-titulo-tesis`.
+
+Decisiones del plan (2026-10-02):
+- Cota Gilmore–Gomory con scipy 1.18.1/HiGHS (rueda musllinux cp312 verificada en PyPI) y
+  certificado lagrangiano (INF-016).
+- Umbral en `execution_config.umbral_desperdicio_pct`, fuera de la huella, editable al
+  reprocesar.
+- Nueva página `/archivos/[id]`.
+- Regresión repitiendo los 136 + 12 en el contenedor actual (sin evidencia nueva).
+- INF-015 [PENDIENTE]: el umbral se compara con el desperdicio de INF-012.
+
+**Spec 001 implementada (2026-10-02): 56/56 tareas de `tasks.md` completas.** Commit en la rama
+`feat/spec-001-alineacion-titulo`, autorizado por el usuario. **Sin push ni PR todavía.**
+
+Validación:
+- **Pruebas**: 124, pasan dentro de la imagen nueva (con scipy 1.18.1) y con el código en memoria
+  (`--container oica-validation-backend-1`; el worker no tiene `gevent`).
+- **Regresión**: 0 diferencias en 148 registros
+  (`tests/benchmarks/2026-10-02-regresion-analisis-1.jsonl`; la del MVP en `…-regresion-mvp-us1`).
+- **Cota de los ensayos**: 148/148 con desperdicio ≥ cota y la cota ajustada; 002 con condiciones
+  físicas tiene cota de 7,5958 % y brecha del AG balanceado de 1,30 pp (mediana), frente a 2,53 pp
+  de FFD/BFD (`…-cota-ensayos.jsonl`).
+- **E2E**: 67/67 comprobaciones contra el stack reconstruido. Para la UI se usó Playwright con
+  `libgbm` extraído localmente en `tmp/` (sin instalar nada en el sistema): 12/12 pantallas
+  correctas a 1440, 820 y 390 px, 0 violaciones axe y sin desbordamiento. Proyectos de QA
+  44–47 eliminados; la base conserva sus 6 proyectos.
+- **SC-005**: 13.955 barras se agrupan en 136 patrones (102,6 veces menos filas).
+- **SC-007**: +8,8 % en una comparación intercalada con el código previo en el mismo contenedor
+  (24,58 s frente a 26,75 s). Frente a la base de T002, medida con la imagen anterior, es +40 %,
+  pero se debe a deriva del entorno: el código previo también tarda +28 %. Detalle en
+  `tests/data/002/ANALISIS_RESULTADOS.md` §12.
+- **T003**: NSR-10 verificada (Título C, Tabla C.3.5.3-2, p. C-47; el Título C no contiene
+  «desperdicio»). INVIAS 640 e IDU sin copia oficial: **pedir los documentos al autor**.
+
+Imágenes: reconstrucción única aprobada (14 m 55 s). Backend 627 MB y worker 604 MB (+150 MB cada
+uno por scipy); frontend 229 MB. Se retiraron solo las tres imágenes huérfanas de OICA. Quedan
+836 MB de caché de build, que acelera la próxima construcción. C: tenía 7,7 GB libres al cierre.
+
+**PNG por piezas desplegado (2026-10-02, aprobado por el usuario).**
+- Se reconstruyeron backend y worker solo en la capa de código (4,6 s, caché de pip reutilizada).
+- 124 pruebas pasan dentro de la imagen.
+- Una carga real de 002 (rápido, umbral 10 %) quedó «dentro de lo admisible», con 135 patrones y
+  la cota calculada. Su PNG muestra cada pieza separada.
+- Se retiraron el proyecto de QA 48 y las dos imágenes huérfanas.
+- **Disco**: C: bajó de 7,7 a 4,4 GB libres sin causa atribuible a esta sesión; el disco de WSL
+  apenas creció (21 GB usados). Vigilar antes de la próxima construcción.
+
+Documento: Cap. 1 (título fijo, «web», procedencia), Cap. 2 §2.1, 2.4, 2.7 y 2.8, Cap. 3 §3.9,
+Cap. 4 §4.10 y `docs/tesis-doc/Referencias.md` (15 fichas). Pendientes académicos: revisión del
+director, INF-015 y fuentes sin verificar (RIESGO-AC-008).
+
+`CLAUDE.md` quedó alineado con la constitución el 2026-10-02:
+- monorepo y `services/` como copia histórica;
+- worker con pool prefork;
+- requisitos comunes más constraints;
+- commits solo con orden explícita para esa ocasión;
+- disco, puertas de calidad, Spec Kit y fuentes;
+- BUG-002 y BUG-006 marcados como del motor histórico.
+
+`AGENTS.md` y `HISTORICAL_CONTEXT.md` también quedaron alineados el 2026-10-02.
+
+Fuentes: la Res. 472/2017 y la Res. 1257/2021 quedaron verificadas. INVIAS 640 e IDU necesitan que el
+usuario descargue los PDF desde el navegador, porque los portales bloquean la descarga
+automatizada.
 
 **Pregunta pendiente del usuario:** datos de compra reales (facturas o remisiones, al menos kg
 por diámetro) de una obra colombiana para OE5. Mientras tanto, OE5 se evalúa con heurísticas y

@@ -9,7 +9,7 @@ import { Button } from '@/components/ui/button';
 import { Alert } from '@/components/ui/alert';
 import { Badge } from '@/components/ui/badge';
 import { Card } from '@/components/ui/card';
-import { Field, Select } from '@/components/ui/form-controls';
+import { Field, Input, Select } from '@/components/ui/form-controls';
 import { Progress } from '@/components/ui/progress';
 import { ArrowRight, CheckCircle2, Clock3, FileSpreadsheet, Layers3, Upload } from 'lucide-react';
 import { useRouter } from 'next/navigation';
@@ -27,6 +27,12 @@ export function FileUpload() {
    const [estimating, setEstimating] = useState(false);
    const [metadata, setMetadata] = useState<ParameterMetadata | null>(null);
    const [parameters, setParameters] = useState<PhysicalParameters | null>(null);
+   // Umbral opcional de desperdicio admisible (FR-001/FR-002): sin valor por defecto.
+   const [umbral, setUmbral] = useState('');
+   const umbralNumero = Number(umbral.trim().replace(',', '.'));
+   const umbralError = umbral.trim() !== '' && !(Number.isFinite(umbralNumero) && umbralNumero > 0 && umbralNumero < 100)
+      ? 'Ingresa un porcentaje mayor que 0 y menor que 100, o deja el campo vacío.'
+      : null;
 
    useEffect(() => {
       let active = true;
@@ -211,6 +217,7 @@ export function FileUpload() {
       if (!parameters) throw new Error('Espera a que carguen los parámetros de corte');
       form.append('parametros_corte', JSON.stringify(parameters));
       if (inventory) form.append('inventario', inventory);
+      if (umbral.trim()) form.append('umbral_desperdicio_pct', umbral.trim());
       return form;
    };
 
@@ -234,6 +241,10 @@ export function FileUpload() {
 
       if (files.length === 0) {
          setBackendError('No hay archivos para enviar');
+         return;
+      }
+      if (umbralError) {
+         setBackendError(umbralError);
          return;
       }
 
@@ -384,6 +395,26 @@ export function FileUpload() {
                         <option value="profundo">Profundo — mayor búsqueda, sin garantía de mejora</option>
                      </Select>
                   </Field>
+                  <Field
+                     label="Desperdicio admisible (%)"
+                     htmlFor="umbral-desperdicio"
+                     className="mt-5"
+                     description="Opcional. No identificamos una norma colombiana que fije un porcentaje máximo de desperdicio de acero; usa el que asumiste en tu análisis de precios unitarios o el que exige tu contrato."
+                     error={umbralError}
+                  >
+                     <Input
+                        id="umbral-desperdicio"
+                        type="text"
+                        inputMode="decimal"
+                        autoComplete="off"
+                        value={umbral}
+                        onChange={event => setUmbral(event.target.value)}
+                        disabled={loadingSendButton}
+                        aria-invalid={umbralError ? true : undefined}
+                        aria-describedby={umbralError ? 'umbral-desperdicio-error' : 'umbral-desperdicio-description'}
+                        className="sm:max-w-48"
+                     />
+                  </Field>
                </Card>
 
                <CuttingOptions
@@ -444,7 +475,7 @@ export function FileUpload() {
                   <Button
                      size="lg"
                      onClick={handleSend}
-                     disabled={!parameters || files.length === 0 || loadingSendButton}
+                     disabled={!parameters || files.length === 0 || loadingSendButton || Boolean(umbralError)}
                   >
                      {loadingSendButton ? 'Procesando…' : 'Iniciar optimización'}
                      {!loadingSendButton && <ArrowRight className="h-4 w-4" aria-hidden="true" />}

@@ -28,6 +28,8 @@
 | INF-013 | Arquitectura | Media | [VALIDADA] | Proxy seleccionable container/host; VPS en otro ambiente |
 | INF-011 | Arquitectura | Alta | [VALIDADA] | Monorepo, producción VPS, CI/CD y desarrollo nativo |
 | INF-014 | Académica | Alta | [VALIDADA] | Título fijo con IA/nesting/desperdicios admisibles; se alinea la app (spec 001) y los objetivos reales |
+| INF-015 | Metodología | Alta | [PENDIENTE] | El umbral admisible se compara con el desperdicio de INF-012 (incluye saldo reutilizable) |
+| INF-016 | Técnica | Media | [VALIDADA] | Cota Gilmore–Gomory con scipy/HiGHS, certificado lagrangiano y etapas relajadas |
 
 ---
 
@@ -810,3 +812,77 @@ Solicitó registrar la evaluación y las alternativas (2026-09-29). El 2026-10-0
   y cota (sin datos de compra real por ahora; ver RIESGO-AC-009).
 Cap. 1 §1.3 actualizado. Especificación: `specs/001-alineacion-titulo-tesis/spec.md`.
 Referencias propuestas: se documentarán en `docs/tesis-doc/Referencias.md` (FR-021).
+
+---
+
+## INF-015
+
+### Categoría
+Metodología
+### Prioridad
+Alta
+### Pregunta inferida
+¿Contra qué porcentaje se compara el umbral de desperdicio admisible que ingresa el usuario?
+### Respuesta asumida
+Contra el desperdicio final por masa de INF-012: sobrante final + pérdida por corte +
+descartes, sobre la masa de barras usadas. Ese valor incluye el saldo reutilizable. La pérdida
+irrecuperable (corte + descartes) se informa aparte, sin juicio de cumplimiento.
+### Justificación
+Es la métrica ya validada en la matriz de 136 ensayos y la que reporta la app. Comparar contra
+otra definición crearía dos «desperdicios» distintos. Spec 001, FR-003 y supuestos; plan R-05.
+### Impacto
+`backend/cutting/analysis.py` (nuevo), artefactos, `/archivos/[id]`, Cap. 3 y Cap. 4.
+### Riesgo si la asunción es incorrecta
+Medio. En los análisis de precios unitarios, el desperdicio suele entenderse como el material
+que no se recupera. Si el director lo interpreta así, el estado «excede» sería demasiado
+estricto con planes que dejan saldo reutilizable. Revertirlo solo cambia la evaluación, no el
+plan.
+### Fecha
+2026-10-02
+### Inferencias relacionadas
+INF-012, INF-014
+### Puede consolidarse con
+Ninguna: INF-012 define la métrica, y esta entrada su uso frente al umbral.
+### Estado
+[PENDIENTE] — confirmar con el director qué desperdicio presupuesta un APU en Colombia.
+
+---
+
+## INF-016
+
+### Categoría
+Técnica
+### Prioridad
+Media
+### Pregunta inferida
+¿Cómo se calcula una cota Gilmore–Gomory válida sin convertirla en optimizador ni romper la
+evidencia existente?
+### Respuesta asumida
+- Generación de columnas por diámetro sobre la relajación lineal, con `scipy.optimize.linprog`
+  (HiGHS) y pricing por mochila exacta en enteros escalados.
+- La validez se certifica con una cota lagrangiana (duales escalados), así que la cota es
+  válida aunque el LP no converja.
+- Se relajan el orden de etapas, los descartes y los saldos entre etapas. La pérdida por corte
+  se modela como `Σ(l+e)·a ≤ L+e`, y se redondea al múltiplo del mcd de las longitudes de barra.
+- Es solo una métrica: si el plan queda por debajo de la cota, se trata como error de dominio.
+### Justificación
+Decisión del usuario (2026-10-02): scipy frente a simplex propio. Constitución, Principios I y
+IV. Spec 001, FR-012 a FR-017; plan R-01, R-02 y R-12.
+### Impacto
+`backend/cutting/bound.py` (nuevo), dependencia `scipy==1.18.1` (reconstrucción de imágenes con
+aprobación) y `scripts/cota_ensayos.py`.
+### Riesgo si la asunción es incorrecta
+Bajo para la validez, gracias al certificado. Medio para la utilidad: al relajar las etapas, la
+cota puede quedar holgada y la brecha resultar grande. Se declara en la tesis.
+### Fecha
+2026-10-02
+### Inferencias relacionadas
+INF-014
+### Puede consolidarse con
+Ninguna.
+### Estado
+[VALIDADA] — 2026-10-02, decisiones del usuario en `/speckit-plan`. Implementada y verificada el mismo día:
+- pruebas de fuerza bruta y de certificados con duales aleatorios;
+- cota calculada para los 148 registros, todos con desperdicio ≥ cota y cota «ajustada» (`tests/benchmarks/2026-10-02-cota-ensayos.jsonl`).
+Presupuesto efectivo: 4 s por plan, en lugar de los 6 s previstos, para preservar SC-007.
+

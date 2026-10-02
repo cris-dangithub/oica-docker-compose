@@ -178,6 +178,138 @@ class CuttingApiTests(unittest.TestCase):
         self.assertIsNone(response.json['remaining_seconds'])
         self.assertEqual(response.json['calibration'], 'calibrando')
 
+    def run_worker(self, file_id, task_id, perfil='rapido'):
+        import celery_worker as worker
+        with patch.dict(os.environ, {'UPLOAD_PATH': self.directory.name}), \
+             patch.object(worker, 'create_flask_app', return_value=self.app), \
+             patch.object(worker, 'redis_client'), patch.object(worker, 'publish_progress'), \
+             patch.object(worker.process_file_task, 'update_state'):
+            worker.process_file_task.push_request(id=task_id)
+            try:
+                return worker.process_file_task.run(file_id, perfil)
+            finally:
+                worker.process_file_task.pop_request()
+
+    def test_umbral_invalido_no_encola(self):
+        for value in ('0', '100', '-1', 'abc', 'NaN', 'inf'):
+            with self.subTest(umbral=value):
+                data = self.data(); data['umbral_desperdicio_pct'] = value
+                with patch.object(self.server.process_file_task, 'apply_async') as enqueue:
+                    response = self.client.post('/upload', data=data)
+                self.assertEqual(response.status_code, 400)
+                self.assertIn('Umbral de desperdicio admisible inválido', response.json['error'])
+                enqueue.assert_not_called()
+                self.assertEqual(self.server.UploadedFile.query.count(), 0)
+
+    def test_umbral_se_guarda_fuera_del_problema(self):
+        for value, expected in (('7,5', 7.5), ('7.5', 7.5), ('', None), (None, None)):
+            with self.subTest(umbral=value):
+                data = self.data()
+                if value is not None:
+                    data['umbral_desperdicio_pct'] = value
+                with patch.object(self.server.process_file_task, 'apply_async', return_value=MagicMock(id='p')):
+                    response = self.client.post('/upload', data=data)
+                self.assertEqual(response.status_code, 202, response.json)
+                record = self.db.session.get(self.server.UploadedFile, response.json['file_id'])
+                self.assertEqual(record.execution_config['umbral_desperdicio_pct'], expected)
+                self.assertNotIn('umbral_desperdicio_pct', record.execution_config['parametros_corte'])
+
+    def test_estimacion_ignora_umbral(self):
+        with patch.object(self.server.redis_client, 'get', return_value='entorno'):
+            base = self.client.post('/estimate', data=self.data())
+            data = self.data(); data['umbral_desperdicio_pct'] = '5'
+            with_umbral = self.client.post('/estimate', data=data)
+        self.assertEqual(base.status_code, 200)
+        self.assertEqual(base.json, with_umbral.json)
+
+    def test_umbral_al_reprocesar(self):
+        data = self.data(); data['umbral_desperdicio_pct'] = '5'
+        with patch.object(self.server.process_file_task, 'apply_async', return_value=MagicMock(id='p')):
+            file_id = self.client.post('/upload', data=data).json['file_id']
+        record = self.db.session.get(self.server.UploadedFile, file_id)
+        record.processing_status = 'completed'
+        self.db.session.commit()
+        cases = [({'perfil': 'rapido'}, 202, 5.0), ({'umbral_desperdicio_pct': 12}, 202, 12.0),
+                 ({'umbral_desperdicio_pct': 150}, 400, 12.0), ({'umbral_desperdicio_pct': None}, 202, None)]
+        for body, status, expected in cases:
+            with self.subTest(body=body):
+                with patch.object(self.server.process_file_task, 'apply_async', return_value=MagicMock(id='r')) as enqueue:
+                    response = self.client.post(f'/reprocess/{file_id}', json=body)
+                self.assertEqual(response.status_code, status, response.json)
+                self.assertEqual(enqueue.called, status == 202)
+                self.db.session.expire_all()
+                record = self.db.session.get(self.server.UploadedFile, file_id)
+                self.assertEqual(record.execution_config['umbral_desperdicio_pct'], expected)
+                record.processing_status = 'completed'
+                self.db.session.commit()
+
+    def test_worker_guarda_admisibilidad_y_umbral_por_version(self):
+        data = self.data(); data['umbral_desperdicio_pct'] = '50'
+        with patch.object(self.server.process_file_task, 'apply_async', return_value=MagicMock(id='p')):
+            file_id = self.client.post('/upload', data=data).json['file_id']
+        self.assertEqual(self.run_worker(file_id, f'process_{file_id}')['status'], 'completed')
+        with patch.object(self.server.process_file_task, 'apply_async', return_value=MagicMock(id='r')):
+            self.assertEqual(self.client.post(f'/reprocess/{file_id}', json={'umbral_desperdicio_pct': None}).status_code, 202)
+        self.assertEqual(self.run_worker(file_id, 'r')['status'], 'completed')
+        self.db.session.expire_all()
+        first, second = self.server.ProcessingResult.query.order_by(self.server.ProcessingResult.version_number).all()
+        self.assertEqual(first.execution_config['umbral_desperdicio_pct'], 50.0)
+        self.assertEqual(second.execution_config['umbral_desperdicio_pct'], None)
+        # El umbral no cambia el plan ni la huella del problema.
+        self.assertEqual(first.resultados, second.resultados)
+        self.assertEqual(first.execution_config['input_hash'], second.execution_config['input_hash'])
+        self.assertEqual(first.metricas['analisis']['admisibilidad']['proyecto']['estado'], 'dentro')
+        self.assertEqual(second.metricas['analisis']['admisibilidad']['proyecto']['estado'], 'sin_evaluar')
+        detail = self.client.get(f'/file/{file_id}').json
+        self.assertIsNone(detail['umbral_desperdicio_pct'])
+        latest = detail['processing_results'][0]
+        self.assertEqual(latest['admisibilidad_estado'], 'sin_evaluar')
+        self.assertTrue(latest['valido'])
+        self.assertEqual(latest['analisis']['version'], 'analisis-1')
+        listed = self.client.get('/files').json['files'][0]['processing_results']
+        self.assertNotIn('analisis', listed[0])
+        self.assertEqual([r['admisibilidad_estado'] for r in listed], ['sin_evaluar', 'dentro'])
+        import pandas as pd
+        sheets = pd.read_excel(first.excel_path, sheet_name=None)
+        admisibilidad = sheets['Admisibilidad'].to_dict('records')
+        self.assertEqual(admisibilidad[0]['ambito'], 'proyecto')
+        self.assertEqual(admisibilidad[0]['estado'], 'Dentro de lo admisible')
+        self.assertEqual(admisibilidad[0]['umbral_desperdicio_pct'], 50)
+        self.assertEqual([r['diametro'] for r in admisibilidad[1:]], ['#3'])
+        cota = sheets['Cota'].to_dict('records')
+        self.assertEqual(cota[0]['ambito'], 'proyecto')
+        self.assertEqual([r['diametro'] for r in cota[1:]], ['#3'])
+        self.assertLessEqual(cota[0]['simple_desperdicio_pct'], cota[0]['desperdicio_plan_pct'] + 1e-9)
+        # La cartilla de prueba usa 1 kg/m para #3 (nominal 0,560): aviso no bloqueante.
+        avisos = sheets['Avisos'].to_dict('records')
+        self.assertEqual(avisos[0]['diametro'], '#3')
+        self.assertIn('NSR-10', avisos[0]['estado'])
+        compra = sheets['Resumen de compra']
+        self.assertEqual(int(compra['barras'].sum()), first.metricas['barras'])
+        self.assertEqual(list(compra.columns), ['diametro', 'longitud_m', 'origen', 'barras', 'masa_kg',
+                                                'aprovechamiento_pct'])
+        indicadores = dict(zip(sheets['Metricas']['indicador'], sheets['Metricas']['valor']))
+        self.assertEqual(indicadores['admisibilidad_estado'], 'Dentro de lo admisible')
+        self.assertEqual(indicadores['analisis_version'], 'analisis-1')
+
+    def test_pdf_con_admisibilidad(self):
+        from cutting.analysis import analizar
+        from cutting.domain import normalize
+        from cutting.optimizer import optimize
+        from cutting.report import generate, admisibilidad_html
+        p = normalize([{'N° Orden': 'p', 'N° de Barra': '#3', 'Cantidad': 2,
+                        'Longitud total (m)': 2.5, 'Masa total (kg)': 5}], options={})
+        r = optimize(p)
+        r['metrics']['analisis'] = analizar(p, r, 1.0)
+        html = admisibilidad_html(r['metrics']['analisis'])
+        self.assertIn('Excede', html)
+        from cutting.report import compra_html, cota_html
+        self.assertIn('Resumen de compra', compra_html(r['metrics']['analisis']))
+        self.assertIn('Cota inferior', cota_html(r['metrics']['analisis']))
+        self.assertIn('no se identificó un máximo normativo', html)
+        files = generate(p, r, Path(self.directory.name) / 'admisible', 'Proyecto', True)
+        self.assertEqual(Path(files['pdf_path']).read_bytes()[:4], b'%PDF')
+
     def test_artefactos_visuales_acotados(self):
         from cutting.domain import normalize
         from cutting.optimizer import optimize
@@ -193,6 +325,34 @@ class CuttingApiTests(unittest.TestCase):
             self.assertLessEqual(image.width * image.height, 3_000_000)
         rows = read_rows(files['excel_path'])
         self.assertEqual(sum(int(row['piezas_por_barra']) for row in rows), 2)
+        import pandas as pd
+        sheets = pd.read_excel(files['excel_path'], sheet_name=None)
+        patrones = sheets['Patrones']
+        self.assertEqual(int(patrones['repeticiones'].sum()), len(sheets['Barras']))
+        self.assertTrue(set(sheets['Barras']['patron_id']) <= set(patrones['patron_id']))
+        self.assertEqual(list(patrones.columns), ['patron_id', 'diametro', 'origen', 'longitud_m', 'secuencia',
+                                                  'repeticiones', 'aprovechamiento_pct', 'perdida_corte_m',
+                                                  'descartado_m', 'saldo_m'])
+
+    def test_artefactos_por_patrones_acotados(self):
+        # Más de 150 patrones distintos: PDF y PNG muestran los más repetidos y avisan.
+        from cutting.domain import normalize
+        from cutting.optimizer import optimize
+        from cutting.report import generate, patrones_html
+        from PIL import Image
+        # 340 piezas de 1,3 a 2,317 m en barras de 2,5 m: una pieza por barra, 340 patrones.
+        rows = [{'N° Orden': f'p{i}', 'N° de Barra': '#3', 'Cantidad': 1,
+                 'Longitud total (m)': round(1.3 + i * 0.003, 3), 'Masa total (kg)': round(1.3 + i * 0.003, 3)}
+                for i in range(340)]
+        catalog = [{'diametro': '#3', 'longitud_m': 2.5, 'cantidad': None}]
+        p = normalize(rows, catalog)
+        r = optimize(p)
+        files = generate(p, r, Path(self.directory.name) / 'patrones', 'Proyecto', True)
+        html = patrones_html(p, r)
+        self.assertIn('Se omitieron', html)
+        self.assertEqual(Path(files['pdf_path']).read_bytes()[:4], b'%PDF')
+        with Image.open(files['graph_image_path']) as image:
+            self.assertLessEqual(image.width * image.height, 3_000_000)
 
 
 if __name__ == '__main__':

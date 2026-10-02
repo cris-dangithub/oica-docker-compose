@@ -1,8 +1,8 @@
 # Plan de Trabajo — OICA Tesis
 
-> **Última actualización:** 2026-09-29
+> **Última actualización:** 2026-10-02
 > **Estado global:** Motor secuencial validado; dirección visual aprobada y Design System v1 en preparación
-> **Bloque activo:** J — Rediseño visual y Design System de OICA
+> **Bloque activo:** K — Alineación con el título fijo (spec 001); J con pendientes de QA/Figma
 
 ---
 
@@ -19,6 +19,7 @@
 | F | Producción, CI/CD y desarrollo nativo | 🔄 Código implementado; cierre pendiente | ALTA |
 | G | Corte secuencial, inventarios y caso 002 | Completado en localhost; cierre académico pendiente | ALTA |
 | J | Rediseño visual y Design System | Dirección B aprobada; implementación code-first autorizada | ALTA |
+| K | Alineación con el título fijo (spec 001) | Implementada, validada y desplegada en local (56/56); pendiente la revisión académica | ALTA |
 
 ---
 
@@ -311,3 +312,23 @@ la funcionalidad ni los contratos del optimizador.
 y consulta de librerías fueron rechazadas antes de ejecutar cambios. Por decisión
 del usuario se continúa code-first con la especificación versionada y se
 sincronizará Figma después; Figma sigue siendo un criterio final.
+
+## Bloque K — Alineación con el título fijo de la tesis (spec 001)
+
+**Objetivo:** dar respaldo verificable en la app y en el documento a cada término del título
+fijo, sin alterar el plan de `secuencial-2` (constitución v1.0.0).
+
+- [x] Ratificar la constitución de Spec Kit (v1.0.0, 2026-10-02).
+- [x] Especificación `specs/001-alineacion-titulo-tesis/spec.md` y checklist.
+- [x] Plan y diseño: `plan.md`, `research.md`, `data-model.md`, `contracts/` y `quickstart.md`.
+- [x] Tareas (`/speckit-tasks`): `tasks.md`, 56 tareas (T001–T056), ajustadas tras `/speckit-analyze`.
+- [x] Base sin scipy: patrones, admisibilidad, compra, NSR-10 y pruebas; regresión 136 + 12.
+- [x] Integración en worker, API y artefactos; frontend `/archivos/[id]`.
+- [x] Aprobación de espacio y reconstrucción con scipy; cota, `cota_ensayos.py` y SC-007.
+- [x] E2E local según `quickstart.md`.
+- [x] `Referencias.md`, capítulos 1–4 y archivos de control (US6).
+- [x] Reconstruir backend y worker solo en la capa de código para desplegar el PNG por piezas (aprobado y desplegado el 2026-10-02).
+- [ ] Revisión del director, INF-015 y verificación de INVIAS 640, IDU, Res. 472 y la fuente de «nesting lineal».
+
+**Pendiente del usuario o el director:** INF-015 (qué desperdicio se compara con el umbral) y
+datos de compra reales para OE5 (RIESGO-AC-009).

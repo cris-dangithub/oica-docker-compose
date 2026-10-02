@@ -84,7 +84,21 @@ def main():
             assert units(cut['longitud_m']) == order['longitud']
             demand[cut['fila_origen']] += cut['cantidad']
         assert demand == Counter({o['row_id']: o['cantidad'] for o in orders.values()})
+        # Versiones con análisis (spec 001, SC-004 y SC-010); las anteriores se omiten sin error.
+        analisis = metrics.get('analisis')
+        if analisis:
+            sheets = pd.read_excel(excel, sheet_name=['Barras', 'Patrones', 'Resumen de compra'])
+            barras, patrones = sheets['Barras'], sheets['Patrones']
+            assert int(patrones['repeticiones'].sum()) == len(barras), 'Repeticiones ≠ barras'
+            assert set(barras['patron_id']) <= set(patrones['patron_id']), 'patron_id sin patrón'
+            assert len(patrones) == analisis['patrones']['total'], 'Total de patrones distinto del persistido'
+            compra = Counter()
+            for row in sheets['Resumen de compra'].to_dict('records'):
+                compra[(row['diametro'], units(row['longitud_m']))] += int(row['barras'])
+            assert compra == Counter((b['diametro'], b['longitud']) for b in bars), 'Resumen de compra ≠ barras'
         print(json.dumps({'file_id': file_id, 'version': version, 'perfil': metrics['perfil'],
+                          'analisis': analisis.get('version') if analisis else None,
+                          'patrones': analisis['patrones']['total'] if analisis else None,
                           'valido': checked['valido'], 'piezas': checked['piezas'],
                           'barras': checked['barras'], 'desperdicio_porcentaje': checked['desperdicio_porcentaje'],
                           'motor_segundos': metrics['duracion_segundos'],

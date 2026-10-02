@@ -42,8 +42,8 @@
 - No quedaron marcadores [NEEDS CLARIFICATION]. Las decisiones críticas se resolvieron con el
   usuario en la sesión del 2026-10-02 (título fijo, opción A de admisible, opción A de patrones,
   nesting lineal, procedencia confidencial).
-- La constitución del proyecto (`.specify/memory/constitution.md`) es una plantilla sin llenar;
-  se aplicaron las reglas de `AGENTS.md`.
+- La constitución del proyecto se ratificó después (v1.0.0, 2026-10-02); el Constitution Check
+  de `plan.md` la aplica.
 - Iteración 2 (2026-10-02): se incorporaron los objetivos reales aportados por el autor, con la
   redacción ajustada que aceptó, y la tabla objetivo → respaldo. Cambios:
   - Nueva historia 2 (resumen de compra verificado); las historias siguientes pasan a 3–6.
@@ -56,3 +56,11 @@
     del resumen y de las versiones.
   Se volvieron a revisar los 16 puntos: todos pasan. Sin marcadores [NEEDS CLARIFICATION];
   «huella» se reemplazó por «identidad del problema» en los supuestos.
+- Iteración 3 (2026-10-02, tras `/speckit-analyze`):
+  - FR-002 y FR-018 ya no afirman fuentes sin verificar (rótulos «por verificar» hasta la tarea
+    T003).
+  - SC-007 tiene una línea base medible con el mismo arnés.
+  - FR-005 y US1-AS4 incluyen el umbral editable al reprocesar.
+  - FR-013 y US4-AS1 definen la cota simple como aprovechamiento perfecto.
+  - El caso límite analítico se restringe a una longitud de pieza y una de barra.
+  Los 16 puntos siguen pasando.

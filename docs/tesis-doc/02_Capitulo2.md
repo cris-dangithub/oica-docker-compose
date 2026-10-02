@@ -6,7 +6,7 @@ OICA recibe longitudes de piezas ya definidas en una cartilla y las asigna a bar
 
 Se estudia stock con varias longitudes comerciales y disponibilidad configurable, complementado por un inventario finito. Las demandas están divididas en etapas ordenadas. Un sobrante puede permanecer disponible durante varias etapas, pero solo puede consumirse una vez en cada estado de su saldo.
 
-El término «nesting» no se usa aquí para sugerir una implementación de distribución bidimensional: no se modelan áreas, rotaciones de figuras o láminas. Tampoco se emplean modelos generativos, entrenamiento supervisado ni redes neuronales.
+En el título, «nesting» se entiende como **nesting lineal**: el acomodo unidimensional de piezas a lo largo de barras, en el sentido con que se usa en la fabricación con barras y perfiles. OICA lo presenta como patrones de corte con sus repeticiones (sección 2.7). En la tipología académica de corte y empaque el término suele reservarse para piezas irregulares en dos dimensiones (Wäscher, Haußner y Schumann, 2007; *cita literal por verificar*, ficha REF-WASCHER-2007). Por eso se declara el sentido usado y se mantiene la exclusión: no se modelan áreas, rotaciones de figuras ni láminas. La fuente del uso industrial de «nesting lineal» está **pendiente de localizar** (ficha REF-NESTING-LINEAL). Tampoco se emplean modelos generativos, entrenamiento supervisado ni redes neuronales.
 
 ## 2.2 Factibilidad y objetivo
 
@@ -29,6 +29,8 @@ First Fit Decreasing (FFD) ordena pedidos por longitud decreciente dentro de la 
 Cada referencia devuelve su mejor plan factible entre esas tres reglas. Esta adaptación se declara porque comparar el genético únicamente contra una heurística que siempre abre barras de 12 m confundiría la selección del catálogo con el aporte de la evolución. Ninguna referencia recibe piezas de etapas futuras por adelantado.
 
 ## 2.4 Algoritmo genético y representación
+
+El algoritmo genético es la técnica de Inteligencia Artificial de la aplicación. Pertenece a la computación evolutiva: busca soluciones evolucionando una población de candidatos mediante selección, cruce, mutación y elitismo (Holland, 1975; Goldberg, 1989; Russell y Norvig; *edición y páginas por verificar*, fichas REF-HOLLAND-1975, REF-GOLDBERG-1989 y REF-RUSSELL-NORVIG). Es el único optimizador que produce el plan. Las heurísticas de la sección 2.3 y la cota de la sección 2.7 sirven de referencia o de medida.
 
 La población contiene candidatos con genes por orden, no por pieza individual. Cada orden tiene una prioridad de colocación y una regla de elección de longitud. El decodificador respeta primero la etapa; la prioridad genética solo decide dentro de esa restricción.
 
@@ -57,3 +59,39 @@ El usuario puede sustituir el mínimo automático por un valor común positivo e
 Corrección, calidad y tiempo son dimensiones distintas. Un programa puede terminar rápidamente y producir piezas incorrectas; también puede producir un plan válido con desperdicio alto. La evaluación exige primero factibilidad, luego comparación de desperdicio y duración bajo las mismas entradas y restricciones.
 
 Se conservan huellas de entradas y código, semilla, perfil, versión de Python, plataforma, tiempos y consumo máximo observado de memoria. Los ensayos del motor excluyen PDF y PNG para separar optimización de presentación. Cinco semillas por perfil constituyen un piloto descriptivo; no bastan para afirmar significación estadística, optimalidad o generalización a todas las cartillas.
+
+## 2.7 Patrones de corte y cota inferior
+
+Un **patrón de corte** es el esquema repetible de corte de una barra: de qué barra se parte, qué piezas se obtienen en cada etapa, qué pérdida y descarte se producen y qué saldo queda. Dos barras del plan comparten patrón solo si coinciden en diámetro, origen, longitud, secuencia de cortes por etapa, pérdida, descarte y saldo. El plan se presenta como «patrón × repeticiones». La vista barra por barra se conserva para la trazabilidad.
+
+El **enfoque basado en patrones de corte** de Gilmore y Gomory formula el problema de corte como un programa lineal sobre patrones y genera patrones útiles mediante un subproblema de mochila (Gilmore y Gomory, 1961, 1963; *cita literal por verificar*, ficha REF-GG; datos bibliográficos confirmados). OICA usa este enfoque para **medir**, no para construir el plan. Con él calcula una **cota inferior**: el desperdicio por debajo del cual ningún plan puede bajar.
+
+La cota resuelve la relajación lineal por diámetro, con estas adaptaciones del diseño de OICA, que no se atribuyen a los autores:
+
+- considera las longitudes comerciales, el inventario adicional limitado y la pérdida por corte;
+- la pérdida por corte se modela como Σ(l + e)·a ≤ L + e, porque m piezas exigen al menos m − 1 separaciones;
+- relaja el orden de etapas, los saldos entre etapas y los descartes por mínimo reutilizable.
+
+Esas relajaciones la vuelven válida pero posiblemente holgada.
+
+La validez no depende de que el programa lineal converja. Con cualquier vector dual no negativo se obtiene una cota lagrangiana, certificada con una mochila exacta en enteros. Si el cálculo no termina de ajustarse, la cota se informa como «no ajustada», sigue siendo válida y solo es más holgada. También se informa una **cota simple**, que supone aprovechamiento perfecto: material igual a la longitud de las piezas.
+
+La **brecha** es la diferencia, en puntos porcentuales, entre el desperdicio del plan y la cota. No es una prueba de optimalidad. Si un plan quedara por debajo de una cota válida, se trataría como error de dominio y el plan no se presentaría como válido.
+
+## 2.8 Desperdicio admisible
+
+El **desperdicio admisible** es el porcentaje que el usuario considera aceptable para su proyecto: por ejemplo, el que asumió en su análisis de precios unitarios o el que exige su contrato. OICA no propone un valor por defecto. Con el umbral que el usuario ingresa, informa si el plan queda dentro o lo excede, para el proyecto y para cada diámetro.
+
+El umbral se compara con el desperdicio por masa de la sección 2.2, que incluye el saldo reutilizable final. Por eso se informan aparte la pérdida irrecuperable (corte y descartes) y el saldo reutilizable. Si el director entiende el desperdicio de un análisis de precios unitarios como solo lo irrecuperable, esta comparación debe ajustarse (INF-015, pendiente).
+
+No se identificó una norma colombiana que fije un porcentaje máximo de desperdicio de acero de refuerzo. El estado de cada fuente es:
+
+- **NSR-10, Título C** (*verificada*, fichas REF-NSR10-TABLA y REF-DECRETO926): su texto completo no contiene el término «desperdicio» (búsqueda del 2 de octubre de 2026 en la copia consultada). Solo se revisó el Título C.
+- **INVIAS, artículo 640** (*cita literal por verificar*, ficha REF-INVIAS-640): según resúmenes secundarios, mide el acero en kilogramos suministrados y colocados e incluye los desperdicios en el precio unitario.
+- **IDU** (*pendiente de localizar*, ficha REF-IDU-ACERO).
+- **Resolución 472 de 2017** de MinAmbiente, modificada por la Resolución 1257 de 2021 (*verificada* en textos compilados, ficha REF-RES472): trata los residuos de construcción y demolición. No usa el término «desperdicio»; su único porcentaje es una meta mínima de aprovechamiento de RCD para grandes generadores, no un máximo de desperdicio.
+
+Un contrato sí puede fijar un máximo en sus especificaciones particulares. Algunos resúmenes mencionan el 2 % o el 3 %, sin verificar. Por eso el umbral se deja al usuario.
+
+Como referencia empírica débil, existe un estudio de desperdicio de acero en una vivienda de dos plantas (Almendariz Rodríguez y Ortiz Aguirre, 2022; *cita literal por verificar*, ficha REF-RECIAMUC-2022). Es un solo caso, de una revista ecuatoriana; no se usa como umbral.
+

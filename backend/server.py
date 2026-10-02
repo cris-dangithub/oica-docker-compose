@@ -17,6 +17,7 @@ WebSocket:
 """
 import os
 import json
+import math
 import re
 import redis
 import threading
@@ -87,6 +88,28 @@ def validate_perfil(perfil):
     return perfil in perfiles_validos
 
 
+UMBRAL_INVALIDO = 'Umbral de desperdicio admisible inválido: debe ser un porcentaje mayor que 0 y menor que 100'
+
+
+def parse_umbral(value):
+    """Umbral opcional de desperdicio admisible (FR-001). Vacío o None: sin umbral.
+
+    Es un dato de evaluación: nunca entra en `normalize` ni en `parametros_corte`, así que
+    no altera el plan, la huella del problema ni la estimación de tiempo (FR-005).
+    """
+    if value is None or (isinstance(value, str) and not value.strip()):
+        return None
+    if isinstance(value, bool):
+        raise ValueError(UMBRAL_INVALIDO)
+    try:
+        number = float(str(value).strip().replace(',', '.'))
+    except ValueError:
+        raise ValueError(UMBRAL_INVALIDO) from None
+    if not math.isfinite(number) or not 0 < number < 100:
+        raise ValueError(UMBRAL_INVALIDO)
+    return number
+
+
 def uploaded_configuration():
     """Validar todo antes de guardar datos o encolar trabajos."""
     catalog = json.loads(request.form['catalogo']) if 'catalogo' in request.form else default_catalog()
@@ -109,6 +132,7 @@ def uploaded_configuration():
     return {'catalog': catalog, 'inventory': inventory, 'seed': seed,
             'parametros_corte': problem['parameters'],
             'parametros_resueltos': problem['resolved_parameters'],
+            'umbral_desperdicio_pct': parse_umbral(request.form.get('umbral_desperdicio_pct')),
             'visuals': request.form.get('visuales', 'true') == 'true'}, problem
 
 
@@ -366,7 +390,7 @@ def get_file_detail(file_id):
         }
     """
     uploaded_file = UploadedFile.query.get_or_404(file_id)
-    return jsonify(uploaded_file.to_dict(include_results=True))
+    return jsonify(uploaded_file.to_dict(include_results=True, include_analysis=True))
 
 
 @app.route('/file/<int:file_id>', methods=['DELETE'])
@@ -417,7 +441,8 @@ def reprocess_file(file_id):
     
     JSON body:
         {
-            "perfil": "rapido" | "balanceado" | "profundo"
+            "perfil": "rapido" | "balanceado" | "profundo",
+            "umbral_desperdicio_pct": número | null   (opcional; ausente = conservar)
         }
     
     Returns:
@@ -451,6 +476,16 @@ def reprocess_file(file_id):
             'allowed': ['rapido', 'balanceado', 'profundo']
         }), 400
 
+    # Umbral: clave ausente lo conserva, null lo quita y un valor lo reemplaza. Se valida
+    # antes de modificar nada; la nueva versión lo copia en su snapshot.
+    config_anterior = uploaded_file.execution_config
+    if 'umbral_desperdicio_pct' in data:
+        try:
+            umbral = parse_umbral(data['umbral_desperdicio_pct'])
+        except ValueError as error:
+            return jsonify({'error': str(error)}), 400
+        uploaded_file.execution_config = {**(config_anterior or {}), 'umbral_desperdicio_pct': umbral}
+
     estado_anterior = uploaded_file.processing_status
     detalle_anterior = uploaded_file.status_details
     task_anterior, perfil_anterior = uploaded_file.active_task_id, uploaded_file.active_profile
@@ -481,6 +516,7 @@ def reprocess_file(file_id):
         uploaded_file.processing_status = estado_anterior
         uploaded_file.status_details = detalle_anterior
         uploaded_file.active_task_id, uploaded_file.active_profile = task_anterior, perfil_anterior
+        uploaded_file.execution_config = config_anterior
         db.session.commit()
         return jsonify({
             'error': 'Error al reprocesar archivo',
