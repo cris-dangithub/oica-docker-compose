@@ -29,7 +29,9 @@ Decisiones del plan (2026-10-02):
 - INF-015 [PENDIENTE]: el umbral se compara con el desperdicio de INF-012.
 
 **Spec 001 implementada (2026-10-02): 56/56 tareas de `tasks.md` completas.** Commit en la rama
-`feat/spec-001-alineacion-titulo`, autorizado por el usuario. **Sin push ni PR todavía.**
+`feat/spec-001-alineacion-titulo`, autorizado por el usuario. Push y **PR #5 hacia `production`** abiertos
+(https://github.com/cris-dangithub/oica-docker-compose/pull/5). Sin merge ni despliegue: requieren una orden
+explícita aparte.
 
 Validación:
 - **Pruebas**: 124, pasan dentro de la imagen nueva (con scipy 1.18.1) y con el código en memoria
@@ -78,9 +80,17 @@ director, INF-015 y fuentes sin verificar (RIESGO-AC-008).
 
 `AGENTS.md` y `HISTORICAL_CONTEXT.md` también quedaron alineados el 2026-10-02.
 
-Fuentes: la Res. 472/2017 y la Res. 1257/2021 quedaron verificadas. INVIAS 640 e IDU necesitan que el
-usuario descargue los PDF desde el navegador, porque los portales bloquean la descarga
-automatizada.
+Fuentes verificadas:
+- Res. 472/2017 y 1257/2021.
+- **INVIAS 2022 art. 640**: el desperdicio va en el precio unitario (640.7) y no hay máximo; la
+  Tabla 640-1 coincide con la NSR-10.
+- **RECIAMUC 2022**: 6,77 % de desperdicio en una vivienda en Ecuador.
+- Russell-Norvig: edición, sección y página.
+
+PDF en `docs/tesis-doc/fuentes/`: se versionan la fe de erratas de INVIAS y RECIAMUC (1,6 MB). Las
+especificaciones INVIAS completas (82 MB) quedan solo en local, ignoradas en `.gitignore`. Pendientes: IDU, la fuente de «nesting lineal» y las páginas de Holland y Goldberg
+(préstamo en Internet Archive). Los cambios de fuentes en el Cap. 2 y en `Referencias.md` no tienen
+commit (el PR #5 sigue abierto).
 
 **Pregunta pendiente del usuario:** datos de compra reales (facturas o remisiones, al menos kg
 por diámetro) de una obra colombiana para OE5. Mientras tanto, OE5 se evalúa con heurísticas y
