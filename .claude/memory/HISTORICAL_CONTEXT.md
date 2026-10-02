@@ -150,3 +150,29 @@ visual, pero el plan Starter agotó el cupo MCP: inspección y consulta de libre
 posteriores a la aprobación fueron rechazadas antes de ejecutarse. Reanudar Phase
 0 en ese archivo cuando se renueve el cupo; no crear otro archivo ni saltar a
 componentes/código sin foundations verificadas.
+
+## 2026-10-02 — Título fijo, constitución y spec 001
+
+**Título y objetivos.** El autor fijó el título palabra por palabra («… con desperdicios
+admisibles mediante el enfoque basado en patrones de corte y nesting») y aportó los objetivos
+vigentes, con una redacción ajustada que está pendiente del director. Se descartó reformular el
+título (INF-014): la app y la tesis se alinean a él.
+
+**Constitución v1.0.0 de Spec Kit.** Seis principios: validez de dominio, coherencia
+título–tesis–app, evidencia reproducible con motor versionado, el AG optimiza y lo demás mide,
+honestidad y trazabilidad, y simplicidad. Prevalece sobre AGENTS.md y CLAUDE.md, que se alinearon
+el mismo día. Commits solo con orden explícita para cada ocasión.
+
+**Spec 001**, implementada con 56 tareas y sin cambiar el plan de `secuencial-2`. Añade:
+- umbral de desperdicio admisible del usuario, fuera de la huella (INF-015 pendiente);
+- patrones de corte con repeticiones;
+- cota Gilmore–Gomory con scipy/HiGHS y certificado lagrangiano (INF-016);
+- aviso de masa nominal NSR-10 (tabla verificada);
+- resumen de compra y página `/archivos/[id]`.
+
+Validación: regresión con 0 diferencias en 148 registros, cota válida en los 148, E2E y axe
+correctos, y SC-007 con +8,8 % en una comparación controlada. Se hicieron dos reconstrucciones
+aprobadas.
+
+**Fuentes.** Verificadas: NSR-10 Tabla C.3.5.3-2 y las Res. 472/2017 y 1257/2021. Pendientes:
+INVIAS 640 e IDU (los portales oficiales exigen descarga desde navegador).

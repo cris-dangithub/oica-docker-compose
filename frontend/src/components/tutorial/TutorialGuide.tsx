@@ -87,7 +87,11 @@ const glosario = [
   },
   {
     termino: "Patrón de corte",
-    definicion: "Esquema que indica cómo cortar cada barra para cubrir la demanda con el menor desperdicio posible.",
+    definicion: "Esquema repetible de corte de una barra: de qué barra se parte, qué piezas se obtienen en cada etapa, qué sobra y cuántas veces se repite en el plan (patrón × repeticiones). Las barras cortadas de forma idéntica comparten patrón.",
+  },
+  {
+    termino: "Nesting lineal",
+    definicion: "Acomodo unidimensional de piezas a lo largo de barras. OICA lo presenta por patrones de corte; no realiza nesting bidimensional de piezas irregulares.",
   },
   {
     termino: "Pérdida por corte",
@@ -103,7 +107,15 @@ const glosario = [
   },
   {
     termino: "Algoritmo genético",
-    definicion: "Método de búsqueda que evoluciona una población de soluciones mediante selección por torneo, cruce, mutación y elitismo.",
+    definicion: "Técnica de Inteligencia Artificial de la familia de la computación evolutiva: evoluciona una población de planes mediante selección por torneo, cruce, mutación y elitismo. Busca planes con poco desperdicio, sin garantizar que sean óptimos.",
+  },
+  {
+    termino: "Cota inferior",
+    definicion: "Desperdicio por debajo del cual ningún plan puede bajar, calculado con el enfoque de patrones de corte de Gilmore–Gomory. Mide la calidad del plan (la brecha); no lo construye ni demuestra optimalidad.",
+  },
+  {
+    termino: "Desperdicio admisible",
+    definicion: "Porcentaje máximo de desperdicio que define el usuario para su proyecto, por ejemplo el de su análisis de precios unitarios o su contrato. No se identificó un máximo normativo; OICA solo informa si el plan está dentro o lo excede.",
   },
 ];
 
@@ -132,7 +144,11 @@ const faqs = [
   },
   {
     pregunta: "¿Qué pasa con los resultados anteriores al reprocesar?",
-    respuesta: "Cada reproceso crea una nueva versión con sus propios parámetros. La lista de proyectos muestra la versión más reciente.",
+    respuesta: "Cada reproceso crea una nueva versión con sus propios parámetros y su propio desperdicio admisible. La lista muestra la versión más reciente; en «Ver detalle» puedes comparar todas.",
+  },
+  {
+    pregunta: "¿Puedo procesar barras #2?",
+    respuesta: "El catálogo por defecto va de #3 a #18 y no incluye #2. Si tu cartilla tiene pedidos #2, agrega al catálogo las longitudes de #2 disponibles antes de procesar.",
   },
 ];
 

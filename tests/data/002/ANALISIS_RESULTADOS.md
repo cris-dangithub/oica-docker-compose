@@ -284,3 +284,40 @@ La baja eficiencia de #5 (~87%) y #6 (~77%) respecto a #3/#4 (~99%) no es un fal
 2. ✅ Análisis de resultados documentado
 3. ⏳ Decidir INF-008 (reutilización de desperdicios en alcance)
 4. ⏳ Iniciar Bloque E — redacción Cap. 4 con resultados reales (INF-005)
+
+---
+
+## 12. Spec 001 — patrones, cota y tiempos (2026-10-02, motor `secuencial-2` + `analisis-1`)
+
+Cartilla 002, perfil balanceado, semilla 0, condiciones físicas por defecto (disco 1 mm y mínimo
+automático). El plan es idéntico al de la matriz del 13 de septiembre: 8,86018 %, 13.955 barras y
+la misma huella de entrada.
+
+**SC-005 (patrones).** Las 13.955 barras se agrupan en **136 patrones**: la hoja Patrones tiene
+102,6 veces menos filas que la vista barra por barra, frente a una meta de al menos 5 veces. Los
+patrones más repetidos son P-#3-001 ×2199, P-#6-001 ×1775 y P-#3-002 ×1244. La suma de
+repeticiones es igual a las barras y la expansión reproduce la demanda (verificado en código, en
+el Excel y con `scripts/verify_sequential_result.py`).
+
+**Cota inferior.** 7,5958 % (ajustada), con una brecha del plan de 1,2644 pp. Por diámetro:
+
+| Diámetro | #3 | #4 | #5 | #6 | #7 |
+|---|---:|---:|---:|---:|---:|
+| Brecha (pp) | 0,51 | 0,27 | 2,05 | 1,40 | 0,61 |
+
+**SC-007 (tiempo).** El arnés mide motor, análisis y artefactos (`--artifacts-smoke`):
+
+- **Frente a la base de T002** (19,14 s, medida con la imagen anterior): se obtuvo 26,85 s, un
+  +40 %. No es atribuible a la feature. Con la imagen reconstruida (Python 3.12.15) el **código
+  previo** también tarda más: mediana de 24,58 s, con el motor de 4,83 s a 6,05 s y los
+  artefactos de 14,3 s a 18,1 s.
+- **Comparación controlada**: código previo y código nuevo intercalados en el mismo contenedor.
+  - Medianas: 24,58 s (5 muestras) frente a 26,75 s (6 muestras), es decir **+8,8 %**, dentro
+    del límite de +25 %.
+  - El costo propio es el análisis, unos 2,1 s, casi todo de la cota (presupuesto máximo 4 s).
+- Evidencia: `tests/benchmarks/2026-10-02-sc007-comparacion.json`, `…-base-sc007.jsonl` y
+  `…-despues-sc007.jsonl`.
+
+**Observación.** El entorno local mostró una variación de hasta ±20 % entre repeticiones del
+mismo código. Los tiempos absolutos no deben compararse entre sesiones sin repetir la medición
+del código previo en las mismas condiciones.

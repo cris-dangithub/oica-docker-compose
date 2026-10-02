@@ -295,3 +295,47 @@ Evidencia: [integración de condiciones físicas](../../tests/benchmarks/2026-09
 [HTTP/WS 001](../../tests/benchmarks/2026-09-13-fisico-http-001.json).
 Estos resultados cierran la validación local de software; mantienen los límites
 de calibración física, revisión académica y reproducibilidad externa ya declarados.
+
+## 4.10 Calidad frente a la cota inferior por patrones (OE5)
+
+La cota inferior de la sección 2.7 se calculó para los 136 ensayos y los 12 controles de la sección 4.8 **sin volver a ejecutar el algoritmo genético**. Para cada registro se normalizó la cartilla con sus parámetros y se compararon el desperdicio registrado y la cota, para el proyecto y para cada diámetro.
+
+- **Resultado**: en los 148 registros el desperdicio es mayor o igual que la cota, tanto del proyecto como de cada diámetro. La cota quedó «ajustada» en todos los casos.
+- **Tiempo**: como máximo 0,67 s por diámetro.
+- **Confirmación de la línea base**: la repetición de los 148 registros con el código de `analisis-1` produjo 0 diferencias ([regresión](../../tests/benchmarks/2026-10-02-regresion-analisis-1.jsonl)). Las cifras de 4.8 siguen siendo válidas; la regresión no aporta resultados nuevos.
+- **Evidencia**: [cota de los ensayos](../../tests/benchmarks/2026-10-02-cota-ensayos.jsonl).
+
+La cota depende solo de la cartilla y de las condiciones físicas, no de la semilla ni del perfil:
+
+| Caso | Escenario | Cota por patrones (%) | Cota simple (%) |
+|---|---|---:|---:|
+| 001 | Los cuatro escenarios | 2,9822 | 1,2018 |
+| 002 | Ideal y solo mínimo | 5,9222 | 0,0069 |
+| 002 | Solo pérdida y ambos | 7,5958 | 0,0069 |
+
+La cota simple (aprovechamiento perfecto) es casi nula en 002, porque el material redondeado al múltiplo común de 6, 9 y 12 m apenas supera la longitud de las piezas. La cota por patrones es mucho más informativa: incorpora la imposibilidad de combinar piezas sin sobrante en cada barra.
+
+**Brecha frente a la cota en 002.** Mediana (mínimo) en puntos porcentuales; AG con cinco semillas por perfil, FFD y BFD con una ejecución:
+
+| Escenario | FFD/BFD | AG rápido | AG balanceado | AG profundo |
+|---|---:|---:|---:|---:|
+| Ideal | 3,5676 | 2,1394 (2,0494) | 2,0246 (2,0116) | 2,0182 (2,0123) |
+| Solo pérdida | 2,5342 | 1,3674 (1,3324) | 1,2994 (1,2426) | 1,2893 (1,2837) |
+| Solo mínimo | 3,5676 | 2,1625 (2,0597) | 2,0305 (2,0098) | 2,0110 (2,0041) |
+| Ambos | 2,5342 | 1,3698 (1,3668) | 1,2977 (1,2644) | 1,2853 (1,2330) |
+
+**Brecha frente a la cota en 001.** Es de 2,1720 pp para FFD, BFD y AG rápido, y de 1,4589 pp para los mejores ensayos de los perfiles balanceado y profundo, en los cuatro escenarios.
+
+En 002 con ambas condiciones activas, el algoritmo genético balanceado reduce la brecha de 2,53 pp (heurísticas) a una mediana de 1,30 pp: cierra cerca de la mitad de la distancia entre las heurísticas y el mejor resultado posible. Por diámetro (balanceado, semilla 0), la brecha es:
+
+| Diámetro | #3 | #4 | #5 | #6 | #7 |
+|---|---:|---:|---:|---:|---:|
+| Brecha (pp) | 0,51 | 0,27 | 2,05 | 1,40 | 0,61 |
+
+**Límites de esta evaluación**:
+
+- La cota relaja el orden de etapas, los saldos entre etapas y los descartes. Parte de la brecha puede deberse a esas restricciones reales y no a la búsqueda; la brecha es un máximo de lo que podría mejorarse, no una pérdida demostrada.
+- La cota no prueba que exista un plan que la alcance ni que el plan del algoritmo genético sea óptimo.
+- No se presenta una evaluación de admisibilidad para 001 y 002. El umbral lo define el usuario y no se ha aportado un porcentaje con fuente para esta obra (FR-025).
+- La comparación con el desperdicio registrado en obra queda pendiente, porque faltan datos de compra reales (RIESGO-AC-009).
+

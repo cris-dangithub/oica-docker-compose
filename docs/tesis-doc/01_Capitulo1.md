@@ -1,14 +1,16 @@
-# Desarrollo y evaluación de una aplicación local para la planificación secuencial de cortes de acero mediante algoritmos genéticos e inventario reutilizable
+# Diseño y desarrollo de una aplicación web con Inteligencia Artificial para la distribución eficiente de barras de acero comercial de 6, 9 y 12 metros en Colombia, con desperdicios admisibles mediante el enfoque basado en patrones de corte y nesting
+
+> Título fijado por el autor el 2 de octubre de 2026, palabra por palabra (INF-014). Cada término se define y respalda en los capítulos 2 a 4 y en `Referencias.md`.
 
 ## Resumen
 
-Se desarrolla una aplicación local para planificar cortes unidimensionales de acero por etapas, con inventario comercial y adicional y transferencia de sobrantes entre etapas. El algoritmo genético utiliza una representación por órdenes y evalúa saldos agrupados, mientras un validador independiente comprueba demanda, capacidad e inventario. El modelo permite configurar pérdida por corte y longitud mínima reutilizable, conservando el escenario ideal anterior como control. Se evalúan dos cartillas de 92 y 67.443 piezas mediante heurísticas de referencia y cinco semillas por perfil genético. La comparación distingue material incorporado a piezas, pérdida por corte, descarte y sobrante reutilizable final. El piloto ideal inicial produjo planes válidos en menos de diez segundos de motor en el caso principal; los escenarios ampliados se presentan por separado en el capítulo 4. Los tiempos del motor excluyen artefactos y no constituyen garantía de optimalidad, validación física o generalización a otras obras.
+Se desarrolla una aplicación web para planificar cortes unidimensionales de acero por etapas, con inventario comercial y adicional y transferencia de sobrantes entre etapas. El algoritmo genético utiliza una representación por órdenes y evalúa saldos agrupados, mientras un validador independiente comprueba demanda, capacidad e inventario. El modelo permite configurar pérdida por corte y longitud mínima reutilizable, conservando el escenario ideal anterior como control. Se evalúan dos cartillas de 92 y 67.443 piezas mediante heurísticas de referencia y cinco semillas por perfil genético. La comparación distingue material incorporado a piezas, pérdida por corte, descarte y sobrante reutilizable final. El piloto ideal inicial produjo planes válidos en menos de diez segundos de motor en el caso principal; los escenarios ampliados se presentan por separado en el capítulo 4. Los tiempos del motor excluyen artefactos y no constituyen garantía de optimalidad, validación física o generalización a otras obras.
 
 ## Abstract
 
-This work develops a local application for sequential one-dimensional steel cutting with commercial and additional stock and reuse of remaining material across execution stages. A genetic algorithm represents orders rather than individual pieces and evaluates grouped stock balances. An independent validator checks demand, capacity and inventory conservation. Cutting loss and minimum reusable length are configurable, while the previous ideal model remains a control scenario. Two schedules containing 92 and 67,443 pieces are evaluated against adapted heuristics using five seeds per genetic profile. The comparison distinguishes finished pieces, cutting loss, discarded material and final reusable remnants. The initial ideal-model pilot produced feasible plans in less than ten seconds of engine time on the larger case; the extended scenarios are reported separately in Chapter 4. Engine timings exclude artifact generation and do not establish optimality, physical validation or generalization to other construction projects.
+This work develops a web application for sequential one-dimensional steel cutting with commercial and additional stock and reuse of remaining material across execution stages. A genetic algorithm represents orders rather than individual pieces and evaluates grouped stock balances. An independent validator checks demand, capacity and inventory conservation. Cutting loss and minimum reusable length are configurable, while the previous ideal model remains a control scenario. Two schedules containing 92 and 67,443 pieces are evaluated against adapted heuristics using five seeds per genetic profile. The comparison distinguishes finished pieces, cutting loss, discarded material and final reusable remnants. The initial ideal-model pilot produced feasible plans in less than ten seconds of engine time on the larger case; the extended scenarios are reported separately in Chapter 4. Engine timings exclude artifact generation and do not establish optimality, physical validation or generalization to other construction projects.
 
-Palabras clave: corte unidimensional; acero; algoritmo genético; inventario; planificación por etapas.
+Palabras clave: corte unidimensional; acero de refuerzo; algoritmo genético; patrones de corte; nesting lineal; desperdicio admisible; inventario; planificación por etapas.
 
 ## Capítulo 1
 
@@ -16,7 +18,7 @@ Palabras clave: corte unidimensional; acero; algoritmo genético; inventario; pl
 
 La planificación de cortes transforma una cartilla de despiece en una asignación de piezas a barras disponibles. Para que el plan sea utilizable debe conservar cantidades, longitudes y diámetros, y respetar la disponibilidad temporal del material. La sola reducción de cantidad de barras no mide adecuadamente el aprovechamiento cuando las longitudes y diámetros son diferentes.
 
-Este proyecto aborda esa planificación mediante una aplicación local que permite configurar el catálogo comercial, incorporar inventario adicional y trasladar sobrantes entre etapas del mismo proyecto. Su evaluación distingue la corrección de los planes, el porcentaje de desperdicio final por masa y el tiempo de cálculo. No se atribuyen ahorros económicos, mejoras de productividad de operarios o beneficios ambientales sin mediciones específicas.
+Este proyecto aborda esa planificación mediante una aplicación web que permite configurar el catálogo comercial, incorporar inventario adicional y trasladar sobrantes entre etapas del mismo proyecto. Su evaluación distingue la corrección de los planes, el porcentaje de desperdicio final por masa y el tiempo de cálculo. No se atribuyen ahorros económicos, mejoras de productividad de operarios o beneficios ambientales sin mediciones específicas.
 
 ### 1.1 Antecedentes
 
@@ -52,7 +54,7 @@ A nivel nacional, la gestión ineficiente de las barras de acero ha sido un prob
 
 Una cartilla de despiece indica qué piezas requiere la obra, pero no determina por sí sola su asignación a barras comerciales y existencias disponibles. Cuando la ejecución se divide en etapas, esa asignación también debe conservar los sobrantes que podrán utilizarse más adelante y evitar contabilizar una misma barra como material nuevo en cada etapa.
 
-La contribución propuesta consiste en una herramienta local cuyo plan de corte sea verificable por pedido, diámetro, etapa y barra de origen. El algoritmo genético busca mejorar el aprovechamiento del material; su uso se justifica mediante comparación experimental con heurísticas sometidas a las mismas restricciones, sin presumir optimalidad ni superioridad universal.
+La contribución propuesta consiste en una herramienta web cuyo plan de corte sea verificable por pedido, diámetro, etapa y barra de origen. El algoritmo genético busca mejorar el aprovechamiento del material; su uso se justifica mediante comparación experimental con heurísticas sometidas a las mismas restricciones, sin presumir optimalidad ni superioridad universal.
 
 El valor para ingeniería civil se evaluará por la satisfacción de la cartilla, la conservación del inventario, el desperdicio final por masa y el tiempo requerido para producir un plan. La reducción potencial de compras, costos o impacto ambiental requiere información adicional de precios, operación y ejecución real; no se presenta como resultado demostrado por esta investigación.
 
@@ -62,7 +64,7 @@ El valor para ingeniería civil se evaluará por la satisfacción de la cartilla
 
 Desarrollar una aplicación web que integre técnicas de inteligencia artificial, específicamente un algoritmo genético, para optimizar la distribución de barras de acero comercial de 6, 9 y 12 metros en Colombia, mediante patrones de corte unidimensional y enfoque de nesting lineal, con el fin de reducir el desperdicio a niveles admisibles y mejorar la eficiencia del uso del material.
 
-> Objetivos aportados por el autor; redacción ajustada el 2 de octubre de 2026 para que sean verificables, pendiente de revisión formal con el director. Sustituyen la reformulación del 13 de septiembre de 2026.
+> Objetivos aportados por el autor. **Redacción ajustada, pendiente de revisión del director** (2 de octubre de 2026), para que sean verificables. Sustituyen la reformulación del 13 de septiembre de 2026.
 
 #### 1.3.2 Objetivos específicos
 
@@ -76,7 +78,7 @@ Desarrollar una aplicación web que integre técnicas de inteligencia artificial
 
 ¿En qué medida el algoritmo genético reduce el porcentaje final de material no aprovechado respecto de heurísticas de referencia, qué tan lejos queda de la cota inferior por patrones de corte y qué costo temporal añade, para las cartillas 001 y 002 bajo un mismo modelo secuencial?
 
-El caso principal es 002: 67.443 piezas, 137 órdenes, cinco diámetros y 13 etapas. El caso 001 contiene 92 piezas y 16 órdenes. Los ejemplos históricos de 683 piezas no forman parte de esta evaluación. No se infieren resultados generales para toda obra a partir de dos cartillas.
+El caso principal es 002: 67.443 piezas, 137 órdenes, cinco diámetros y 13 etapas. El caso 001 contiene 92 piezas y 16 órdenes. Ambas cartillas provienen de una obra de construcción en Colombia; sus datos son confidenciales y se presentan anonimizados, sin identificar el proyecto, el propietario ni la ubicación. Los ejemplos históricos de 683 piezas no forman parte de esta evaluación. No se infieren resultados generales para toda obra a partir de dos cartillas.
 
 Los grupos se ejecutan en orden numérico; los sobrantes disponibles de grupos anteriores pueden abastecer grupos posteriores del mismo diámetro. El catálogo predeterminado de 6, 9 y 12 m es configurable, y puede complementarse con existencias finitas importadas. El inventario de salida es una proyección del plan: su disponibilidad física debe comprobarse antes de emplearlo en otro proyecto.
 

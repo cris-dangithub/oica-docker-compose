@@ -166,8 +166,16 @@ título vigente dice «aplicación local», aunque la aplicación está desplega
 
 **Estado:** [EN MITIGACIÓN — 2026-10-02] El usuario fijó el título palabra por palabra y aportó
 los objetivos vigentes; se aceptó su redacción ajustada (Cap. 1 §1.3 actualizado). La alineación de
-la app con cada término se especifica en `specs/001-alineacion-titulo-tesis/spec.md`. Pendiente:
-implementar la spec, actualizar Cap. 2–4 y revisión del director.
+la app con cada término se especifica en `specs/001-alineacion-titulo-tesis/spec.md` y se
+planificó en `plan.md` (2026-10-02; cota con scipy, INF-016; umbral frente a INF-012, INF-015).
+Implementado y validado el 2026-10-02: la app respalda cada término del título (umbral, patrones,
+cota, nesting lineal en el PNG, aviso NSR-10, resumen de compra y detalle web). Cap. 1–4 y
+`Referencias.md` están actualizados. Sigue **en mitigación** por:
+- revisión del director (objetivos e INF-015);
+- fuentes sin verificar: INVIAS 640 (cita literal), IDU (por localizar), fuente de «nesting
+  lineal», ediciones de Holland, Goldberg y Russell-Norvig. La Res. 472/2017 y la Res. 1257/2021
+  quedaron verificadas el 2026-10-02;
+- la «pregunta textual del usuario» de cada ficha, que no quedó registrada.
 
 ---
 

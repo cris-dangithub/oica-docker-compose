@@ -15,7 +15,7 @@ import { API_URL } from '@/lib/api';
 
 import React, { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
-import { Download, FileSpreadsheet, FolderOpen, Plus, RefreshCw, Search, SlidersHorizontal, Trash2 } from 'lucide-react';
+import { Download, Eye, FileSpreadsheet, FolderOpen, Plus, RefreshCw, Search, SlidersHorizontal, Trash2 } from 'lucide-react';
 import { Alert } from '@/components/ui/alert';
 import { Badge } from '@/components/ui/badge';
 import { Button, buttonVariants } from '@/components/ui/button';
@@ -27,6 +27,9 @@ import { cn } from '@/lib/utils';
 import { subscribeToTask, unsubscribeFromTask, TaskUpdate } from '@/lib/socket';
 
 interface ProcessingResult {
+  admisibilidad_estado?: 'dentro' | 'excede' | 'sin_evaluar' | null;
+  umbral_desperdicio_pct?: number | null;
+  valido?: boolean | null;
   inventory_path?: string;
   motor?: string;
   desperdicio_porcentaje?: number;
@@ -53,6 +56,7 @@ interface UploadedFile {
   created_at: string;
   updated_at: string;
   processing_results?: ProcessingResult[];
+  umbral_desperdicio_pct?: number | null;  // Umbral vigente del archivo
   current_progress?: number;  // Progreso actual de Redis (0-100)
   current_state?: string;      // Estado actual del worker
   current_message?: string;    // Mensaje descriptivo del progreso
@@ -114,6 +118,22 @@ const formatDate = (value: string) =>
 
 const kg = (value?: number) => (value != null ? `${value.toFixed(3)} kg` : '—');
 
+const ADMISIBILIDAD: Record<string, { label: string; tone: Tone }> = {
+  dentro: { label: 'Dentro de lo admisible', tone: 'success' },
+  excede: { label: 'Excede', tone: 'error' },
+  sin_evaluar: { label: 'Sin evaluar', tone: 'neutral' },
+};
+
+// Mismo criterio que el backend: vacío = sin umbral; si no, 0 < v < 100.
+const umbralError = (value: string) => {
+  const text = value.trim();
+  if (!text) return null;
+  const number = Number(text.replace(',', '.'));
+  return Number.isFinite(number) && number > 0 && number < 100
+    ? null
+    : 'Ingresa un porcentaje mayor que 0 y menor que 100, o deja el campo vacío.';
+};
+
 export default function FilesTable({ apiUrl = API_URL }: FilesTableProps) {
   const [files, setFiles] = useState<UploadedFile[]>([]);
   const [loading, setLoading] = useState(true);
@@ -140,6 +160,8 @@ export default function FilesTable({ apiUrl = API_URL }: FilesTableProps) {
   const [pendingDelete, setPendingDelete] = useState<UploadedFile | null>(null);
   const [pendingReprocess, setPendingReprocess] = useState<UploadedFile | null>(null);
   const [newPerfil, setNewPerfil] = useState('balanceado');
+  const [newUmbral, setNewUmbral] = useState('');
+  const [umbralTouched, setUmbralTouched] = useState(false);
   const [busy, setBusy] = useState(false);
   const [dialogError, setDialogError] = useState<string | null>(null);
   const [notice, setNotice] = useState<{ tone: 'success' | 'error'; text: string } | null>(null);
@@ -246,6 +268,9 @@ export default function FilesTable({ apiUrl = API_URL }: FilesTableProps) {
   const openReprocess = (file: UploadedFile) => {
     setDialogError(null);
     setNewPerfil(file.perfil || 'balanceado');
+    // Precargar el umbral vigente; solo se envía si el usuario lo cambia.
+    setNewUmbral(file.umbral_desperdicio_pct != null ? String(file.umbral_desperdicio_pct) : '');
+    setUmbralTouched(false);
     setPendingReprocess(file);
   };
 
@@ -276,14 +301,25 @@ export default function FilesTable({ apiUrl = API_URL }: FilesTableProps) {
 
   const handleReprocess = async () => {
     if (!pendingReprocess) return;
+    const invalid = umbralError(newUmbral);
+    if (invalid) {
+      setDialogError(invalid);
+      return;
+    }
     setBusy(true);
     setDialogError(null);
+
+    // Clave ausente = conservar el umbral; null = quitarlo; número = reemplazarlo.
+    const body: { perfil: string; umbral_desperdicio_pct?: number | null } = { perfil: newPerfil };
+    if (umbralTouched) {
+      body.umbral_desperdicio_pct = newUmbral.trim() ? Number(newUmbral.trim().replace(',', '.')) : null;
+    }
 
     try {
       const response = await fetch(`${apiUrl}/reprocess/${pendingReprocess.id}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ perfil: newPerfil }),
+        body: JSON.stringify(body),
       });
 
       if (!response.ok) {
@@ -366,10 +402,20 @@ export default function FilesTable({ apiUrl = API_URL }: FilesTableProps) {
   };
 
   const renderWaste = (result?: ProcessingResult) => result?.desperdicio_porcentaje != null ? (
-    <span className="font-mono text-sm font-semibold tabular-nums text-content">
-      {result.desperdicio_porcentaje.toFixed(3)}%
-      <span className="block text-xs font-normal text-content-muted">en masa</span>
-    </span>
+    <div className="space-y-2">
+      <span className="font-mono text-sm font-semibold tabular-nums text-content">
+        {result.desperdicio_porcentaje.toFixed(3)}%
+        <span className="block text-xs font-normal text-content-muted">en masa</span>
+      </span>
+      {result.admisibilidad_estado && ADMISIBILIDAD[result.admisibilidad_estado] && (
+        <Badge
+          tone={ADMISIBILIDAD[result.admisibilidad_estado].tone}
+          title={result.umbral_desperdicio_pct != null ? `Umbral: ${result.umbral_desperdicio_pct}%` : undefined}
+        >
+          {ADMISIBILIDAD[result.admisibilidad_estado].label}
+        </Badge>
+      )}
+    </div>
   ) : (
     <span className="text-sm text-content-muted">—</span>
   );
@@ -378,6 +424,14 @@ export default function FilesTable({ apiUrl = API_URL }: FilesTableProps) {
     const latestResult = file.processing_results?.[0];
     return (
       <div className={cn('flex gap-2', align === 'end' ? 'items-center justify-end' : 'flex-wrap justify-start')}>
+        <Link
+          href={`/archivos/${file.id}`}
+          className={buttonVariants({ size: 'sm', variant: 'outline' })}
+          aria-label={`Ver detalle de ${file.filename}`}
+        >
+          <Eye className="h-4 w-4" aria-hidden="true" />
+          Ver detalle
+        </Link>
         {latestResult && (
           <div role="group" aria-label={`Descargas de ${file.filename}`} className={cn('flex gap-2', align === 'start' && 'flex-wrap')}>
             <Button
@@ -752,6 +806,24 @@ export default function FilesTable({ apiUrl = API_URL }: FilesTableProps) {
             <Select id="reprocess-perfil" value={newPerfil} onChange={e => setNewPerfil(e.target.value)} disabled={busy}>
               {PERFILES.map(p => <option key={p.value} value={p.value}>{p.label}</option>)}
             </Select>
+          </Field>
+          <Field
+            label="Desperdicio admisible (%)"
+            htmlFor="reprocess-umbral"
+            description="Opcional. Déjalo vacío para evaluar la nueva versión sin umbral. Las versiones anteriores conservan el suyo."
+            error={umbralTouched ? umbralError(newUmbral) : null}
+          >
+            <Input
+              id="reprocess-umbral"
+              type="text"
+              inputMode="decimal"
+              autoComplete="off"
+              value={newUmbral}
+              onChange={e => { setNewUmbral(e.target.value); setUmbralTouched(true); }}
+              disabled={busy}
+              aria-invalid={umbralTouched && umbralError(newUmbral) ? true : undefined}
+              aria-describedby={umbralTouched && umbralError(newUmbral) ? 'reprocess-umbral-error' : 'reprocess-umbral-description'}
+            />
           </Field>
           {dialogError && <Alert tone="error">{dialogError}</Alert>}
         </div>

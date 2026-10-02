@@ -4,7 +4,7 @@
 
 Se desarrolla y evalúa un artefacto de ingeniería para planificación de cortes de acero. La secuencia de trabajo es: formalización de reglas de dominio, pruebas independientes de factibilidad, implementación, comparación controlada de algoritmos e interpretación de resultados. No se presenta la elección de herramientas de programación como método de investigación por sí misma.
 
-Se emplean dos cartillas facilitadas por el autor: 001 como caso pequeño de regresión y 002 como caso principal de rendimiento. La procedencia documental detallada y las condiciones de uso de los datos deben integrarse en los anexos antes de la entrega académica. Los archivos originales se conservan sin modificaciones.
+Se emplean dos cartillas facilitadas por el autor, provenientes de una obra de construcción en Colombia cuyos datos son confidenciales y se presentan anonimizados: 001 como caso pequeño de regresión y 002 como caso principal de rendimiento. La procedencia documental detallada y las condiciones de uso de los datos deben integrarse en los anexos antes de la entrega académica. Los archivos originales se conservan sin modificaciones.
 
 ## 3.2 Arquitectura
 
@@ -73,6 +73,51 @@ Si una ejecución excede ese rango, la aplicación lo comunica y evita mostrar u
 
 ## 3.8 Artefactos y límites de validación
 
-Excel contiene barras raíz, cortes por etapa/pedido, inventario, métricas, descartes, inventario inicial excluido y parámetros con referencias. PDF y PNG muestran muestras acotadas y remiten al Excel para el plan completo. El error de generación de archivos se distingue del error del algoritmo: un plan válido no se anuncia como una entrega íntegra si falló un artefacto.
+Excel contiene barras raíz (con su patrón), cortes por etapa/pedido, inventario, métricas, descartes, inventario inicial excluido y parámetros con referencias, además de las hojas del análisis de la sección 3.9. PDF y PNG presentan el plan por patrones de corte, acotados a los más repetidos, y remiten al Excel para el plan completo. El error de generación de archivos se distingue del error del algoritmo: un plan válido no se anuncia como una entrega íntegra si falló un artefacto.
 
 Las pruebas HTTP/worker aisladas emplean SQLite en memoria y un broker simulado, con generación real de archivos pequeños. No sustituyen la verificación final de migraciones PostgreSQL, Celery, Redis, WebSocket y frontend con las imágenes de la entrega. La reproducibilidad en una segunda máquina y la revisión con el director deben documentarse antes de presentar la tesis.
+
+## 3.9 Análisis posterior a la optimización
+
+Desde la versión `analisis-1`, después de que el algoritmo genético entrega un plan y el validador independiente lo acepta, el worker ejecuta un análisis único. Ese análisis no construye ni modifica el plan: el motor sigue siendo `secuencial-2`. Calcula seis grupos de indicadores, que se guardan con cada versión.
+
+1. **Admisibilidad.** El usuario puede ingresar un umbral opcional de desperdicio admisible, entre 0 y 100 %, sin valor por defecto.
+   - El umbral se guarda junto a la configuración del archivo, fuera de los parámetros de corte. Así no cambia la huella del problema ni la estimación de tiempo.
+   - Al reprocesar puede conservarse, cambiarse o quitarse; cada versión guarda el umbral con el que se evaluó.
+   - El estado es «dentro de lo admisible», «excede» o «sin evaluar», para el proyecto y para cada diámetro. Un empate cuenta como «dentro».
+   - El umbral se compara con el desperdicio por masa de la sección 2.2. Esa comparación está pendiente de confirmación por el director (INF-015).
+2. **Pérdidas.** Se separan la pérdida irrecuperable (corte y descartes) y el saldo reutilizable final, en masa y en porcentaje. También se informa el aprovechamiento, igual a 100 % menos el desperdicio.
+3. **Resumen de compra.** Barras por diámetro, longitud y origen, con masa y aprovechamiento. Las barras de inventario adicional se listan aparte y no cuentan como compra. Por construcción, el total coincide con las barras del plan.
+4. **Patrones de corte.** Se agrupan las barras idénticas, según la definición de la sección 2.7.
+   - Cada patrón recibe un identificador determinista, `P-<diámetro>-<nnn>`.
+   - Se comprueba que la suma de repeticiones sea igual al número de barras y que expandir los patrones reproduzca exactamente la demanda.
+   - En la cartilla 002, perfil balanceado, 13.955 barras se agrupan en 136 patrones.
+5. **Cota inferior.** Se calcula por diámetro con generación de columnas (sección 2.7).
+   - El maestro lineal se resuelve con HiGHS (`scipy.optimize.linprog`, scipy 1.18.1) y el subproblema con una mochila exacta en enteros escalados.
+   - La validez se certifica con una cota lagrangiana. Se informa también la cota simple, y se toma la mayor de las dos.
+   - El cálculo tiene un presupuesto de 2 s por diámetro y 4 s por plan. Si se agota, la cota sigue siendo válida y se marca «no ajustada».
+   - Si scipy falta o el solver falla, la cota se informa como «no disponible», con su motivo, y el plan se entrega igualmente.
+   - Si el desperdicio de un plan quedara por debajo de una cota válida, la versión se registra como error de dominio y no se presenta como válida.
+6. **Avisos de masa nominal.** La masa por metro de cada diámetro de la cartilla se contrasta con la NSR-10, Título C, Tabla C.3.5.3-2 (verificada). Una diferencia mayor a 1 % produce un aviso que no bloquea el plan. Ese 1 % es una decisión de diseño, no un requisito normativo.
+
+**Dónde se presentan.** Los resultados aparecen en cinco hojas nuevas del Excel (Admisibilidad, Resumen de compra, Patrones, Cota y Avisos), en el PDF y en una página de detalle por proyecto. Esa página compara las versiones por perfil, tiempo, desperdicio, umbral, admisibilidad y verificación. El PNG se titula «Nesting lineal por patrones de corte» y dibuja las piezas de los patrones más repetidos.
+
+**Efecto en la estimación de tiempo.** Un cambio de código reinicia la calibración de tiempos de la sección 3.7, porque la clave de entorno firma el módulo de corte. El umbral no la afecta.
+
+**Validación.** Se verificaron cuatro puntos:
+
+- **Pruebas automatizadas.** 124 pruebas automatizadas pasan dentro de la imagen reconstruida. Para la cota, las pruebas comparan:
+  - un caso analítico;
+  - instancias pequeñas resueltas por fuerza bruta, donde la cota nunca supera el óptimo;
+  - certificados con duales aleatorios, que también deben ser válidos;
+  - el fallo simulado del solver.
+- **Regresión.** Se repitieron los 136 ensayos y los 12 controles de `secuencial-2` con el código nuevo. El resultado fue 0 diferencias en todas las métricas no temporales ([regresión](../../tests/benchmarks/2026-10-02-regresion-analisis-1.jsonl)). Su único fin es comprobar que el plan no cambió: no constituye evidencia nueva.
+- **Cota sobre los ensayos registrados.** Se calculó sin volver a ejecutar el algoritmo genético (sus resultados se presentan en el capítulo 4).
+- **Tiempo (SC-007).** Se compararon el código previo y el nuevo, intercalados en el mismo contenedor, con la cartilla 002 en perfil balanceado. El tiempo de motor, análisis y artefactos crece un 8,8 % en mediana (24,58 s frente a 26,75 s), por debajo del límite de 25 % ([comparación](../../tests/benchmarks/2026-10-02-sc007-comparacion.json)).
+- **Prueba de punta a punta** con la aplicación y el navegador:
+  - umbral inválido rechazado antes de encolar;
+  - paso de «excede» a «dentro» con el plan idéntico;
+  - comparación de cuatro versiones;
+  - aviso de masa y versiones históricas sin el análisis, mostradas como «no disponible»;
+  - sin violaciones de accesibilidad axe a 1440, 820 y 390 px.
+

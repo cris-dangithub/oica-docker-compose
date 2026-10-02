@@ -12,7 +12,17 @@ from pathlib import Path
 import subprocess
 import sys
 
-RUNNER = r'''
+PROFILES = ['rapido', 'balanceado', 'profundo']
+# Nombre del campo `dataset` de las líneas base → cartilla del repositorio.
+DATASETS = {'001-pruebaInicial.xlsx': 'tests/data/001/001-pruebaInicial.xlsx',
+            '002-ingeBigTest.xlsx': 'tests/data/002/002-ingeBigTest.xlsx'}
+# Claves temporales, de entorno o añadidas después de la línea base: no se comparan.
+IGNORED = {'duracion_segundos', 'timings', 'memoria_maxima_kib', 'codigo_sha256', 'python', 'plataforma',
+           'artefactos_generados', 'analisis', 'analisis_segundos', 'artifacts_seconds', 'pipeline_seconds',
+           'dataset', 'escenario'}
+
+# Cargador de fuentes en memoria, reutilizado por scripts/cota_ensayos.py.
+FINDER = r'''
 import sys, json, base64, io, importlib.abc, importlib.util, platform, resource, unittest
 payload = json.load(sys.stdin)
 class Sources(importlib.abc.MetaPathFinder, importlib.abc.Loader):
@@ -30,6 +40,9 @@ class Sources(importlib.abc.MetaPathFinder, importlib.abc.Loader):
 sys.meta_path.insert(0, Sources())
 if sys.version_info[:2] != (3, 12):
     raise RuntimeError('Esta verificación requiere Python 3.12')
+'''
+
+RUNNER = FINDER + r'''
 if payload['tests'] or payload.get('api_tests') or payload.get('all_tests'):
     names = payload.get('test_names') if payload.get('all_tests') else ['test_cutting_api' if payload.get('api_tests') else 'test_sequential']
     suite = unittest.defaultTestLoader.loadTestsFromNames(names)
@@ -40,6 +53,35 @@ from cutting.io import read_rows
 from cutting.optimizer import optimize
 from hashlib import sha256
 code_hash = sha256(json.dumps(payload['sources'], sort_keys=True).encode()).hexdigest()
+if payload.get('compare'):
+    # Regresión: reproducir cada registro de la línea base y comparar sus métricas.
+    from cutting.parameters import defaults
+    allowed = set(defaults())
+    contents = {d['name']: base64.b64decode(d['content']) for d in payload['datasets']}
+    problems = {}
+    for record in payload['compare']:
+        raw = contents[record['dataset']]
+        options = None if record['escenario'] == 'ideal' else {
+            k: v for k, v in record['parametros_corte'].items() if k in allowed}
+        key = (record['dataset'], json.dumps(options, sort_keys=True))
+        if key not in problems:
+            problems[key] = normalize(read_rows(io.BytesIO(raw), record['dataset']), options=options)
+        m = optimize(problems[key], record['perfil'], record['seed'], record['metodo'])['metrics']
+        m['archivo_sha256'] = sha256(raw).hexdigest()
+        def sin_reloj(metrics):
+            # `evolucion[d].seconds` es tiempo de reloj; el resto de la evolución sí se compara.
+            metrics = dict(metrics)
+            if isinstance(metrics.get('evolucion'), dict):
+                metrics['evolucion'] = {d: {k: v for k, v in e.items() if k != 'seconds'}
+                                        for d, e in metrics['evolucion'].items()}
+            return metrics
+        expected, m = sin_reloj(record), sin_reloj(m)
+        diff = {k: {'esperado': v, 'obtenido': m.get(k, '<ausente>')} for k, v in expected.items()
+                if k not in payload['ignored'] and m.get(k, '<ausente>') != v}
+        print(json.dumps({'dataset': record['dataset'], 'escenario': record['escenario'],
+                          'metodo': record['metodo'], 'perfil': record['perfil'], 'seed': record['seed'],
+                          'diferencias': diff, 'ok': not diff}, ensure_ascii=False, allow_nan=False), flush=True)
+    sys.exit(0)
 for dataset in payload['datasets']:
     raw = base64.b64decode(dataset['content'])
     problem = normalize(read_rows(io.BytesIO(raw), dataset['name']), options=dataset.get('parameters', payload.get('parameters')))
@@ -55,10 +97,22 @@ for dataset in payload['datasets']:
             from cutting.report import generate, legacy_patterns
             from cutting.domain import validate
             started = time.perf_counter()
+            if 'cutting.analysis' in payload['sources']:
+                # Mismo orden que el worker: análisis del plan validado y luego artefactos.
+                from cutting.analysis import analizar
+                analysis_started = time.perf_counter()
+                m['analisis'] = analizar(problem, r, None)
+                m['analisis_segundos'] = time.perf_counter() - analysis_started
+                started = time.perf_counter()
             with tempfile.TemporaryDirectory(prefix='oica-artefactos-') as directory:
                 files = generate(problem, r, directory, dataset['name'], True)
                 sheets = pd.read_excel(files['excel_path'], sheet_name=None)
-                assert set(sheets) == {'Barras', 'Cortes', 'Inventario', 'Metricas', 'Descartados', 'Inventario excluido', 'Parametros'}
+                # Las hojas originales deben seguir presentes; la spec 001 añade otras.
+                assert set(sheets) >= {'Barras', 'Cortes', 'Inventario', 'Metricas', 'Descartados', 'Inventario excluido', 'Parametros'}
+                if 'cutting.analysis' in payload['sources']:
+                    assert set(sheets) >= {'Admisibilidad', 'Resumen de compra', 'Patrones', 'Cota', 'Avisos'}
+                    m['patrones_total'] = len(sheets['Patrones'])
+                    assert int(sheets['Patrones']['repeticiones'].sum()) == len(sheets['Barras'])
                 actual = Counter()
                 for row in sheets['Cortes'].to_dict('records'):
                     actual[int(row['fila_origen'])] += int(row['cantidad'])
@@ -94,10 +148,13 @@ def main():
                         help='Un ensayo rápido por cartilla con reportes temporales; comprobar espacio antes')
     parser.add_argument('--dataset', action='append', default=[])
     parser.add_argument('--seeds', type=int, default=5)
-    parser.add_argument('--profiles', nargs='+', default=['rapido', 'balanceado', 'profundo'])
+    parser.add_argument('--profiles', nargs='+', default=None,
+                        help='Por defecto: los tres perfiles; con --artifacts-smoke, solo rapido')
     parser.add_argument('--output')
     parser.add_argument('--parametros-corte', help='Objeto JSON con las condiciones del ensayo')
     parser.add_argument('--matrix', action='store_true', help='Cuatro combinaciones de checks, en serie')
+    parser.add_argument('--comparar', action='append', default=[], metavar='RUTA.jsonl',
+                        help='Reproducir cada registro de una línea base y exigir 0 diferencias (repetible)')
     args = parser.parse_args()
     root = Path(__file__).resolve().parents[1]
     sources = {}
@@ -125,9 +182,10 @@ def main():
                'datasets': [{'name': Path(p).name, 'content': base64.b64encode(Path(p).read_bytes()).decode()}
                             for p in args.dataset],
                'runs': [('ffd', 'rapido', 0), ('bfd', 'rapido', 0)] +
-                       [('ag', profile, seed) for profile in args.profiles for seed in range(args.seeds)]}
+                       [('ag', profile, seed) for profile in args.profiles or PROFILES for seed in range(args.seeds)]}
     if args.artifacts_smoke:
-        payload['runs'] = [('ag', 'rapido', 0)]
+        # Un ensayo por perfil pedido (rapido si no se indica), semilla 0.
+        payload['runs'] = [('ag', profile, 0) for profile in args.profiles or ['rapido']]
     if args.matrix:
         if args.parametros_corte or args.artifacts_smoke:
             parser.error('--matrix no se combina con parámetros individuales ni artefactos')
@@ -135,7 +193,21 @@ def main():
             for name, options in [('ideal', None), ('solo_perdida', {'minimo_activo': False}),
                                   ('solo_minimo', {'perdida_activa': False}), ('ambos', {})]
             for dataset in payload['datasets']]
+    if args.comparar:
+        if args.matrix or args.artifacts_smoke or args.tests or args.api_tests or args.all_tests:
+            parser.error('--comparar no se combina con otros modos')
+        records = [json.loads(line) for path in args.comparar
+                   for line in Path(path).read_text(encoding='utf-8').splitlines() if line.strip()]
+        names = sorted({r['dataset'] for r in records})
+        unknown = [n for n in names if n not in DATASETS]
+        if unknown:
+            parser.error(f'Dataset desconocido en la línea base: {unknown}')
+        payload['datasets'] = [{'name': n, 'content': base64.b64encode((root / DATASETS[n]).read_bytes()).decode()}
+                               for n in names]
+        payload['compare'] = records
+        payload['ignored'] = sorted(IGNORED)
     output = open(args.output, 'x', encoding='utf-8') if args.output else None
+    differences = 0
     try:
         with subprocess.Popen(['docker', 'exec', '-i', args.container, 'python', '-B', '-c', RUNNER],
                               stdin=subprocess.PIPE, stdout=subprocess.PIPE, text=True) as process:
@@ -149,6 +221,11 @@ def main():
                 if output:
                     output.write(line)
                     output.flush()
+                if args.comparar:
+                    differences += not m['ok']
+                    print(f"{m['escenario']} {m['dataset']} {m['metodo']} {m['perfil']} semilla={m['seed']}: "
+                          f"{'OK' if m['ok'] else 'DIFERENCIAS ' + ', '.join(m['diferencias'])}", flush=True)
+                    continue
                 print(f"{m['escenario']} {m['dataset']} {m['metodo']} {m['perfil']} semilla={m['seed']}: "
                       f"{m['duracion_segundos']:.2f}s, desperdicio={m['desperdicio_porcentaje']:.4f}%, "
                       f"piezas={m['piezas']}, valido={m['valido']}", flush=True)
@@ -157,6 +234,10 @@ def main():
                           f"generación y verificación: {m['artefactos_y_verificacion_segundos']:.2f}s", flush=True)
             if process.wait():
                 raise SystemExit(process.returncode)
+        if args.comparar:
+            print(f'Registros con diferencias: {differences}', flush=True)
+            if differences:
+                raise SystemExit(1)
     finally:
         if output:
             output.close()

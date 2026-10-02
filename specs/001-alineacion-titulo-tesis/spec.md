@@ -88,8 +88,10 @@ porcentaje de desperdicio cambien.
    exceden.
 3. **Given** una cartilla sin umbral, **When** termina la optimización, **Then** la aplicación
    muestra «sin evaluar» y presenta igualmente el desperdicio y la pérdida irrecuperable.
-4. **Given** un archivo procesado con umbral, **When** el usuario lo reprocesa con otro perfil,
-   **Then** la nueva versión conserva el mismo umbral y lo vuelve a evaluar.
+4. **Given** un archivo procesado con umbral, **When** el usuario lo reprocesa con otro perfil
+   sin tocar el umbral, **Then** la nueva versión conserva el mismo umbral y lo vuelve a evaluar.
+   Si al reprocesar el usuario cambia o quita el umbral, la nueva versión usa el valor nuevo y
+   las versiones anteriores conservan el suyo.
 5. **Given** cualquier umbral, **When** se compara con la ejecución equivalente sin umbral (misma
    cartilla, parámetros y semilla), **Then** el plan de corte y sus métricas de desperdicio son
    idénticos.
@@ -180,8 +182,8 @@ igual que el óptimo.
 **Acceptance Scenarios**:
 
 1. **Given** un plan terminado, **When** se consultan sus resultados, **Then** se muestran la cota
-   de desperdicio por patrones, la cota simple (material de piezas sobre la barra más larga) y la
-   brecha del plan en puntos porcentuales.
+   de desperdicio por patrones, la cota simple (aprovechamiento perfecto del material de las
+   piezas) y la brecha del plan en puntos porcentuales.
 2. **Given** un problema con inventario adicional limitado y pérdida por corte activa, **When** se
    calcula la cota, **Then** la cota respeta las cantidades disponibles y la pérdida por corte, y
    sigue siendo menor o igual que cualquier plan factible.
@@ -276,7 +278,9 @@ definición, la funcionalidad que lo respalda y al menos una fuente con estado d
   distintos, porque su origen difiere.
 - Cota con pérdida por corte activa: la capacidad de cada patrón descuenta la pérdida de cada
   separación, salvo cuando una pieza consume exactamente el saldo.
-- Un diámetro con una sola longitud de pieza: la cota debe coincidir con el óptimo analítico.
+- Un diámetro con una sola longitud de pieza y una sola longitud de barra: la cota debe coincidir
+  con el óptimo analítico (⌈n/q⌉ barras, con q piezas por barra). Con varias longitudes de barra
+  solo se exige que la cota no supere el óptimo.
 - Un diámetro de la cartilla sin masa nominal conocida: no se emite aviso de masa y se informa que
   no se pudo contrastar.
 - Una cartilla con pedidos #2: el comportamiento actual (catálogo por defecto sin #2) se documenta;
@@ -300,8 +304,9 @@ definición, la funcionalidad que lo respalda y al menos una fuente con estado d
 - **FR-001**: El sistema MUST permitir que el usuario ingrese, de forma opcional, un umbral de
   desperdicio admisible en porcentaje (0 < valor < 100) al subir una cartilla.
 - **FR-002**: El sistema MUST NOT proponer un valor por defecto del umbral, y MUST indicar junto
-  al campo que no existe un máximo legal y que el valor proviene del presupuesto o contrato del
-  usuario.
+  al campo que el valor proviene del presupuesto o contrato del usuario y que no se identificó
+  una norma colombiana que fije un máximo. Mientras las fichas de INVIAS e IDU no estén
+  «verificadas» en `Referencias.md`, el texto MUST NOT nombrar normas concretas como respaldo.
 - **FR-003**: El sistema MUST comparar el umbral con el porcentaje de desperdicio por masa ya
   definido en INF-012 (todo lo que sobra al final del proyecto sobre la masa de barras usadas), a
   nivel de proyecto y de cada diámetro, y reportar «dentro de lo admisible», «excede» o «sin
@@ -310,7 +315,9 @@ definición, la funcionalidad que lo respalda y al menos una fuente con estado d
   descartes) y el saldo reutilizable final, en masa y en porcentaje.
 - **FR-005**: El umbral MUST NOT alterar el plan de corte, la búsqueda del algoritmo genético, la
   identidad del problema que se usa para comparar ejecuciones, ni la estimación de tiempo basada
-  en ejecuciones anteriores. MUST conservarse con el archivo y reutilizarse al reprocesar.
+  en ejecuciones anteriores. MUST conservarse con el archivo y reutilizarse al reprocesar. Al
+  reprocesar, el usuario MAY cambiarlo o quitarlo; cada versión guarda el umbral con el que se
+  evaluó (decisión del usuario, 2026-10-02).
 - **FR-006**: El estado de admisibilidad MUST aparecer en la lista de archivos, en el Excel (con
   detalle por diámetro) y en el PDF.
 
@@ -348,9 +355,11 @@ definición, la funcionalidad que lo respalda y al menos una fuente con estado d
   porcentaje de desperdicio, con el enfoque de patrones de corte de Gilmore–Gomory (relajación
   lineal), por diámetro. MUST considerar las longitudes comerciales, el inventario adicional
   limitado y la pérdida por corte, y relajar el orden de etapas.
-- **FR-013**: El sistema MUST reportar también la cota simple (material de las piezas sobre la
-  barra disponible más larga) y la brecha del plan frente a la cota por patrones, en puntos
-  porcentuales.
+- **FR-013**: El sistema MUST reportar también la cota simple y la brecha del plan frente a la
+  cota por patrones, en puntos porcentuales. La cota simple supone aprovechamiento perfecto:
+  material mínimo igual a la longitud total de las piezas, redondeada al múltiplo común de las
+  longitudes de barra disponibles. Se acompaña del número mínimo de barras, que es la longitud
+  total de las piezas dividida por la barra disponible más larga, redondeada hacia arriba.
 - **FR-014**: Si la cota no se ajusta por completo dentro del tiempo asignado, el sistema MUST
   presentar una cota todavía válida y marcarla como «no ajustada».
 - **FR-015**: Si el desperdicio del plan es menor que la cota, el sistema MUST registrar un error de
@@ -363,8 +372,10 @@ definición, la funcionalidad que lo respalda y al menos una fuente con estado d
 **Colombia, eficiencia, IA**
 
 - **FR-018**: El sistema MUST contrastar la masa por metro de cada diámetro de la cartilla con la
-  masa nominal de la NSR-10 y emitir un aviso no bloqueante cuando la diferencia supere 1 %. El
-  aviso MUST verse en los resultados, el Excel y el PDF.
+  masa nominal de referencia (tabla de barras de la plantilla de cartilla, cuya correspondencia
+  con la NSR-10 debe verificarse) y emitir un aviso no bloqueante cuando la diferencia supere
+  1 %. El aviso MUST verse en los resultados, el Excel y el PDF. Mientras la correspondencia no
+  esté verificada, el rótulo MUST ser «masa de referencia (NSR-10, por verificar)».
 - **FR-019**: El sistema MUST mostrar el aprovechamiento (100 % − desperdicio) en los resultados
   nuevos.
 - **FR-020**: El tutorial MUST definir «algoritmo genético (técnica de IA, computación
@@ -410,8 +421,8 @@ definición, la funcionalidad que lo respalda y al menos una fuente con estado d
   barras del plan.
 - **Cota inferior**: material mínimo teórico por diámetro y su porcentaje de desperdicio
   equivalente (cota simple y cota por patrones), con indicador de ajuste y brecha del plan.
-- **Aviso de masa nominal**: diámetro, masa por metro de la cartilla, masa nominal NSR-10 y
-  diferencia relativa.
+- **Aviso de masa nominal**: diámetro, masa por metro de la cartilla, masa nominal NSR-10
+  (Título C, Tabla C.3.5.3-2; verificada el 2026-10-02) y diferencia relativa.
 - **Resumen de compra**: por diámetro, longitud de barra y origen, número de barras, masa y
   aprovechamiento; se deriva de las barras del plan y su total coincide con ellas.
 - **Estado de verificación**: resultado de la comprobación independiente de demanda, diámetro,
@@ -440,8 +451,9 @@ definición, la funcionalidad que lo respalda y al menos una fuente con estado d
 - **SC-006**: En el 100 % de los ensayos existentes de 001 y 002, el desperdicio obtenido es mayor
   o igual que la cota por patrones del caso. En instancias pequeñas resueltas por fuerza bruta, la
   cota nunca supera el óptimo.
-- **SC-007**: El tiempo total de procesamiento de la cartilla 002 no aumenta más de 25 % respecto
-  al actual por el cálculo de patrones, cota y evaluación.
+- **SC-007**: Para la cartilla 002 (perfil balanceado, semilla 0, condiciones físicas por
+  defecto), el tiempo de motor + análisis + artefactos medido con el mismo arnés no aumenta más
+  de 25 % respecto a la medición previa a la feature.
 - **SC-008**: El 100 % de las fichas de `Referencias.md` contiene los ocho campos exigidos. Ninguna
   fuente no verificada aparece en el documento de tesis como si estuviera verificada.
 - **SC-009**: El objetivo general y cada uno de los cinco objetivos específicos tienen al menos una
@@ -478,8 +490,8 @@ definición, la funcionalidad que lo respalda y al menos una fuente con estado d
   previa del usuario.
 - Las cartillas 001 y 002 provienen de una obra colombiana cuyos datos son confidenciales; se
   presentan anonimizadas.
-- No se ejecutará de nuevo la matriz de 136 ensayos. La brecha se calcula sobre los resultados
-  registrados.
-- La constitución de Spec Kit del proyecto no está definida (plantilla vacía). Rigen las reglas de
-  `AGENTS.md`: sin commits sin instrucción, documentación en español, no editar `services/`,
-  registrar inferencias y riesgos.
+- La matriz de 136 ensayos (y los 12 controles) se vuelve a ejecutar solo como verificación de
+  regresión (decisión del usuario, 2026-10-02): no produce evidencia nueva para el Cap. 4. La
+  brecha se calcula sobre los resultados registrados, sin ejecutar el algoritmo genético.
+- Rige la constitución del proyecto (`.specify/memory/constitution.md`, v1.0.0, 2026-10-02), que
+  prevalece sobre `AGENTS.md` y `CLAUDE.md`.

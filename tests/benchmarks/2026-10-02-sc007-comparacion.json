@@ -1,0 +1,51 @@
+{
+  "fecha": "2026-10-02",
+  "caso": "002-ingeBigTest.xlsx, balanceado, semilla 0, condiciones físicas por defecto",
+  "criterio": "SC-007: motor + análisis + artefactos ≤ 1,25 × medición previa a la feature, mismo arnés",
+  "base_T002": {
+    "archivo": "2026-10-02-base-sc007.jsonl",
+    "total_s": 19.144,
+    "entorno": "imagen anterior (Python 3.12.14)"
+  },
+  "despues_T055": {
+    "archivo": "2026-10-02-despues-sc007.jsonl",
+    "total_s": 26.847,
+    "ratio_vs_base": 1.402
+  },
+  "comparacion_controlada": {
+    "descripcion": "Código previo (git HEAD de backend/cutting) y código nuevo intercalados en el mismo contenedor (imagen nueva, Python 3.12.15)",
+    "previo": {
+      "totales_s": [
+        28.871,
+        24.14,
+        24.582,
+        24.708,
+        23.927
+      ],
+      "mediana_total_s": 24.582,
+      "mediana_motor_s": 6.054,
+      "mediana_analisis_s": 0,
+      "mediana_artefactos_s": 18.086
+    },
+    "nuevo": {
+      "totales_s": [
+        27.165,
+        26.35,
+        26.346,
+        26.647,
+        26.846,
+        27.691
+      ],
+      "mediana_total_s": 26.747,
+      "mediana_motor_s": 6.345,
+      "mediana_analisis_s": 2.081,
+      "mediana_artefactos_s": 18.299
+    },
+    "ratio_medianas": 1.088
+  },
+  "sc005": {
+    "barras": 13955,
+    "patrones": 136,
+    "reduccion_filas": 102.6
+  }
+}

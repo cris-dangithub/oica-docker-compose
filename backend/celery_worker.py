@@ -169,6 +169,7 @@ def process_file_task(self, uploaded_file_id, perfil):
     from cutting.optimizer import optimize
     from cutting.report import generate, legacy_patterns
     from cutting.estimation import environment_key, estimate
+    from cutting.analysis import analizar
     from sqlalchemy import text
 
     app = create_flask_app()
@@ -243,7 +244,13 @@ def process_file_task(self, uploaded_file_id, perfil):
             progress(phase='preparing', message='Cartilla e inventario validados', force=True)
             result = optimize(problem, perfil, snapshot['seed'], callback=progress)
             record.processing_status = 'generating_artifacts'
-            progress(phase='generating_artifacts', message='Generando Excel e inventario final', force=True)
+            progress(phase='generating_artifacts', message='Analizando el plan y generando Excel e inventario final', force=True)
+            # Métricas derivadas del plan ya validado; no lo modifican. Un «Error de dominio:»
+            # (p. ej., desperdicio por debajo de la cota) llega al except general y la versión
+            # no se presenta como válida.
+            analysis_started = time.perf_counter()
+            result['metrics']['analisis'] = analizar(problem, result, config.get('umbral_desperdicio_pct'))
+            result['metrics']['analisis_segundos'] = time.perf_counter() - analysis_started
             storage_uuid = str(uuid.uuid4())
             directory = os.path.join(os.environ.get('UPLOAD_PATH', '/usr/src/app/data/filestore'), storage_uuid)
             artifacts_started = time.perf_counter()

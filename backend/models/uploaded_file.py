@@ -30,12 +30,13 @@ class UploadedFile(db.Model):
                              cascade='all, delete-orphan', 
                              order_by='ProcessingResult.version_number.desc()')
     
-    def to_dict(self, include_results=False):
+    def to_dict(self, include_results=False, include_analysis=False):
         """
         Serializa el archivo a diccionario.
         
         Args:
             include_results: Si True, incluye array de versiones completo
+            include_analysis: Si True, cada versión incluye su análisis completo (detalle)
         """
         # Obtener perfil del resultado más reciente
         latest_perfil = self.active_profile or (self.results[0].perfil_usado if self.results else None)
@@ -55,11 +56,14 @@ class UploadedFile(db.Model):
             'created_at': self.created_at.isoformat() if self.created_at else None,
             'updated_at': self.updated_at.isoformat() if self.updated_at else None,
             'total_versions': len(self.results) if self.results else 0,
-            'latest_version': self.results[0].version_number if self.results else None
+            'latest_version': self.results[0].version_number if self.results else None,
+            # Umbral vigente del archivo; cada versión conserva el suyo en su snapshot.
+            'umbral_desperdicio_pct': (self.execution_config or {}).get('umbral_desperdicio_pct')
         }
         
         if include_results and self.results:
-            data['processing_results'] = [result.to_dict(include_data=False) for result in self.results]
+            data['processing_results'] = [result.to_dict(include_data=False, include_analysis=include_analysis)
+                                          for result in self.results]
         
         return data
 
@@ -106,13 +110,17 @@ class ProcessingResult(db.Model):
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
     
-    def to_dict(self, include_data=False):
+    def to_dict(self, include_data=False, include_analysis=False):
         """
         Serializa el resultado a diccionario.
         
         Args:
             include_data: Si True, incluye resultados/metricas/cartilla (puede ser pesado)
+            include_analysis: Si True, incluye `metricas.analisis` completo (spec 001)
         """
+        metricas = self.metricas or {}
+        analisis = metricas.get('analisis')
+        admisibilidad = ((analisis or {}).get('admisibilidad') or {}).get('proyecto') or {}
         base_dict = {
             'id': self.id,
             'uploaded_file_id': self.uploaded_file_id,
@@ -136,8 +144,14 @@ class ProcessingResult(db.Model):
             'updated_at': self.updated_at.isoformat() if self.updated_at else None,
             'has_pdf': self.pdf_path is not None,
             'has_graph': self.graph_image_path is not None,
-            'has_excel': self.excel_path is not None
+            'has_excel': self.excel_path is not None,
+            # Campos de la spec 001; las versiones históricas los devuelven como null.
+            'valido': metricas.get('valido'),
+            'umbral_desperdicio_pct': (self.execution_config or {}).get('umbral_desperdicio_pct'),
+            'admisibilidad_estado': admisibilidad.get('estado')
         }
+        if include_analysis:
+            base_dict['analisis'] = analisis
         
         if include_data:
             base_dict.update({

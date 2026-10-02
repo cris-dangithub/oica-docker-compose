@@ -10,6 +10,8 @@ flask-socketio==5.3.5
 python-socketio==5.10.0
 pandas==3.0.2
 numpy==2.4.4
+# Cota Gilmore–Gomory (spec 001, research R-01): rueda musllinux cp312, numpy>=2.0,<2.8.
+scipy==1.18.1
 openpyxl==3.1.5
 matplotlib==3.10.9
 weasyprint==68.1
