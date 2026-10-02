@@ -27,6 +27,7 @@
 | INF-012 | Datos y metodología | Alta | [VALIDADA] | Corpus 001/002, pérdida configurable y desperdicio final por masa |
 | INF-013 | Arquitectura | Media | [VALIDADA] | Proxy seleccionable container/host; VPS en otro ambiente |
 | INF-011 | Arquitectura | Alta | [VALIDADA] | Monorepo, producción VPS, CI/CD y desarrollo nativo |
+| INF-014 | Académica | Alta | [PENDIENTE] | Título propuesto con IA/nesting/desperdicios admisibles no coincide con el modelo; alternativas |
 
 ---
 
@@ -733,3 +734,65 @@ Ninguna: extiende el modo de operación de INF-011.
 [VALIDADA]
 ### Respuesta del usuario
 «ejecuta entonces», con trabajo del VPS delegado al ambiente con acceso SSH.
+
+---
+
+## INF-014
+
+### Categoría
+Académica
+### Prioridad
+Alta
+### Pregunta inferida
+¿Es coherente con el proyecto el título «Diseño y desarrollo de una aplicación web con
+Inteligencia Artificial para la distribución eficiente de barras de acero comercial de
+6, 9 y 12 metros en Colombia, con desperdicios admisibles mediante el enfoque basado en
+patrones de corte y nesting»?
+### Respuesta asumida
+No en su forma actual. Se recomienda:
+*Desarrollo y evaluación de una aplicación web para la planificación por etapas del corte
+de barras de acero de refuerzo mediante algoritmos genéticos y reutilización de sobrantes.*
+
+Variantes:
+- Si se exige mencionar IA: *Aplicación web basada en algoritmos genéticos para minimizar
+  el desperdicio en el corte de barras de acero de refuerzo por etapas con reutilización
+  de sobrantes.*
+- Contexto colombiano defendible: añadir «, bajo la NSR-10»; y «: caso de estudio en
+  [ciudad]» solo si las cartillas 001/002 provienen de una obra identificable.
+- «Patrones de corte» puede usarse como producto («…que genera patrones de corte…»), no
+  como método.
+### Justificación
+Contraste término por término con el código y el documento:
+
+| Término | Respaldo | Evidencia |
+|---|---|---|
+| «aplicación web» | Sí | Next.js + Flask desplegado con HTTPS (INF-011). El título vigente dice «local». |
+| falta «evaluación» | — | Objetivo específico 4 y Cap. 4 son de evaluación. |
+| «con Inteligencia Artificial» | Débil | Cap. 2 §2.1: sin modelos generativos, aprendizaje supervisado ni redes neuronales; la técnica es un algoritmo genético. |
+| «distribución eficiente» | Vago | El problema es corte unidimensional; el resumen niega garantía de optimalidad. |
+| «6, 9 y 12 metros» | Parcial | Son longitudes por defecto; catálogo editable, inventario adicional y saldos reutilizados. |
+| «en Colombia» | No | Dos cartillas; el resumen excluye generalización a otras obras. Solo la NSR-10 es colombiana. |
+| «desperdicios admisibles» | No | El modelo minimiza desperdicio final por masa sin umbral admisible; Cap. 2 §2.5: el Tw de Benjaoran y Bhokha (2013) no se usa como mínimo universal. |
+| «enfoque basado en patrones de corte» | Engañoso | En IO designa formulaciones por generación de patrones (Gilmore–Gomory); OICA usa un AG con representación por órdenes. |
+| «nesting» | Contradictorio | Cap. 2 §2.1 excluye explícitamente la distribución bidimensional. |
+
+Además: nombra dos métodos a la vez, omite la contribución distintiva (etapas y
+reutilización de sobrantes) y tiene ~35 palabras.
+### Impacto
+- `docs/tesis-doc/01_Capitulo1.md` (título, resumen, objetivo general)
+- `docs/tesis-doc/02_Capitulo2.md` §2.1 (aclaración sobre nesting e IA)
+- Portada y registro institucional del título
+### Riesgo si la asunción es incorrecta
+Medio: si la institución exige conservar términos del título original («IA», «nesting»,
+«desperdicios admisibles»), habría que ampliar el alcance o justificar explícitamente
+cada término en el Cap. 2; de lo contrario el jurado puede señalar la incoherencia.
+### Fecha
+2026-09-29
+### Inferencias relacionadas
+INF-012 (autoriza reformular el título con el director), INF-011 (aplicación web).
+### Puede consolidarse con
+Ninguna: INF-012 solo deja abierta la reformulación; esta entrada evalúa la propuesta.
+### Estado
+[PENDIENTE] — el usuario pidió registrarla; requiere revisión con el director.
+### Respuesta del usuario
+Solicitó registrar la evaluación y las alternativas (2026-09-29). Título final pendiente.

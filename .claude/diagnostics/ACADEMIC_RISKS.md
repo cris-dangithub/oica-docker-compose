@@ -1,0 +1,167 @@
+# Riesgos Académicos
+
+> Inconsistencias entre el documento de tesis y la aplicación, gaps de alcance, problemas metodológicos y riesgos que afectan la validez académica del proyecto.
+
+---
+
+## RIESGO-AC-001 — AG ignora diámetro de barra
+
+**Severidad:** CRÍTICA
+
+**Descripción:**
+El algoritmo genético procesa todas las piezas juntas sin importar el diámetro (`N° de Barra`). Un plan de corte que asigna piezas de diámetro #4 y #8 a la misma barra es físicamente imposible. Si se presenta este resultado en el Cap. 4, la tesis sería técnicamente incorrecta.
+
+**Evidencia:**
+- `services/backend/celery_worker.py` líneas 396-402: `N° de Barra` ignorado en la transformación a `df_ag`.
+
+**Impacto académico:**
+- El Cap. 4 no puede mostrar resultados válidos hasta que esto se resuelva.
+- La comparativa con la "Cartilla N°1" sería inválida.
+
+**Inferencias relacionadas:** INF-001, INF-006
+
+**Estado:** [PENDIENTE — bloquea Cap. 4]
+
+---
+
+## RIESGO-AC-002 — Capítulo 3 describe arquitectura que no existe
+
+**Severidad:** ALTA
+
+**Descripción:**
+La sección 3.3.3 (Desarrollo del Frontend) del Capítulo 3 describe una arquitectura con AWS Lambda, S3 y presigned URLs. Esta arquitectura fue descartada. El código actual usa Docker Compose con almacenamiento local.
+
+**Evidencia:**
+- `docs/tesis-doc/03_Capitulo3.md` sección 3.3.3.
+- No hay ninguna referencia a AWS en el código de producción.
+
+**Impacto académico:**
+- El documento es inconsistente con la implementación real.
+- Un evaluador que lea el Cap. 3 no entendería cómo funciona la app real.
+
+**Inferencias relacionadas:** INF-003
+
+**Estado:** [CONFIRMADO — pendiente actualización en Bloque E]
+
+---
+
+## RIESGO-AC-003 — Objetivo de reutilización de desperdicios no implementado
+
+**Severidad:** MEDIA
+
+**Descripción:**
+El Objetivo Específico 3 del Capítulo 1 menciona "registrar la reutilización de los desperdicios de barras de acero de proyectos anteriores". El código siempre pasa `desperdicios_previos = []`, haciendo que este objetivo no se cumpla en ninguna ejecución.
+
+**Evidencia:**
+- `services/backend/celery_worker.py`: `desperdicios_previos = []`
+- `docs/tesis-doc/01_Capitulo1.md`: Objetivo Específico 3.
+
+**Impacto académico:**
+- Si este objetivo no se implementa, debe eliminarse de los objetivos o ajustarse el alcance en el documento.
+- El Cap. 4 no puede mostrar resultados de reutilización.
+
+**Inferencias relacionadas:** INF-008
+
+**Estado:** [PENDIENTE — requiere decisión del usuario sobre alcance]
+
+---
+
+## RIESGO-AC-004 — Capítulo 4 sin resultados reales
+
+**Severidad:** ALTA
+
+**Descripción:**
+El Capítulo 4 (Análisis de Resultados) tiene apenas 16 líneas de contenido real. No hay tablas de resultados cuantitativos, no hay análisis de eficiencia, no hay comparativa completa con la Cartilla N°1.
+
+**Evidencia:**
+- `docs/tesis-doc/04_Capitulo4.md`: 16 líneas, una imagen, texto introductorio.
+
+**Impacto académico:**
+- Sin Cap. 4 completo, la tesis no puede entregarse.
+- El Cap. 4 depende de que la app funcione correctamente (Bloques A, B, C).
+
+**Inferencias relacionadas:** INF-005
+
+**Estado:** [CONFIRMADO — bloqueado hasta Bloque C]
+
+---
+
+## RIESGO-AC-005 — Abstract y keywords vacíos
+
+**Severidad:** MEDIA
+
+**Descripción:**
+El Capítulo 1 del documento tiene el Abstract y los Keywords completamente vacíos (solo tiene el texto de la plantilla).
+
+**Evidencia:**
+- `docs/tesis-doc/01_Capitulo1.md` líneas 3-9.
+
+**Impacto académico:**
+- El abstract es uno de los primeros elementos que evalúa el comité.
+
+**Inferencias relacionadas:** Ninguna
+
+**Estado:** [CONFIRMADO — pendiente en Bloque E]
+
+---
+
+## RIESGO-AC-006 — Secciones del Marco Teórico con notas sin completar
+
+**Severidad:** MEDIA
+
+**Descripción:**
+El Capítulo 2 tiene al menos 4 secciones marcadas con `> Nota:` que indican contenido pendiente:
+- Completar con información de Next.js.
+- Hablar de Docker como open source.
+- Hablar sobre qué subrama de IA se usa (algoritmo genético vs IA generativa vs predictiva).
+- Buscar y completar literal 2.2 (clasificación de problemas de corte).
+- Completar literal 2.3 (algoritmos clásicos — menos IA, verificar bibliografía).
+
+**Evidencia:**
+- `docs/tesis-doc/02_Capitulo2.md` múltiples líneas con `> Nota:`.
+
+**Impacto académico:**
+- El Marco Teórico incompleto puede ser señalado por el comité evaluador.
+
+**Estado:** [CONFIRMADO — pendiente en Bloque E]
+
+---
+
+## RIESGO-AC-007 — Guía de la app con afirmaciones sin respaldo en código ni tesis
+
+**Severidad:** MEDIA (visible para usuarios y evaluadores de la app)
+
+**Descripción:**
+El glosario/FAQ de `/tutorial` (`frontend/src/components/tutorial/TutorialGuide.tsx`) contenía:
+- "Método Búfalo" como técnica de optimización: no aparece en `backend/` ni en `docs/tesis-doc/`.
+- "#4 pesa aproximadamente 0.668 kg/m": la plantilla (`TablaBarras`) y la NSR-10 dan 0,994 kg/m.
+- "Método intensivo… máxima eficiencia": el perfil se llama Profundo y el Cap. 3 declara que no se afirma que más población siempre mejore.
+- "Solo XLSX" y "unos segundos": la app acepta XLSX/CSV y el tiempo depende del tamaño (hay estimador).
+
+**Resolución (2026-09-29, rediseño Bloque J):** corregido como error factual evidente. Se eliminó
+"Método Búfalo", se corrigió la masa, se renombró el perfil con los parámetros del Cap. 3 y se
+añadieron términos del Cap. 3 (grupo de ejecución, catálogo, inventario, pérdida por corte,
+mínimo reutilizable, inventario final).
+
+**Pendiente de validación del usuario:** confirmar que "Método Búfalo" no corresponde a una
+referencia que los autores quieran conservar; si la tiene, debe citarse en el Marco Teórico antes
+de reincorporarla.
+
+**Estado:** [RESUELTO EN APP — pendiente confirmación sobre "Método Búfalo"]
+
+---
+
+## RIESGO-AC-008 — Título propuesto incoherente con el modelo implementado
+
+**Severidad:** ALTA (afecta portada, resumen y defensa)
+
+**Descripción:**
+El título propuesto el 2026-09-29 afirma «Inteligencia Artificial», «desperdicios admisibles»,
+«enfoque basado en patrones de corte y nesting» y alcance «en Colombia». El Cap. 2 §2.1 excluye
+nesting bidimensional y modelos de IA distintos del algoritmo genético; el modelo minimiza el
+desperdicio sin umbral admisible; la evaluación usa dos cartillas sin generalización. Además, el
+título vigente dice «aplicación local», aunque la aplicación está desplegada como web.
+
+**Inferencias relacionadas:** INF-014, INF-012, INF-011
+
+**Estado:** [PENDIENTE — revisión con el director; no se modificó el documento]

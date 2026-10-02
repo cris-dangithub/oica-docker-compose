@@ -1,0 +1,1 @@
+- 001.png: La columna "Perfil" no debe depender del fin del análisis realizado.
