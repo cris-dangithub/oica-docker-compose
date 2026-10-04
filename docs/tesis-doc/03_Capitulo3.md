@@ -85,7 +85,7 @@ Desde la versión `analisis-1`, después de que el algoritmo genético entrega u
    - El umbral se guarda junto a la configuración del archivo, fuera de los parámetros de corte. Así no cambia la huella del problema ni la estimación de tiempo.
    - Al reprocesar puede conservarse, cambiarse o quitarse; cada versión guarda el umbral con el que se evaluó.
    - El estado es «dentro de lo admisible», «excede» o «sin evaluar», para el proyecto y para cada diámetro. Un empate cuenta como «dentro».
-   - El umbral se compara con el desperdicio por masa de la sección 2.2. Esa comparación está pendiente de confirmación por el director (INF-015).
+   - El umbral se compara con el desperdicio por masa de la sección 2.2: todo lo comprado que no termina en piezas (INF-015, validada por el autor).
 2. **Pérdidas.** Se separan la pérdida irrecuperable (corte y descartes) y el saldo reutilizable final, en masa y en porcentaje. También se informa el aprovechamiento, igual a 100 % menos el desperdicio.
 3. **Resumen de compra.** Barras por diámetro, longitud y origen, con masa y aprovechamiento. Las barras de inventario adicional se listan aparte y no cuentan como compra. Por construcción, el total coincide con las barras del plan.
 4. **Patrones de corte.** Se agrupan las barras idénticas, según la definición de la sección 2.7.

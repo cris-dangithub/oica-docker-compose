@@ -215,8 +215,9 @@ no quedó registrada en las sesiones: figura como «pendiente: pedir al autor» 
 - **Pregunta textual del usuario que la originó**: pendiente: pedir al autor.
 - **Término del título que respalda**: «desperdicios admisibles».
 - **Ubicación prevista en la tesis**: Cap. 2 y Cap. 3 (umbral del usuario).
-- **Advertencias**: un porcentaje de un APU es un supuesto de presupuesto, no una norma. Ver
-  INF-015: el APU puede referirse solo a la pérdida irrecuperable.
+- **Advertencias**: un porcentaje de un APU es un supuesto de presupuesto, no una norma. Según INF-015
+  (validada), OICA compara el umbral con el desperdicio total: todo lo comprado que no queda en
+  piezas. Si un APU usa otra definición, el usuario debe convertir su porcentaje antes de ingresarlo.
 
 ---
 

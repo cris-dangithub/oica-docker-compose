@@ -26,12 +26,16 @@ Decisiones del plan (2026-10-02):
   reprocesar.
 - Nueva página `/archivos/[id]`.
 - Regresión repitiendo los 136 + 12 en el contenedor actual (sin evidencia nueva).
-- INF-015 [PENDIENTE]: el umbral se compara con el desperdicio de INF-012.
+- INF-015 [VALIDADA] por el autor (2026-10-03): el umbral se compara con el desperdicio total
+  (todo lo comprado que no queda en piezas).
 
 **Spec 001 implementada (2026-10-02): 56/56 tareas de `tasks.md` completas.** Commit en la rama
-`feat/spec-001-alineacion-titulo`, autorizado por el usuario. Push y **PR #5 hacia `production`** abiertos
-(https://github.com/cris-dangithub/oica-docker-compose/pull/5). Sin merge ni despliegue: requieren una orden
-explícita aparte.
+`feat/spec-001-alineacion-titulo`. **Publicado en producción**:
+- **PR #5**: fusionado por el usuario el 2026-10-02 a las 12:44 UTC.
+- **PR #6**: verificación de fuentes; fusionado por orden del usuario a las 19:25 UTC (`ae56668`).
+- **Despliegue**: «Publicar producción» terminó con éxito ambas veces. https://oica.cris-munoz.me
+  responde sano y la ruta `/archivos/<id>` está disponible.
+- **Spec 001 cerrada el 2026-10-04**: el cierre (INF-015 y el estado de la spec) se publicó con commit directo a `production`, por orden del usuario.
 
 Validación:
 - **Pruebas**: 124, pasan dentro de la imagen nueva (con scipy 1.18.1) y con el código en memoria
@@ -68,7 +72,7 @@ uno por scipy); frontend 229 MB. Se retiraron solo las tres imágenes huérfanas
 
 Documento: Cap. 1 (título fijo, «web», procedencia), Cap. 2 §2.1, 2.4, 2.7 y 2.8, Cap. 3 §3.9,
 Cap. 4 §4.10 y `docs/tesis-doc/Referencias.md` (15 fichas). Pendientes académicos: revisión del
-director, INF-015 y fuentes sin verificar (RIESGO-AC-008).
+director (objetivos) y fuentes sin verificar (RIESGO-AC-008).
 
 `CLAUDE.md` quedó alineado con la constitución el 2026-10-02:
 - monorepo y `services/` como copia histórica;
