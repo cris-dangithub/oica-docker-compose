@@ -1,5 +1,7 @@
 # Contrato de artefactos — Excel, PDF y PNG
 
+> **Sustituido en parte por `specs/002-presentacion-resultados/contracts/` (2026-10-04).** Lo que la spec 002 cambia rige desde allí; el resto de este contrato sigue vigente.
+
 Los genera `backend/cutting/report.py`. Antes de tocar este archivo hay que leer el último
 `tests/data/<NNN>/ANALISIS_RESULTADOS.md`. Los artefactos de versiones históricas no se
 regeneran.

@@ -3,7 +3,7 @@
  */
 import React from 'react';
 import { Alert } from '@/components/ui/alert';
-import { AvisoMasa } from './types';
+import { AvisoMasa, decimal } from './types';
 
 const ROTULO = 'masa nominal NSR-10 (Título C, Tabla C.3.5.3-2)';
 
@@ -22,9 +22,9 @@ export default function MassWarnings({ avisos }: MassWarningsProps) {
          <ul className="mt-2 space-y-1 font-mono text-xs tabular-nums">
             {avisos.map(a => (
                <li key={a.diametro}>
-                  {a.diametro}: cartilla {a.masa_cartilla_kg_m.toFixed(4)} kg/m
+                  {a.diametro}: cartilla {decimal(a.masa_cartilla_kg_m, 3)} kg/m
                   {a.estado === 'aviso' && a.masa_nominal_kg_m != null && a.diferencia_relativa_pct != null
-                     ? ` · nominal ${a.masa_nominal_kg_m.toFixed(3)} kg/m · diferencia ${a.diferencia_relativa_pct > 0 ? '+' : ''}${a.diferencia_relativa_pct.toFixed(2)} %`
+                     ? ` · nominal ${decimal(a.masa_nominal_kg_m, 3)} kg/m · diferencia ${a.diferencia_relativa_pct > 0 ? '+' : ''}${decimal(a.diferencia_relativa_pct, 2)} %`
                      : ' · sin valor nominal: no se pudo contrastar'}
                </li>
             ))}

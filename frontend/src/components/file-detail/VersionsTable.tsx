@@ -16,6 +16,7 @@ import {
    NO_DISPONIBLE,
    PERFIL_LABELS,
    VersionDetalle,
+   decimal,
    pct,
 } from './types';
 
@@ -25,7 +26,7 @@ interface VersionsTableProps {
    onSelect: (version: number) => void;
 }
 
-const seconds = (value: number | null) => (value != null ? `${value.toFixed(1)} s` : NO_DISPONIBLE);
+const seconds = (value: number | null) => (value != null ? `${decimal(value, 1)} s` : NO_DISPONIBLE);
 
 const umbral = (value: number | null) => (value != null ? pct(value, 2) : 'sin umbral');
 

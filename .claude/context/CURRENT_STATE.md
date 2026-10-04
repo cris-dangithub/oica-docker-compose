@@ -6,8 +6,12 @@ Rama `feat/spec-002-presentacion-resultados`, que ya integra `production` (cierr
 001). `.specify/feature.json` → `specs/002-presentacion-resultados` (local; si falta, usar
 `SPECIFY_FEATURE_DIRECTORY`).
 
-- **Estado**: especificada, enmendada (2026-10-04) y analizada. **Ninguna tarea implementada**
-  (0/48).
+- **Estado** (2026-10-04): **implementada y validada, 48 de 48 tareas**, E2E incluido. Los
+  cambios están sin commit en la rama.
+- **Stack local**: corre con las imágenes nuevas. Las anteriores se retiraron por ID, sin
+  `prune`. C: quedó con unos 102 GB libres.
+- **Playwright**: hay Chromium headless en `~/.cache/ms-playwright` (266 MB) y `libgbm` y
+  `libwayland-server` extraídas en `tmp/qa-spec002/libs` (sin instalar en el sistema).
 - **Alcance**:
   - Excel con «Resumen», totales y «Trazabilidad».
   - PDF con la compra primero y el nesting por páginas.
@@ -30,8 +34,33 @@ Rama `feat/spec-002-presentacion-resultados`, que ya integra `production` (cierr
   - el `json.loads` de unos 12,5 MB bloquea gevent unos 0,3 s (mitigado con una LRU por uuid);
   - los pedidos de 001 y 002 se muestran en la web: la demostración debe usar datos
     anonimizados (constitución, Principio V).
-- **Siguiente paso**: `/speckit-implement` empezando por la US1 (MVP). Para el E2E hay que
-  reconstruir imágenes, lo que requiere aprobación y una estimación de espacio en C:.
+- **Puertas ejecutadas**:
+  - Backend: 164 pruebas OK.
+  - Regresión: 0 diferencias en 148 registros (`2026-10-04-regresion-presentacion.jsonl`).
+  - SC-007: medianas de 25,58 s y 27,36 s, ratio 1,07 (los artefactos suman +1,9 s).
+  - SC-009: 0,47 s.
+  - Frontend: typecheck, lint y build OK con Node 22 (nvm).
+  - Despliegue: 16 pruebas OK.
+- **Cambios no previstos en las tareas**:
+  - El arnés `check_cutting_container.py` acepta las hojas nuevas o las previas, y un PNG de
+    hasta 9 MP.
+  - Nuevo `scripts/medir_vista_patrones.py`.
+  - La paleta de etapas del PNG excluye el rojo (R-03).
+- **Revisión manual** de Excel, PDF y PNG de la 001 y la 002: correcta (§13 de
+  `tests/data/002/ANALISIS_RESULTADOS.md`).
+- **E2E (T047)**:
+  - API: 0 fallos.
+  - Auditor (SC-005): OK.
+  - UI: 51 comprobaciones; axe en 0 violaciones en 1440, 820 y 390 px; teclado y foco correctos.
+- **Estándar numérico único** (enmienda 2, decisión del usuario; FR-032 a FR-035, R-20):
+  - coma decimal, punto de miles y espacio antes de la unidad;
+  - decimales fijos por tipo de cifra;
+  - entradas que aceptan coma o punto (`DecimalInput`, `leerDecimal`);
+  - `cutting/formato.py` en el backend.
+- **Verificación**: QA de las 6 pantallas en 3 anchos; pantalla, PDF y «Resumen» coherentes.
+- **Pendiente**: las imágenes Docker del stack aún no incluyen la enmienda 2. Reconstruirlas
+  requiere aprobación.
+- **Siguiente paso**: commit y PR, solo con instrucción explícita.
 
 
 ## Bloque K — Alineación con el título fijo de la tesis (spec 001)

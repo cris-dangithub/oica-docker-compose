@@ -44,14 +44,14 @@ en memoria, sin reconstruir imágenes.
 **Purpose**: leer las reglas obligatorias y medir la línea base de tiempo **antes** de cambiar
 código.
 
-- [ ] T001 Leer las reglas obligatorias y anotar en las notas de la tarea las que apliquen:
+- [X] T001 Leer las reglas obligatorias y anotar en las notas de la tarea las que apliquen:
   - `tests/data/002/ANALISIS_RESULTADOS.md` §12, obligatorio antes de tocar
     `backend/cutting/report.py` y `backend/celery_worker.py`.
   - `docs/oica-redesign/AI-DESIGN-RULES.md`, `docs/oica-redesign/STATE.md` y
     `docs/oica-redesign/DESIGN-SYSTEM.md`, obligatorios antes de tocar la UI.
   - Las reglas de UI que apliquen a tablas, tarjetas, avisos, filas-botón desplegables,
     diagramas a escala, tokens `data/*` y controles de `frontend/src/components/ui/form-controls.tsx`.
-- [ ] T002 Medir la línea base de SC-007 con el código actual:
+- [X] T002 Medir la línea base de SC-007 con el código actual:
   - 5 ejecuciones de `python3 scripts/check_cutting_container.py --artifacts-smoke --dataset
     tests/data/002/002-ingeBigTest.xlsx --profiles balanceado --seeds 1 --container
     oica-validation-backend-1`, con las condiciones físicas por defecto (como en
@@ -59,6 +59,9 @@ código.
   - Guardar los totales, el motor, el análisis y los artefactos en
     `tests/benchmarks/2026-10-04-sc007-presentacion-antes.jsonl`, sin sobrescribir.
   - Si el arnés no admite repeticiones, ejecutarlo 5 veces con salidas numeradas.
+  - *Hecho (2026-10-04)*: 5 corridas con `--parametros-corte '{}'` (disco de 1 mm y mínimo
+    automático; sin ese argumento el arnés corre sin condiciones físicas). Desperdicio 8,8602 %;
+    mediana total (motor + análisis + artefactos) ≈ 25,6 s.
 
 ---
 
@@ -66,19 +69,19 @@ código.
 
 **Purpose**: ayudantes de formato y cobertura, y número de versión disponible para el PDF.
 
-- [ ] T003 En `backend/cutting/report.py`, añadir los ayudantes:
+- [X] T003 En `backend/cutting/report.py`, añadir los ayudantes:
   - `numero(valor, decimales=2)`: punto de miles y coma decimal (por ejemplo `152.039,57`);
     `None` → «no disponible»; sin `locale` (research R-05).
   - `PERFILES = {'rapido': 'Rápido', 'balanceado': 'Balanceado', 'profundo': 'Profundo'}`.
   - `cobertura(mostrados, total_patrones, total_barras)`: devuelve `(n, m, b, t, pct)`, con
     `b = Σ repeticiones de los mostrados`, y el texto «Se muestran N de M patrones, que cubren B
     de T barras (x %)» (data-model §6; invariante «`b ≤ t`; si `n = m`, entonces `b = t`»).
-- [ ] T004 Crear `backend/tests/test_report_presentacion.py`:
+- [X] T004 Crear `backend/tests/test_report_presentacion.py`:
   - Un plan pequeño de prueba (dos diámetros, dos etapas, inventario adicional opcional), con el
     estilo de `backend/tests/test_cutting_api.py` (`normalize` → `optimize` → `analizar` →
     `generate` en un `TemporaryDirectory`).
   - Pruebas iniciales de `numero()` y `cobertura()`, incluidos `n = m ⇒ b = t` y `b ≤ t`.
-- [ ] T005 Pasar el número de versión a `generate()`:
+- [X] T005 Pasar el número de versión a `generate()`:
   - En `backend/cutting/report.py`, ampliar la firma a `generate(problem, result, directory,
     title='', visuals=True, version=None)`, compatible con el arnés `--artifacts-smoke` y las
     pruebas existentes.
@@ -101,14 +104,14 @@ la primera página del PDF tiene los indicadores clave y la compra con totales (
 
 ### Tests for User Story 1
 
-- [ ] T006 [US1] En `backend/tests/test_report_presentacion.py`, pruebas que deben fallar antes de T008–T011:
+- [X] T006 [US1] En `backend/tests/test_report_presentacion.py`, pruebas que deben fallar antes de T008–T011:
   - El orden exacto de las 13 hojas (contracts/artefactos.md §1).
   - La ausencia de «Metricas».
   - «Resumen» con los 21 indicadores de contracts/artefactos.md §1.1, en orden y con su `unidad`.
   - El bloque «Totales de compra», localizado por su título: «Total comprado» + «Total tomado
     del inventario» = filas de Barras, y la masa = Σ `Resumen de compra.masa_kg` (data-model §3).
   - «Resumen de compra» sin filas de total.
-- [ ] T007 [US1] En `backend/tests/test_report_presentacion.py`, pruebas del PDF. Se extrae el
+- [X] T007 [US1] En `backend/tests/test_report_presentacion.py`, pruebas del PDF. Se extrae el
   texto con `pypdf` si está en la imagen; si no, se comprueba el HTML generado mediante una
   función pura `pdf_html(...)` expuesta por `report.py`:
   - El encabezado contiene el proyecto, la versión, el perfil legible y «hora de Colombia».
@@ -117,25 +120,25 @@ la primera página del PDF tiene los indicadores clave y la compra con totales (
 
 ### Implementation for User Story 1
 
-- [ ] T008 [US1] En `backend/cutting/report.py`, implementar `resumen_rows(problem, result, analisis)`:
+- [X] T008 [US1] En `backend/cutting/report.py`, implementar `resumen_rows(problem, result, analisis)`:
   - 21 filas `{indicador, valor, unidad}`, en el orden y con los orígenes de
     contracts/artefactos.md §1.1.
   - Un dato faltante se muestra como «no disponible» o «sin evaluar» (data-model §2: «nunca una
     celda vacía ambigua»).
   - Los valores numéricos siguen siendo números.
-- [ ] T009 [US1] En `backend/cutting/report.py`, implementar `totales_compra_rows(analisis)` a
+- [X] T009 [US1] En `backend/cutting/report.py`, implementar `totales_compra_rows(analisis)` a
   partir de `analisis['resumen_compra']`:
   - Una fila por diámetro y origen (`Compra` o `Inventario adicional`).
   - «Total comprado» y, si hay inventario, «Total tomado del inventario» (data-model §3).
   - Si falta `resumen_compra`, una fila «no disponible».
-- [ ] T010 [US1] En `generate()` de `backend/cutting/report.py`:
+- [X] T010 [US1] En `generate()` de `backend/cutting/report.py`:
   - Escribir la hoja «Resumen» con dos bloques: los indicadores desde la fila 1, una fila en
     blanco, la celda de título «Totales de compra» y la tabla de totales (`startrow` de pandas
     más una celda de título con openpyxl).
   - Reordenar todas las hojas según contracts/artefactos.md §1 y dejar de escribir «Metricas».
   - Escribir provisionalmente los escalares técnicos en una hoja «Trazabilidad» mínima; su
     contenido final se completa en T037.
-- [ ] T011 [US1] En `backend/cutting/report.py`, reestructurar el HTML del PDF en una función pura
+- [X] T011 [US1] En `backend/cutting/report.py`, reestructurar el HTML del PDF en una función pura
   `pdf_html(problem, result, analisis, patrones, title, version, imagenes)`, con las secciones de
   contracts/artefactos.md §2 en orden:
   1. Encabezado: proyecto escapado, versión o «no asignada», perfil con `PERFILES` y fecha con
@@ -148,11 +151,17 @@ la primera página del PDF tiene los indicadores clave y la compra con totales (
   Las secciones 5–9 reutilizan por ahora `patrones_html`, `admisibilidad_html`, `cota_html` y
   `avisos_html`; se completan en US3 y US5. Aplicar `numero()` a todas las cifras visibles, con 3
   decimales en la cota y la brecha (FR-011).
-- [ ] T012 [US1] Ejecutar las pruebas:
+- [X] T012 [US1] Ejecutar las pruebas:
   - Las de T006–T007 deben pasar.
   - También todas las existentes, salvo las que dependan de «Metricas» o de `stock_id`, que se
     actualizan en US5 (anotarlas).
   - Corregir lo necesario.
+  - *Hecho (2026-10-04)*: 136 pruebas OK. Se ajustaron en el momento dos pruebas que dependían
+    del orden y de las hojas: `test_artefactos_visuales_acotados` leía la primera hoja como
+    «Barras», y `test_worker_guarda_admisibilidad_y_umbral_por_version` leía «Metricas» (el
+    cambio de T040 se adelantó). El arnés `scripts/check_cutting_container.py` acepta las hojas
+    nuevas o las previas, para seguir midiendo el código previo. Smoke de artefactos de la 001:
+    OK.
 
 **Checkpoint**: la US1 se puede demostrar con el Excel y el PDF de la 001 (MVP).
 
@@ -172,7 +181,7 @@ abre con el teclado, y sus identificadores, repeticiones y secuencia coinciden c
 
 ### Tests for User Story 2
 
-- [ ] T013 [P] [US2] Crear `backend/tests/test_vista_patrones.py` con pruebas que deben fallar
+- [X] T013 [P] [US2] Crear `backend/tests/test_vista_patrones.py` con pruebas que deben fallar
   antes de T015:
   - **Planes de prueba**: el plan pequeño de T004 (con y sin reglas físicas, incluidos descartes
     de fin de etapa) y el caso de 340 patrones de `test_artefactos_por_patrones_acotados` en
@@ -196,7 +205,7 @@ abre con el teclado, y sus identificadores, repeticiones y secuencia coinciden c
     con `resultados` vacío y con registros sin `trazabilidad_cortes`.
   - **Inconsistencia** (FR-025): alterar una repetición del `top` de `metricas.analisis.patrones`
     o quitar un registro de `resultados` lanza un error de dominio con «Patrones inconsistentes».
-- [ ] T014 [US2] En `backend/tests/test_cutting_api.py`, pruebas de la ruta `GET
+- [X] T014 [US2] En `backend/tests/test_cutting_api.py`, pruebas de la ruta `GET
   /patrones/<storage_uuid>` (contracts/api-patrones.md) que deben fallar antes de T016. Se usa la
   base SQLite en memoria de la clase, creando un `ProcessingResult` con `resultados` de
   `legacy_patterns` y `metricas` con `escala_longitudes`. Casos:
@@ -213,7 +222,7 @@ abre con el teclado, y sus identificadores, repeticiones y secuencia coinciden c
 
 ### Implementation for User Story 2
 
-- [ ] T015 [US2] Crear `backend/cutting/vista_patrones.py`, un módulo puro (research R-16, R-18 y
+- [X] T015 [US2] Crear `backend/cutting/vista_patrones.py`, un módulo puro (research R-16, R-18 y
   R-19; data-model §8):
   - **`barras_desde_resultados(resultados, escala)`**: devuelve las barras con `longitud`,
     `kerf`, `discarded` y `remaining` = `round(valor_m × escala)`, `cuts` = `trazabilidad_cortes`
@@ -228,7 +237,7 @@ abre con el teclado, y sus identificadores, repeticiones y secuencia coinciden c
     `metricas['analisis']['patrones']` si existe e invariantes de pedidos. Si alguna falla,
     `raise ValueError('Patrones inconsistentes: …')`.
   - No importa nada de la base ni de Flask.
-- [ ] T016 [US2] En `backend/server.py`, añadir `@app.route('/patrones/<uuid>', methods=['GET'])`
+- [X] T016 [US2] En `backend/server.py`, añadir `@app.route('/patrones/<uuid>', methods=['GET'])`
   (contracts/api-patrones.md):
   - Busca `ProcessingResult` por `storage_uuid` (404 `{"error": "Versión no encontrada"}`) y
     carga solo `resultados` y `metricas` (`load_only`).
@@ -244,7 +253,7 @@ abre con el teclado, y sus identificadores, repeticiones y secuencia coinciden c
   - Caché `functools.lru_cache(maxsize=8)` sobre una función interna con clave `storage_uuid`;
     solo cachea vistas disponibles.
   - Sin escrituras en la base.
-- [ ] T017 [P] [US2] Añadir los tokens de etapa (research R-17; contracts/ui.md «Tokens de color
+- [X] T017 [P] [US2] Añadir los tokens de etapa (research R-17; contracts/ui.md «Tokens de color
   nuevos»):
   - En `frontend/src/app/globals.css`, `--color-data-stage-1` … `--color-data-stage-6`, como alias
     de primitivos existentes (`--primitive-cobalt-*`, `--primitive-teal-*`,
@@ -252,10 +261,10 @@ abre con el teclado, y sus identificadores, repeticiones y secuencia coinciden c
     `content` cumpla AA sobre cada uno. Exponerlos a Tailwind igual que `data-primary`.
   - Registrarlos en `docs/oica-redesign/DESIGN-SYSTEM.md` (tabla «Semantic colors», grupo Data),
     con el par de contraste validado y la regla de ciclo desde la etapa 7.
-- [ ] T018 [P] [US2] En `frontend/src/components/file-detail/types.ts`, añadir `PedidoPiezas`,
+- [X] T018 [P] [US2] En `frontend/src/components/file-detail/types.ts`, añadir `PedidoPiezas`,
   `PiezaPatron`, `RangoBarras`, `PatronExplorable` y la unión `VistaPatrones`, exactamente como
   en contracts/ui.md «Tipos». `PatronResumen` no cambia.
-- [ ] T019 [US2] Crear `frontend/src/components/file-detail/patterns/filtros.ts` con funciones
+- [X] T019 [US2] Crear `frontend/src/components/file-detail/patterns/filtros.ts` con funciones
   puras, sin React:
   - `filtrar(patrones, filtro)`: combina con Y diámetro, etapa (`etapas.includes`), origen y
     pedido.
@@ -264,7 +273,7 @@ abre con el teclado, y sus identificadores, repeticiones y secuencia coinciden c
     últimos de mayor a menor, con un desempate estable por el índice original (FR-031).
   - `cobertura(filtrados, totales)` → `{n, m, b, t, pct}`, con `b = Σ repeticiones`.
   - `metros(valor)`: coma decimal, sin ceros finales.
-- [ ] T020 [US2] Crear `frontend/src/components/file-detail/patterns/PatternRow.tsx` (research
+- [X] T020 [US2] Crear `frontend/src/components/file-detail/patterns/PatternRow.tsx` (research
   R-17; contracts/ui.md §5, «Lista de patrones»):
   - `<button aria-expanded aria-controls aria-label>` con el `aria-label` del contrato (más el
     aporte del pedido si hay uno filtrado).
@@ -276,7 +285,7 @@ abre con el teclado, y sus identificadores, repeticiones y secuencia coinciden c
     supera el del texto.
   - Recomposición en móvil (< 640 px), sin desplazamiento horizontal.
   - Estados hover, active y focus-visible con tokens.
-- [ ] T021 [US2] Crear `frontend/src/components/file-detail/patterns/PatternDetail.tsx`
+- [X] T021 [US2] Crear `frontend/src/components/file-detail/patterns/PatternDetail.tsx`
   (contracts/ui.md §5, «Detalle del patrón»; FR-028):
   - La secuencia legible y la lista de piezas: etapa, longitud, cantidad por barra y pedidos con
     sus piezas.
@@ -287,7 +296,7 @@ abre con el teclado, y sus identificadores, repeticiones y secuencia coinciden c
     - un botón «Ver más (quedan K)» que suma 100;
     - nunca se pintan más rangos que los pedidos (SC-012).
   - La nota que remite a las hojas «Patrones» y «Barras».
-- [ ] T022 [US2] Crear `frontend/src/components/file-detail/patterns/PatternExplorer.tsx`
+- [X] T022 [US2] Crear `frontend/src/components/file-detail/patterns/PatternExplorer.tsx`
   (contracts/ui.md §5; data-model §8.4):
   - Recibe `storageUuid`.
   - Carga diferida con `IntersectionObserver` sobre la sección y `fetch(`${API_URL}/patrones/${storageUuid}`)`
@@ -304,16 +313,16 @@ abre con el teclado, y sus identificadores, repeticiones y secuencia coinciden c
   - Un único patrón desplegado a la vez. Al cerrarlo, el foco vuelve a su fila.
   - El mensaje «Ningún patrón cumple los filtros» con «Quitar filtros».
   - Usar `useMemo` para filtrar y ordenar.
-- [ ] T023 [US2] En `frontend/src/components/file-detail/FileDetail.tsx`, insertar
+- [X] T023 [US2] En `frontend/src/components/file-detail/FileDetail.tsx`, insertar
   `<PatternExplorer storageUuid={version.storage_uuid} />` entre `PurchaseSummary` y
   `QualitySection` (FR-015). No añadir una vista previa del PNG; la descarga sigue en
   `VersionsTable.tsx`.
-- [ ] T024 [US2] Ejecutar las puertas:
+- [X] T024 [US2] Ejecutar las puertas:
   - Las pruebas del backend: T013–T014 deben pasar, junto con todas las existentes salvo las ya
     anotadas en T012.
   - `cd frontend && npm run typecheck && npm run lint && npm run build`.
   - Corregir lo necesario.
-- [ ] T025 [US2] Medir SC-009 sin reconstruir imágenes:
+- [X] T025 [US2] Medir SC-009 sin reconstruir imágenes:
   - Crear `scripts/medir_vista_patrones.py` siguiendo el patrón de `scripts/cota_ensayos.py`:
     reutiliza el cargador en memoria `FINDER` de `scripts/check_cutting_container.py`, para
     ejecutar `backend/cutting/vista_patrones.py` del árbol de trabajo dentro del contenedor del
@@ -331,6 +340,8 @@ abre con el teclado, y sus identificadores, repeticiones y secuencia coinciden c
     se cumple, informarlo al usuario con el desglose antes de seguir.
   - Las versiones `secuencial-2` locales (ids 44–47) tienen `metricas.valido = true`
     (comprobado el 2026-10-04).
+  - *Hecho (2026-10-04)*: versión 44 (cartilla 002): 136 patrones, 13.955 barras, 145 rangos,
+    137 pedidos y 79 KB de JSON. Mediana total de 0,47 s (lectura 0,36 s + vista 0,11 s). Cumple.
 
 **Checkpoint**: el explorador está completo con datos reales del backend, y SC-009 queda medido
 (T025). La validación visual, axe, SC-011 y SC-012 en el navegador se hacen en el E2E aprobado
@@ -349,14 +360,14 @@ legibles al 100 % (quickstart §3).
 
 ### Tests for User Story 3
 
-- [ ] T026 [US3] En `backend/tests/test_report_presentacion.py`, pruebas del dibujo de nesting:
+- [X] T026 [US3] En `backend/tests/test_report_presentacion.py`, pruebas del dibujo de nesting:
   - El PNG generado tiene unos 200 dpi (`PIL.Image.info['dpi']`) y ≤ 9 MP (FR-014).
   - El número de bloques del PDF = ⌈min(60, M) / 18⌉.
   - La función de dibujo devuelve las etiquetas de leyenda esperadas: una por etapa presente, más
     «Pérdida por corte», «Descarte» y «Saldo reutilizable».
   - Las piezas rotuladas cumplen la regla de ancho de research R-02 (exponer una función pura
     `cabe_rotulo(ancho_m, texto, pulgadas_por_metro)`).
-- [ ] T027 [US3] En `backend/tests/test_report_presentacion.py`:
+- [X] T027 [US3] En `backend/tests/test_report_presentacion.py`:
   - La cobertura de la tabla y de las imágenes coincide con Σ repeticiones de los patrones
     mostrados (SC-003).
   - Con ≤ 150 patrones, la tabla del PDF muestra todos y su cobertura es 100 %.
@@ -365,7 +376,7 @@ legibles al 100 % (quickstart §3).
 
 ### Implementation for User Story 3
 
-- [ ] T028 [US3] En `backend/cutting/report.py`, extraer `dibujar_nesting(problem, patrones_muestra,
+- [X] T028 [US3] En `backend/cutting/report.py`, extraer `dibujar_nesting(problem, patrones_muestra,
   total_patrones, total_barras, titulo)` desde el bloque actual del PNG (líneas ~357-387):
   - Figura de 11 pulgadas de ancho y alto `0,3 × n + 1,2` (research R-04).
   - Piezas con borde fino y medida centrada si `cabe_rotulo(...)`: letra de 5 pt y color por
@@ -375,25 +386,30 @@ legibles al 100 % (quickstart §3).
   - Pie con `cobertura(...)`.
   - Título «Nesting lineal por patrones de corte».
   - Devuelve la figura y las etiquetas de la leyenda.
-- [ ] T029 [US3] En `generate()` de `backend/cutting/report.py`:
+- [X] T029 [US3] En `generate()` de `backend/cutting/report.py`:
   - Generar el PNG **antes** del PDF con `dibujar_nesting(mas_repetidos(patrones, 60), …)`, a
     200 dpi.
   - Generar en memoria los bloques del PDF (18 patrones cada uno, sobre los mismos 60) como PNG
     base64 (`io.BytesIO`) y pasarlos a `pdf_html(..., imagenes=[...])`.
   - Si el dibujo falla, generar el PDF con «imagen no disponible» (research R-01).
-- [ ] T030 [US3] En `pdf_html` de `backend/cutting/report.py`, completar la sección 5 «Patrones de
+- [X] T030 [US3] En `pdf_html` de `backend/cutting/report.py`, completar la sección 5 «Patrones de
   corte»:
   - Las dos líneas de cobertura (tabla e imágenes).
   - Las imágenes incrustadas con `<img src="data:image/png;base64,...">`, una por página
     (`page-break-before` o `break-inside: avoid`), al 100 % del ancho útil.
   - La tabla de patrones (≤ 150, los más repetidos), con coma decimal.
   - La nota de omitidos cuando corresponda.
-- [ ] T031 [US3] En `backend/tests/test_cutting_api.py`, cambiar la aserción
+- [X] T031 [US3] En `backend/tests/test_cutting_api.py`, cambiar la aserción
   `image.width * image.height <= 3_000_000` por `<= 9_000_000` en
   `test_artefactos_visuales_acotados` (línea ~325) y en `test_artefactos_por_patrones_acotados`
   (línea ~355), con un comentario que cite research R-04. El límite sigue siendo fijo e
   independiente del número de barras (BUG-005).
-- [ ] T032 [US3] Ejecutar las pruebas. Deben pasar las de T026–T027 y las existentes de patrones.
+- [X] T032 [US3] Ejecutar las pruebas. Deben pasar las de T026–T027 y las existentes de patrones.
+  - *Hecho (2026-10-04)*: 157 pruebas OK. Las pruebas de la US3 se escribieron antes del código,
+    pero no se corrieron en rojo antes de implementarlo. El arnés pasa a aceptar 9 MP. En la
+    revisión visual de la 002 se corrigieron la superposición de la leyenda con el rótulo del eje
+    y la paleta de etapas (sin el par rojo; research R-03). El PNG queda en 2.200 × 3.890 px a
+    200 dpi (8,56 MP).
 
 **Checkpoint**: la US3 se puede verificar con los artefactos de la 002, de forma independiente
 del explorador.
@@ -410,16 +426,16 @@ calidad sin la tarjeta de cota simple. Una versión histórica se abre sin error
 
 ### Implementation for User Story 4
 
-- [ ] T033 [P] [US4] En `frontend/src/components/file-detail/PurchaseSummary.tsx`, calcular a
+- [X] T033 [P] [US4] En `frontend/src/components/file-detail/PurchaseSummary.tsx`, calcular a
   partir de `lineas` (FR-016; research R-12):
   - una fila de total por diámetro, solo con origen `comercial`;
   - «Total comprado», en barras y kg;
   - «Total tomado del inventario» aparte, si hay líneas `adicional`;
   - en móvil, una tarjeta resumen al final de la lista, sin desplazamiento horizontal.
-- [ ] T034 [P] [US4] En `frontend/src/components/file-detail/QualitySection.tsx`, quitar la
+- [X] T034 [P] [US4] En `frontend/src/components/file-detail/QualitySection.tsx`, quitar la
   tarjeta «Cota simple» y añadir al texto explicativo «Con aprovechamiento perfecto, el
   desperdicio sería x %» si existe `cota.proyecto.simple_desperdicio_pct` (FR-017).
-- [ ] T035 [US4] Ejecutar `cd frontend && npm run typecheck && npm run lint && npm run build`.
+- [X] T035 [US4] Ejecutar `cd frontend && npm run typecheck && npm run lint && npm run build`.
   Corregir lo necesario.
 
 **Checkpoint**: la US4 funciona con versiones nuevas e históricas (validación visual en el E2E
@@ -437,7 +453,7 @@ nueva y una histórica, y reimportación del inventario (quickstart §2, §5 y �
 
 ### Tests for User Story 5
 
-- [ ] T036 [US5] En `backend/tests/test_report_presentacion.py`, pruebas:
+- [X] T036 [US5] En `backend/tests/test_report_presentacion.py`, pruebas:
   - «Trazabilidad» contiene `valido`, `escala_longitudes`, `motor`, `input_hash`, `seed`,
     `perfil`, `metodo`, `duracion_segundos`, `analisis_version` (igual a `analisis-1`),
     `analisis_segundos` (si existe), `cota_ajustada` y `parametros_resueltos`. Este último es un
@@ -454,29 +470,29 @@ nueva y una histórica, y reimportación del inventario (quickstart §2, §5 y �
 
 ### Implementation for User Story 5
 
-- [ ] T037 [US5] En `backend/cutting/report.py`, implementar `trazabilidad_rows(problem, result,
+- [X] T037 [US5] En `backend/cutting/report.py`, implementar `trazabilidad_rows(problem, result,
   analisis)` según data-model §4:
   - Incluye `parametros_resueltos` (`json.dumps(..., ensure_ascii=False, sort_keys=True)`).
   - Incluye todo escalar de `result['metrics']` que no aparezca en `resumen_rows`.
   - Escribir la hoja «Trazabilidad» definitiva (`dato | valor`).
-- [ ] T038 [US5] En `backend/cutting/report.py`, implementar `parametros_rows(problem)` a partir
+- [X] T038 [US5] En `backend/cutting/report.py`, implementar `parametros_rows(problem)` a partir
   de `problem['resolved_parameters']` y `cutting.parameters.REFERENCES` (research R-08):
   - Escribir la hoja «Parámetros» (con tilde), con las columnas `condicion | valor | referencia`.
   - En la sección 9 de `pdf_html`, usar las mismas filas, más el motor, la versión del análisis,
     el método, la semilla, la huella, las piezas, la masa de barras usadas y la nota «Inventario
     final proyectado; verificar físicamente antes de usar».
-- [ ] T039 [US5] En `backend/cutting/report.py`:
+- [X] T039 [US5] En `backend/cutting/report.py`:
   - Quitar `stock_id` de las filas de «Barras» en `generate()`.
   - Renombrar `barras_minimas` a `barras_minimas_teoricas_cota_simple` en `COLUMNAS_COTA` y en
     `cota_rows`.
   - No tocar `legacy_patterns`: sigue escribiendo `stock_id` en `resultados` y R-16 no lo usa.
-- [ ] T040 [US5] En `backend/tests/test_cutting_api.py`:
+- [X] T040 [US5] En `backend/tests/test_cutting_api.py`:
   - Sustituir la lectura de `sheets['Metricas']` (líneas ~291-293) por la de «Resumen» (estado de
     admisibilidad «Dentro de lo admisible») y «Trazabilidad» (`analisis_version ==
     'analisis-1'`).
   - Revisar las demás pruebas que lean hojas o columnas renombradas.
   - La aserción `'analisis-1'` de la línea ~268 no cambia.
-- [ ] T041 [US5] Ejecutar las pruebas completas y luego la regresión:
+- [X] T041 [US5] Ejecutar las pruebas completas y luego la regresión:
   `python3 scripts/check_cutting_container.py --comparar
   tests/benchmarks/2026-09-13-fisico-matriz-final.jsonl --comparar
   tests/benchmarks/2026-09-13-fisico-control-cizalla.jsonl --comparar
@@ -491,34 +507,37 @@ comprobadas.
 
 ## Phase 8: Polish & cross-cutting
 
-- [ ] T042 Medir SC-007 después de los cambios, con el mismo procedimiento de T002:
+- [X] T042 Medir SC-007 después de los cambios, con el mismo procedimiento de T002:
   - Guardar `tests/benchmarks/2026-10-04-sc007-presentacion-despues.jsonl` y un resumen
     comparativo `tests/benchmarks/2026-10-04-sc007-presentacion-comparacion.json` (medianas y
     ratio).
   - Aceptación: ratio de medianas ≤ 1,10. Si se supera, informarlo al usuario con el desglose
     (motor, análisis y artefactos) antes de seguir.
   - La ruta de patrones no corre durante el procesamiento, así que no afecta a SC-007.
-- [ ] T043 Revisar a mano los artefactos de la 001 y la 002:
+  - *Hecho (2026-10-04)*: medianas de 25,58 s antes y 27,36 s después; ratio 1,07, cumple. El
+    costo está en los artefactos (+1,9 s: PNG a 200 dpi y bloques del PDF). El margen es estrecho
+    porque las corridas «antes» variaron entre 21,5 y 28,4 s, y no hubo intercalado.
+- [X] T043 Revisar a mano los artefactos de la 001 y la 002:
   - Ejecutar `--artifacts-smoke`, copiar los artefactos a una carpeta temporal fuera del
     repositorio y revisarlos según quickstart §3 (hojas, totales, cobertura, páginas de nesting,
     medidas legibles y coma decimal).
   - Anotar el resultado en una sección nueva de `tests/data/002/ANALISIS_RESULTADOS.md`,
     «§13 Presentación (spec 002)».
   - No versionar los artefactos.
-- [ ] T044 [P] En `specs/001-alineacion-titulo-tesis/contracts/artefactos.md` y
+- [X] T044 [P] En `specs/001-alineacion-titulo-tesis/contracts/artefactos.md` y
   `specs/001-alineacion-titulo-tesis/contracts/ui.md`, añadir al inicio la nota «Sustituido en
   parte por `specs/002-presentacion-resultados/contracts/` (2026-10-04)».
-- [ ] T045 [P] Actualizar `CLAUDE.md`:
+- [X] T045 [P] Actualizar `CLAUDE.md`:
   - La tabla «Cobertura de evidencia vigente» suma las evidencias nuevas de T025, T041 y T042.
   - Mencionar en «Qué es este proyecto» la ruta de solo lectura `GET /patrones/<uuid>` del
     explorador.
   - El análisis sigue en `analisis-1`: no cambiar esas menciones.
   - Revisar si `AGENTS.md` y `backend/AGENTS.md` necesitan el mismo ajuste (contrato de la API).
-- [ ] T046 [P] Actualizar `docs/oica-redesign/STATE.md` y `docs/oica-redesign/COMPONENT-MAP.md`:
+- [X] T046 [P] Actualizar `docs/oica-redesign/STATE.md` y `docs/oica-redesign/COMPONENT-MAP.md`:
   - el explorador de patrones como componente nuevo;
   - los tokens `data/stage-*`;
   - la regla de diseño 13. Figma queda pendiente si la cuota del MCP sigue bloqueada; declararlo.
-- [ ] T047 Pedir aprobación al usuario para reconstruir las imágenes: estimar el espacio con
+- [X] T047 Pedir aprobación al usuario para reconstruir las imágenes: estimar el espacio con
   `docker system df` y el libre en C:, y nunca usar `prune`. Con la aprobación, ejecutar el E2E de
   quickstart §6 y §7:
   - Subir la 001 con y sin umbral.
@@ -542,7 +561,24 @@ comprobadas.
     punto 7).
 
   Sin aprobación, dejar la tarea pendiente y declararlo.
-- [ ] T048 Actualizar `.claude/context/CURRENT_STATE.md` y `PLAN_TRABAJO.md` (nuevo Bloque L,
+  - *Hecho (2026-10-04, con aprobación)*.
+    - **Imágenes** reconstruidas (el primer build del frontend se colgó en `next build` y se
+      relanzó).
+    - **E2E por API**: 0 fallos.
+      - Proyectos qa-002 de la 001 con y sin umbral, y de la 002.
+      - Excel con 13 hojas, PNG a 200 dpi, inventario reimportado.
+      - `/patrones` idéntico a la hoja «Patrones» y en 0,57 s para la 002.
+      - Históricas: `secuencial-2` con patrones; `secuencial-1` y el motor histórico «no
+        disponible»; 404.
+    - **Auditor** (SC-005): pasa en las versiones nuevas 49 y 51 y en la histórica 38.
+    - **UI con Playwright**: 51 comprobaciones, 0 fallos. axe sin violaciones en 1440, 820 y
+      390 px, con la lista y con el detalle abierto. Teclado y foco correctos. El filtro por
+      pedido suma igual a la demanda. Sin desbordamiento ni errores de consola.
+    - **Confidencialidad**: los pedidos son correlativos y los nombres de archivo, genéricos.
+    - **Ajuste durante la prueba**: el motivo de las versiones del motor histórico pasa a decir
+      que son anteriores a la verificación.
+    - **Limpieza**: se eliminaron los proyectos 49 a 52 y las imágenes huérfanas, por ID.
+- [X] T048 Actualizar `.claude/context/CURRENT_STATE.md` y `PLAN_TRABAJO.md` (nuevo Bloque L,
   spec 002 enmendada, con el estado real de cada puerta):
   - Si alguna decisión lo amerita, registrarla en `INFERENCIAS_TESIS.md`, tras comprobar que no
     haya duplicados.
@@ -622,3 +658,64 @@ Task: "T018 [P] [US2] Tipos del explorador en frontend/src/components/file-detai
 - No se regeneran artefactos de versiones históricas. La ruta de patrones es de solo lectura.
 - La evidencia nueva se guarda con fecha en `tests/benchmarks/` y nunca sobrescribe.
 - Sin commits, push ni despliegues sin una instrucción explícita del usuario para esa ocasión.
+
+---
+
+## Phase 9: Convergence
+
+<!-- Agregada por /speckit-converge (2026-10-04) para la enmienda 2 «formato numérico» (FR-032 a FR-035, SC-013, research R-20). -->
+
+- [X] T049 Ajustar los decimales del frontend a FR-033 per FR-033 (contradicts):
+  - En `frontend/src/components/file-detail/types.ts`, `pct` y `pp` pasan a 2 decimales por
+    defecto y `kg` a 2.
+  - En `QualitySection.tsx`, la cota y la brecha se piden con 3 de forma explícita.
+  - `MassWarnings.tsx` usa 3 decimales en kg/m.
+  - En `FilesTable.tsx`, el desperdicio y los kg usan 2 decimales.
+- [X] T050 Convertir las entradas decimales per FR-034 (missing):
+  - Crear `leerDecimal(texto)` en `frontend/src/components/file-detail/types.ts`: acepta coma o
+    punto, devuelve `number | null` y rechaza entradas como «0,5,1».
+  - En `frontend/src/components/physical-options.tsx`, la pérdida por corte y el mínimo común
+    pasan a `type="text"` con `inputMode="decimal"`. El texto se conserva al editar y se compara
+    con la referencia con `leerDecimal`.
+  - En `frontend/src/components/cutting-options.tsx`, la longitud del catálogo pasa a texto con
+    estado local, de modo que «7,5» se pueda escribir sin perder la coma.
+  - Al enviar a la API (`file-upload.tsx`), los valores van con punto.
+- [X] T051 Formatear las cifras visibles que quedan per FR-032 (contradicts):
+  - En `frontend/src/components/cutting-options.tsx`, los mínimos por diámetro usan `metros` y el
+    tiempo de procesamiento usa `decimal(..., 1)` (FR-033).
+  - El `title` del umbral en `frontend/src/components/FilesTable.tsx` usa `pct(..., 2)`.
+- [X] T052 Crear `backend/cutting/formato.py` per plan: `cutting/formato.py` (partial):
+  - Mover allí `numero`, `con_signo` y `metros` desde `report.py`, que los importa sin cambiar su
+    comportamiento.
+  - El mensaje de error de dominio de `backend/cutting/analysis.py` usa
+    `formato.numero(..., 6)` per FR-032. Solo cambia el texto, no el cálculo.
+  - Las repeticiones del PNG en `report.dibujar_nesting` usan `numero(..., 0)` per FR-032.
+  - Pruebas en `backend/tests/test_report_presentacion.py` del módulo y del mensaje de dominio.
+- [X] T053 Usar los ayudantes compartidos en el diagrama de `frontend/src/app/page.tsx` per R-20
+  (partial).
+- [X] T054 Registrar el estándar numérico en el sistema visual per R-20 (partial):
+  - En `docs/oica-redesign/DESIGN-SYSTEM.md`, una sección «Formato numérico» con las reglas de
+    FR-032 a FR-034 y los ayudantes obligatorios.
+  - En `docs/oica-redesign/AI-DESIGN-RULES.md`, una regla nueva: no usar `toFixed` ni
+    `toLocaleString` sueltos para texto visible.
+- [X] T055 Verificar SC-013 (missing):
+  - Batería del backend completa.
+  - `npm run typecheck`, `lint` y `build` con Node 22.
+  - QA con Playwright de todas las pantallas (`/`, `/subir-cartilla`, `/archivos`,
+    `/archivos/<id>`, `/tutorial` y `/contact-us`) en 1440, 820 y 390 px: ninguna cifra con punto
+    decimal ni pegada a su unidad, axe en 0 violaciones y sin desbordamiento.
+  - Con la cartilla 002, contrastar que el desperdicio, la masa comprada, la cota y la brecha se
+    leen igual en la pantalla, el PDF y la hoja «Resumen».
+  - Regresión de 148 registros solo si `report.py` o `analysis.py` cambian algo distinto del
+    texto. Si no, declararlo.
+  - *Hecho (2026-10-04)*:
+    - Backend: 167 pruebas OK.
+    - Frontend: typecheck, lint y build OK.
+    - QA de las 6 pantallas en 3 anchos (70 comprobaciones): sin cifras con punto decimal ni
+      pegadas a su unidad, axe en 0 violaciones, sin desbordamiento. La pérdida por corte acepta
+      «1,5» y «1.5», y muestra error con «1,5,2».
+    - Con la 002, el desperdicio (8,86 %), la masa comprada (151.868,78 kg), la cota (7,596 %) y
+      la brecha (+1,264 pp) se leen igual en la pantalla, el PDF y «Resumen». El contraste
+      encontró que el PDF mostraba la brecha sin signo; se corrigió y se probó.
+    - **Regresión no ejecutada**: los cambios de `report.py` y `analysis.py` son solo de texto
+      (formato de mensajes y etiquetas) y no tocan el plan ni sus métricas.

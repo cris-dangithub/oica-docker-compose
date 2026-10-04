@@ -90,6 +90,29 @@ Reglas generales:
 7. **Avisos de masa nominal NSR-10**: sin cambios.
 8. **Versiones**: sin cambios.
 
+## Formato numérico en toda la app (enmienda 2; FR-032 a FR-035; research R-20)
+
+Aplica a todas las pantallas (`/`, `/subir-cartilla`, `/archivos`, `/archivos/[id]`, `/tutorial`
+y `/contact-us`).
+
+- **Presentación**: coma decimal, punto de miles desde 1.000 y espacio antes de la unidad
+  («8,86 %», «152.039,57 kg», «13.955 barras», «+1,264 pp»).
+- **Decimales (FR-033)**:
+  - porcentajes: 2;
+  - cota y brecha: 3;
+  - pp frente al umbral: 2;
+  - kg: 2;
+  - kg/m: 3;
+  - metros y mm: hasta 3, sin ceros finales;
+  - segundos medidos: 1;
+  - rangos estimados: enteros;
+  - conteos: enteros con punto de miles.
+- **Ayudantes obligatorios**: `decimal`, `entero`, `pct`, `pp` y `kg` de
+  `file-detail/types.ts`, y `numero` y `metros` de `file-detail/patterns/filtros.ts`. No se usan
+  `toFixed` ni `toLocaleString` sueltos para texto visible.
+- **Entradas decimales**: `Input` con `type="text"` e `inputMode="decimal"`. Se interpretan con
+  `leerDecimal` (acepta coma o punto) y se envían a la API con punto.
+
 ## Tokens de color nuevos (R-17)
 
 `color/data/stage-1` a `stage-6`, como alias de primitivos existentes, que se repiten en ciclo

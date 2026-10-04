@@ -107,8 +107,11 @@ for dataset in payload['datasets']:
             with tempfile.TemporaryDirectory(prefix='oica-artefactos-') as directory:
                 files = generate(problem, r, directory, dataset['name'], True)
                 sheets = pd.read_excel(files['excel_path'], sheet_name=None)
-                # Las hojas originales deben seguir presentes; la spec 001 añade otras.
-                assert set(sheets) >= {'Barras', 'Cortes', 'Inventario', 'Metricas', 'Descartados', 'Inventario excluido', 'Parametros'}
+                # Las hojas originales deben seguir presentes; la spec 001 añade otras. La spec 002
+                # reemplaza «Metricas» por «Resumen» y «Trazabilidad» y renombra «Parámetros»; se
+                # aceptan ambas formas para medir el código previo en comparaciones intercaladas.
+                assert set(sheets) >= {'Barras', 'Cortes', 'Inventario', 'Descartados', 'Inventario excluido'}
+                assert set(sheets) >= {'Metricas', 'Parametros'} or set(sheets) >= {'Resumen', 'Trazabilidad', 'Parámetros'}
                 if 'cutting.analysis' in payload['sources']:
                     assert set(sheets) >= {'Admisibilidad', 'Resumen de compra', 'Patrones', 'Cota', 'Avisos'}
                     m['patrones_total'] = len(sheets['Patrones'])
@@ -122,7 +125,8 @@ for dataset in payload['datasets']:
                 validate(problem, r['bars'], inventory)
                 assert Path(files['pdf_path']).read_bytes().startswith(b'%PDF')
                 with Image.open(files['graph_image_path']) as picture:
-                    assert picture.width * picture.height <= 3_000_000
+                    # Límite fijo (BUG-005); 9 MP desde la spec 002 por los 200 dpi (R-04).
+                    assert picture.width * picture.height <= 9_000_000
                 # La serialización de compatibilidad también se mide, sin guardarla.
                 m['json_compatibilidad_bytes'] = len(json.dumps(legacy_patterns(problem, r)).encode())
                 m['artefactos_bytes'] = {key: Path(path).stat().st_size for key, path in files.items()}

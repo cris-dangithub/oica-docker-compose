@@ -1,6 +1,6 @@
 # Estado persistente del rediseño de OICA
 
-> Actualizado: 2026-09-29
+> Actualizado: 2026-10-04
 
 ## Fase actual
 
@@ -64,6 +64,10 @@ de A. Ver `DESIGN-DIRECTION.md` y ADR-UI-004.
   `Textarea`, `Field`, `CheckboxField`, `Dialog` (`components/ui/`). `Progress` admite `hideLabel`.
 - Shell: `Navbar` responsive con menú móvil; `layout.tsx` con `lang="es"`,
   metadata real y landmark `<main>`.
+- Detalle del proyecto (spec 002): explorador de patrones (`components/file-detail/patterns/`),
+  totales de compra en `PurchaseSummary` y `QualitySection` sin la tarjeta de cota simple. Tokens
+  nuevos `color/data/stage-1…6` (documentados en `DESIGN-SYSTEM.md`). Pendiente en Figma (regla
+  13) mientras siga bloqueado el cupo MCP.
 
 ## Tareas pendientes
 
@@ -75,6 +79,21 @@ de A. Ver `DESIGN-DIRECTION.md` y ADR-UI-004.
 6. Ejecutar QA visual, responsive, accesibilidad y regresión.
 
 ## Último QA realizado
+
+### 2026-10-04 — explorador de patrones (spec 002)
+
+- typecheck, lint y build OK con Node 22; imágenes reconstruidas con aprobación.
+- **axe-core**: 0 violaciones en 1440, 820 y 390 px, con la lista y con el detalle desplegado,
+  sobre la cartilla 002 (135 patrones).
+- **Teclado**: Enter abre el detalle y «Cerrar detalle» devuelve el foco a la fila.
+- Sin desbordamiento horizontal ni errores de consola.
+- Capturas fuera del repositorio (`tmp/qa-spec002/`).
+- **Coma decimal en toda la app** (decisión del usuario, 2026-10-04): el detalle del proyecto y
+  la lista `/archivos` usan coma decimal y punto de miles, con ayudantes `decimal`/`entero` en
+  `file-detail/types.ts`.
+  - QA con un `build` local detrás de un proxy hacia el stack: sin cifras con punto decimal, axe
+    en 0 violaciones y sin desbordamiento en 1440, 820 y 390 px.
+  - La imagen Docker del frontend aún no incluye este cambio.
 
 ### 2026-09-29 — inicio, tutorial y contacto migradas
 

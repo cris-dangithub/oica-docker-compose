@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { ArrowRight, FileSpreadsheet, FolderOpen, Layers3, Recycle, Ruler, Scissors, SlidersHorizontal } from 'lucide-react';
 import { buttonVariants } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
+import { decimal } from '@/components/file-detail/types';
 
 const pasos = [
   { n: '01', titulo: 'Carga la cartilla', detalle: 'XLSX o CSV con pedidos, diámetros, longitudes, cantidades y grupo de ejecución.' },
@@ -68,7 +69,7 @@ export default function Inicio() {
                   ? 'flex items-center justify-center border-r-2 border-surface-elevated bg-data-primary font-mono text-xs font-semibold text-content-inverse'
                   : 'flex items-center justify-center bg-status-success-bg font-mono text-xs font-semibold text-status-success-text'}
               >
-                {t.m.toFixed(1).replace('.', ',')}
+                {decimal(t.m, 1)}
               </div>
             ))}
           </div>

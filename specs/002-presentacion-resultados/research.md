@@ -47,6 +47,13 @@ de patrones) retira R-10, reescribe R-11, ajusta R-14 y añade R-16 a R-19; el r
   - «Pérdida por corte» (negro), «Descarte» (rojo) y «Saldo reutilizable» (gris con trama).
   - Si una muestra tuviera más de 20 etapas, el color se repite (ciclo de `tab20`) y la leyenda lo
     indica.
+  - *Ajuste en la implementación (2026-10-04)*: la revisión visual de la 002 (13 etapas) mostró
+    dos problemas. `tab20` alterna oscuro y claro del mismo color, así que E3 y E4 salían en dos
+    naranjas, y su par rojo se confundía con el «Descarte». Por eso las etapas usan primero los
+    tonos oscuros y luego los claros, sin el par rojo: son 18 colores, que se repiten desde E19 (el
+    pie lo indica). La leyenda va en filas de hasta 12 entradas, bajo el rótulo del eje, con
+    1,0 pulgadas de margen inferior. La imagen de 60 patrones queda en 2.200 × 3.890 px (8,56 MP),
+    dentro del límite de 9 MP (R-04).
 - **Rationale**: hoy el eje x describe los colores en una sola línea de texto que no dice qué
   color es cada etapa.
 - **Alternatives considered**: una paleta continua con barra de color. Se descarta porque las
@@ -369,3 +376,42 @@ de patrones) retira R-10, reescribe R-11, ajusta R-14 y añade R-16 a R-19; el r
   del patrón.
 - **Alternatives considered**: incluir el pedido en la clave del patrón. Cambiaría los
   identificadores y la hoja «Patrones», y rompería la coherencia con la línea base de la spec 001.
+
+## R-20 — Estándar numérico único *(enmienda 2, 2026-10-04)*
+
+- **Contexto**: la revisión del usuario encontró formatos mezclados en la misma app:
+  - «5.154% en masa» en la lista de proyectos, con punto decimal y sin espacio;
+  - la pantalla con 3 decimales en los porcentajes y el PDF con 2;
+  - kg con 3 decimales en pantalla y con 2 en el PDF;
+  - mínimos por diámetro mostrados tal como llegan de la API («0.37 m»);
+  - repeticiones sin punto de miles en el PNG («×2199»);
+  - campos `type="number"` cuyo separador depende del idioma del navegador.
+- **Decision**: una sola regla, implementada una vez por lado y reutilizada en todas partes.
+  - **Frontend**: `decimal(valor, d)` (decimales fijos), `entero(valor)`, `pct`, `pp` y `kg` en
+    `components/file-detail/types.ts`, y `numero`/`metros` (sin ceros finales) en
+    `file-detail/patterns/filtros.ts`. Todo componente que muestre cifras los usa; se prohíben
+    `toFixed`/`toLocaleString` sueltos para texto visible. Los decimales siguen FR-033 (los
+    mismos del PDF).
+  - **Entradas decimales**: `type="text"` con `inputMode="decimal"` (teclado numérico en el
+    móvil). El texto se conserva tal cual mientras se edita y se interpreta con
+    `leerDecimal(texto)`, que acepta coma o punto y rechaza lo demás. Al enviar a la API se manda
+    con punto. El backend ya acepta ambos (`domain.decimal` y `server.parse_umbral`), así que la
+    API no cambia.
+  - **Backend**: `cutting/formato.py` concentra `numero`, `con_signo` y `metros`. Lo usan
+    `report.py` (PDF, PNG y textos del Excel) y los mensajes de error de dominio de
+    `analysis.py`, sin importaciones circulares.
+  - **Excel**: las celdas numéricas siguen siendo números (FR-035). Solo los textos legibles
+    («Parámetros», «secuencia», estados) usan el formato.
+  - **Excepción declarada**: los mensajes de validación de `domain.normalize` repiten el valor tal
+    como lo escribió el usuario («Número inválido: 0,5,1»). `normalize` está protegido por la
+    constitución (Principio III), y repetir la entrada literal es lo correcto para que el usuario
+    la encuentre.
+- **Rationale**: el usuario es colombiano y las normas de presentación de cifras en español usan
+  coma decimal. Un solo juego de ayudantes por lado evita que reaparezcan formatos sueltos, y
+  fijar los decimales por tipo hace que la pantalla y el PDF digan lo mismo.
+- **Alternatives considered**:
+  - `Intl.NumberFormat('es-CO')`: no agrupa los números de 4 cifras («3974») y su salida depende
+    de los datos ICU del entorno (riesgo de discrepancia entre servidor y navegador).
+  - `locale` de Python: depende de los *locales* instalados en la imagen Alpine (R-05).
+  - Mantener `type="number"`: el separador aceptado depende del navegador y del idioma del
+    sistema (FR-034).

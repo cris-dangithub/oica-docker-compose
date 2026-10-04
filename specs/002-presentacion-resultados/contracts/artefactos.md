@@ -136,6 +136,15 @@ y la brecha.
 - **Uso**: el PNG está pensado para verse en pantalla al 100 %; la versión imprimible está en el
   PDF, por páginas.
 
+## Formato numérico de los artefactos (enmienda 2; FR-032 a FR-035; research R-20)
+
+- **PDF y PNG**: coma decimal, punto de miles y espacio antes de la unidad. Los decimales siguen
+  FR-033. Las repeticiones del PNG usan punto de miles («P-#3-001 ×2.199»).
+- **Excel**: las celdas numéricas siguen siendo números (FR-035). Los textos legibles
+  («Parámetros», «secuencia» y los estados de «Resumen») usan el formato del usuario.
+- **Backend**: un solo módulo de formato, `cutting/formato.py`, para `report.py` y los mensajes de
+  dominio de `analysis.py`.
+
 ## 4. Inventario `inventario_final.xlsx`
 
 **Sin cambios** (FR-022): hoja `Inventario` con columnas `diametro, longitud_m, cantidad`.

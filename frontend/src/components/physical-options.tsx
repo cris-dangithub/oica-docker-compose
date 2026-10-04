@@ -4,6 +4,10 @@ import { ExternalLink, Gauge, Recycle } from 'lucide-react';
 import { Alert } from '@/components/ui/alert';
 import { Card } from '@/components/ui/card';
 import { CheckboxField, Field, Input, Select } from '@/components/ui/form-controls';
+import { leerDecimal } from '@/components/file-detail/types';
+
+const ERROR_DECIMAL = 'Escribe un número; puedes usar coma o punto decimal.';
+const errorDecimal = (texto: string) => (texto.trim() !== '' && leerDecimal(texto) === null ? ERROR_DECIMAL : null);
 
 export interface PhysicalParameters {
    perdida_activa: boolean;
@@ -65,19 +69,21 @@ export function PhysicalOptions({ value, metadata, onChange, disabled }: {
                         <option value="cizalla">Cizalla</option>
                      </Select>
                   </Field>
-                  <Field label="Pérdida por separación (mm)" htmlFor="cut-loss-mm">
+                  <Field label="Pérdida por separación (mm)" htmlFor="cut-loss-mm" error={errorDecimal(value.perdida_mm)}>
                      <Input
                         id="cut-loss-mm"
-                        type="number"
-                        min="0"
-                        step="any"
+                        type="text"
+                        inputMode="decimal"
+                        autoComplete="off"
+                        aria-invalid={errorDecimal(value.perdida_mm) ? true : undefined}
+                        aria-describedby={errorDecimal(value.perdida_mm) ? 'cut-loss-mm-error' : undefined}
                         value={value.perdida_mm}
                         onChange={event => update({ perdida_mm: event.target.value })}
                      />
                   </Field>
                   <div className="sm:col-span-2 text-xs leading-5 text-content-muted">
                      <p>
-                        {Number(value.perdida_mm) === Number(reference.valor_mm) ? 'Valor de referencia. ' : 'Valor personalizado. '}
+                        {leerDecimal(value.perdida_mm) === Number(reference.valor_mm) ? 'Valor de referencia. ' : 'Valor personalizado. '}
                         {reference.nota}
                         {reference.url && <>{' '}<a className="inline-flex items-center gap-1 font-medium text-content-brand underline underline-offset-4" href={reference.url} target="_blank" rel="noreferrer">Ficha del fabricante <ExternalLink className="h-3 w-3" aria-hidden="true" /></a>.</>}
                      </p>
@@ -113,12 +119,14 @@ export function PhysicalOptions({ value, metadata, onChange, disabled }: {
                         <option value="manual">Mínimo personalizado</option>
                      </Select>
                   </Field>
-                  {value.modo_minimo === 'manual' && <Field label="Mínimo común (m)" htmlFor="minimum-length">
+                  {value.modo_minimo === 'manual' && <Field label="Mínimo común (m)" htmlFor="minimum-length" error={errorDecimal(value.minimo_m)}>
                      <Input
                         id="minimum-length"
-                        type="number"
-                        min="0"
-                        step="any"
+                        type="text"
+                        inputMode="decimal"
+                        autoComplete="off"
+                        aria-invalid={errorDecimal(value.minimo_m) ? true : undefined}
+                        aria-describedby={errorDecimal(value.minimo_m) ? 'minimum-length-error' : undefined}
                         value={value.minimo_m}
                         onChange={event => update({ minimo_m: event.target.value })}
                      />

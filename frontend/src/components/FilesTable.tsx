@@ -1,5 +1,6 @@
 'use client';
 import { API_URL } from '@/lib/api';
+import { decimal } from '@/components/file-detail/types';
 /**
  * Componente de tabla de archivos procesados con filtros y acciones.
  *
@@ -116,7 +117,7 @@ const responseError = async (response: Response, fallback: string) => {
 const formatDate = (value: string) =>
   new Date(value).toLocaleDateString('es-CO', { day: '2-digit', month: 'short', year: 'numeric' });
 
-const kg = (value?: number) => (value != null ? `${value.toFixed(3)} kg` : '—');
+const kg = (value?: number) => (value != null ? `${decimal(value, 2)} kg` : '—');
 
 const ADMISIBILIDAD: Record<string, { label: string; tone: Tone }> = {
   dentro: { label: 'Dentro de lo admisible', tone: 'success' },
@@ -404,13 +405,13 @@ export default function FilesTable({ apiUrl = API_URL }: FilesTableProps) {
   const renderWaste = (result?: ProcessingResult) => result?.desperdicio_porcentaje != null ? (
     <div className="space-y-2">
       <span className="font-mono text-sm font-semibold tabular-nums text-content">
-        {result.desperdicio_porcentaje.toFixed(3)}%
+        {decimal(result.desperdicio_porcentaje, 2)} %
         <span className="block text-xs font-normal text-content-muted">en masa</span>
       </span>
       {result.admisibilidad_estado && ADMISIBILIDAD[result.admisibilidad_estado] && (
         <Badge
           tone={ADMISIBILIDAD[result.admisibilidad_estado].tone}
-          title={result.umbral_desperdicio_pct != null ? `Umbral: ${result.umbral_desperdicio_pct}%` : undefined}
+          title={result.umbral_desperdicio_pct != null ? `Umbral: ${decimal(result.umbral_desperdicio_pct, 2)} %` : undefined}
         >
           {ADMISIBILIDAD[result.admisibilidad_estado].label}
         </Badge>

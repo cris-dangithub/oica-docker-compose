@@ -10,6 +10,7 @@ import { Alert } from '@/components/ui/alert';
 import { Badge } from '@/components/ui/badge';
 import { Card } from '@/components/ui/card';
 import { Field, Input, Select } from '@/components/ui/form-controls';
+import { decimalParaApi, leerDecimal } from '@/components/file-detail/types';
 import { Progress } from '@/components/ui/progress';
 import { ArrowRight, CheckCircle2, Clock3, FileSpreadsheet, Layers3, Upload } from 'lucide-react';
 import { useRouter } from 'next/navigation';
@@ -29,7 +30,7 @@ export function FileUpload() {
    const [parameters, setParameters] = useState<PhysicalParameters | null>(null);
    // Umbral opcional de desperdicio admisible (FR-001/FR-002): sin valor por defecto.
    const [umbral, setUmbral] = useState('');
-   const umbralNumero = Number(umbral.trim().replace(',', '.'));
+   const umbralNumero = leerDecimal(umbral) ?? Number.NaN;
    const umbralError = umbral.trim() !== '' && !(Number.isFinite(umbralNumero) && umbralNumero > 0 && umbralNumero < 100)
       ? 'Ingresa un porcentaje mayor que 0 y menor que 100, o deja el campo vacío.'
       : null;
@@ -215,9 +216,11 @@ export function FileUpload() {
       form.append('catalogo', JSON.stringify(catalog));
       form.append('visuales', String(visuals));
       if (!parameters) throw new Error('Espera a que carguen los parámetros de corte');
-      form.append('parametros_corte', JSON.stringify(parameters));
+      // Los decimales escritos con coma viajan con punto (FR-034, FR-035).
+      form.append('parametros_corte', JSON.stringify({ ...parameters, perdida_mm: decimalParaApi(parameters.perdida_mm),
+         minimo_m: decimalParaApi(parameters.minimo_m) }));
       if (inventory) form.append('inventario', inventory);
-      if (umbral.trim()) form.append('umbral_desperdicio_pct', umbral.trim());
+      if (umbral.trim()) form.append('umbral_desperdicio_pct', decimalParaApi(umbral));
       return form;
    };
 

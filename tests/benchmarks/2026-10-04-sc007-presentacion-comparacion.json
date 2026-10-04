@@ -1,0 +1,36 @@
+{
+ "fecha": "2026-10-04",
+ "caso": "002-ingeBigTest.xlsx, balanceado, semilla 0, condiciones físicas por defecto (--parametros-corte {})",
+ "criterio": "SC-007 (spec 002): mediana total (motor + análisis + artefactos) ≤ 1,10 × la previa, misma sesión y mismo arnés",
+ "antes_T002": {
+  "archivo": "2026-10-04-sc007-presentacion-antes.jsonl",
+  "totales_s": [
+   21.452,
+   28.429,
+   25.579,
+   25.284,
+   27.513
+  ],
+  "mediana_total_s": 25.579,
+  "mediana_motor_s": 6.033,
+  "mediana_analisis_s": 2.01,
+  "mediana_artefactos_s": 17.536
+ },
+ "despues_T042": {
+  "archivo": "2026-10-04-sc007-presentacion-despues.jsonl",
+  "totales_s": [
+   27.363,
+   27.522,
+   27.279,
+   27.915,
+   27.343
+  ],
+  "mediana_total_s": 27.363,
+  "mediana_motor_s": 6.026,
+  "mediana_analisis_s": 1.914,
+  "mediana_artefactos_s": 19.427
+ },
+ "ratio_medianas": 1.07,
+ "cumple": true,
+ "observaciones": "Mismo plan (8,8602 %). El costo propio está en los artefactos (+1,9 s de mediana: PNG a 200 dpi y 4 bloques de nesting para el PDF); motor y análisis no cambian. Las corridas «antes» variaron entre 21,5 y 28,4 s, así que el margen frente al 10 % es estrecho y no hubo intercalado código previo/nuevo. La ruta de patrones no corre durante el procesamiento."
+}

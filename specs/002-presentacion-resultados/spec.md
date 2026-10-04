@@ -20,6 +20,13 @@ del nesting de los archivos, de la compra en pantalla y de la trazabilidad." Con
 confirmada en las aclaraciones: la versión `analisis-2` se retira, porque el explorador obtiene
 la secuencia de los datos ya guardados de cada versión (FR-019 queda retirado).
 
+**Enmienda 2 (2026-10-04, formato numérico)** (decisión del usuario): "No hay una definición de
+cómo usamos comas o puntos. Dices que el formato es coma decimal y punto de miles, pero en algunas
+tablas se ve, por ejemplo, «5.154% en masa». No hay un estándar en la app, y hay que aplicarlo en
+toda la app." La spec define un estándar numérico único (FR-032 a FR-035) para todo lo que lee el
+usuario: pantalla, PDF, imagen, textos legibles del Excel y mensajes. Los datos para máquinas
+(API, JSON, celdas numéricas del Excel, inventario reimportable) siguen con números nativos.
+
 ## Contexto
 
 La spec 001 añadió a la aplicación el resumen de compra, los patrones de corte, la cota inferior,
@@ -76,6 +83,10 @@ Actores:
 - Q: ¿Cómo funciona el filtro por pedido? → A: Es un campo de búsqueda con sugerencias de los
   pedidos que existen en la versión. Se elige un pedido a la vez, y cada patrón mostrado indica
   cuántas piezas de ese pedido aporta (FR-027).
+- Q: ¿Qué formato numérico usa la aplicación? → A: Uno solo en toda la app, para todo lo que lee el
+  usuario: coma decimal, punto de miles, espacio antes de la unidad y una cantidad fija de
+  decimales por tipo de cifra. Las entradas aceptan coma o punto. Los datos para máquinas siguen
+  con números nativos (enmienda 2; FR-032 a FR-035).
 
 ## User Scenarios & Testing *(mandatory)*
 
@@ -293,6 +304,8 @@ versión nueva y una histórica; reimportar el inventario final de una versión 
 - Pedido presente en muchos patrones: el filtro por pedido los muestra todos, con la cobertura de
   barras correspondiente.
 - Filtros sin resultados: el explorador lo dice explícitamente y ofrece quitar los filtros.
+- *(Enmienda 2)* Entrada «0,5» o «0.5» en un campo decimal: ambas se aceptan y producen el mismo
+  valor. Una entrada que no es un número (por ejemplo «0,5,1») se rechaza con un mensaje claro.
 - Nombre del proyecto con caracteres especiales: el encabezado del PDF los muestra de forma
   segura, sin romper el documento.
 - Inventario adicional consumido en parte: los totales de compra no cuentan las barras del
@@ -339,7 +352,8 @@ versión nueva y una histórica; reimportar el inventario final de una versión 
   cobertura: patrones mostrados frente al total, y barras representadas frente al total, con su
   porcentaje.
 - **FR-011**: Las cifras del PDF dirigidas al usuario MUST usar coma decimal, con dos decimales
-  en general y tres en la cota y la brecha.
+  en general y tres en la cota y la brecha. *(Enmienda 2: se generaliza a toda la aplicación en
+  FR-032 y FR-033.)*
 
 **Imagen**
 
@@ -409,6 +423,32 @@ versión nueva y una histórica; reimportar el inventario final de una versión 
   (diámetro y, dentro de cada uno, repeticiones de mayor a menor). Un selector MUST permitir
   ordenarlos por repeticiones, aprovechamiento o saldo, de mayor a menor; los empates conservan
   el orden del Excel. Cambiar el orden MUST NOT alterar los filtros ni la cobertura.
+
+**Formato numérico en toda la aplicación** *(enmienda 2, 2026-10-04)*
+
+- **FR-032**: Toda cifra que lee el usuario (pantallas, PDF, imagen de nesting, textos legibles
+  del Excel y mensajes de estado o error que genere la aplicación) MUST usar coma decimal y punto
+  de miles en la parte entera desde 1.000 (por ejemplo, «152.039,57 kg» o «13.955 barras»). La
+  unidad MUST ir separada de la cifra por un espacio, incluido el porcentaje («8,86 %»). Las
+  diferencias en puntos porcentuales MUST llevar signo explícito («+1,26 pp» o «-1,14 pp»).
+- **FR-033**: La cantidad de decimales MUST depender del tipo de cifra, igual en todas las
+  salidas:
+  - porcentajes de desperdicio, aprovechamiento, pérdidas y umbral: 2;
+  - cota inferior y brecha: 3;
+  - diferencias frente al umbral (pp): 2;
+  - masas (kg): 2;
+  - masa por metro (kg/m): 3;
+  - longitudes (m) y pérdida por corte (mm): hasta 3, sin ceros finales («4,2 m», «0,37 m»);
+  - tiempos: 1 decimal en segundos medidos y enteros en rangos estimados;
+  - conteos (barras, piezas, patrones, repeticiones): enteros con punto de miles.
+- **FR-034**: Los campos de entrada decimales (umbral, pérdida por corte, mínimo reutilizable y
+  longitudes del catálogo) MUST aceptar coma o punto como separador decimal, con el mismo
+  comportamiento en cualquier navegador o idioma del sistema. Los valores escritos por el usuario
+  MUST conservarse tal como los escribió mientras edita.
+- **FR-035**: Los datos para máquinas MUST conservar números nativos: respuestas de la API, JSON
+  guardado, celdas numéricas del Excel e inventario final reimportable. Las celdas numéricas del
+  Excel MUST seguir siendo números, y su separador lo decide la configuración regional de quien
+  abre el archivo.
 
 **Datos del análisis y compatibilidad**
 
@@ -480,6 +520,11 @@ versión nueva y una histórica; reimportar el inventario final de una versión 
   inmediata para el usuario (menos de 200 ms en el entorno local de validación). Al abrir el
   detalle se muestran como máximo 100 identificadores, y cada «Ver más» añade como máximo otros
   100.
+- **SC-013** *(enmienda 2)*: En el 100 % de las pantallas de la aplicación (inicio, carga, lista,
+  detalle, tutorial y contacto), en los tres anchos de verificación, ninguna cifra con unidad
+  aparece con punto decimal ni pegada a su unidad. Con la cartilla 002, las mismas magnitudes
+  (desperdicio, masa comprada, cota y brecha) se leen igual en la pantalla, el PDF y la hoja
+  «Resumen».
 
 ## Assumptions
 

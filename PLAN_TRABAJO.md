@@ -20,7 +20,7 @@
 | G | Corte secuencial, inventarios y caso 002 | Completado en localhost; cierre académico pendiente | ALTA |
 | J | Rediseño visual y Design System | Dirección B aprobada; implementación code-first autorizada | ALTA |
 | K | Alineación con el título fijo (spec 001) | ✅ Cerrada (2026-10-04): en producción; queda la redacción de fuentes pendientes | ALTA |
-| L | Presentación de resultados y explorador de patrones (spec 002) | 📝 Especificada y enmendada (2026-10-04); implementación pendiente | ALTA |
+| L | Presentación de resultados y explorador de patrones (spec 002) | ✅ Implementada y validada (48/48, E2E incluido); falta commit y PR | ALTA |
 
 ---
 
@@ -362,7 +362,24 @@ jurado.
   confidencialidad de pedidos, planes no verificados, suma por pedido, medición sin reconstruir
   y lista por tramos.
 - [x] Integración de `production` (cierre de la spec 001) en la rama de la spec 002.
-- [ ] `/speckit-implement`, por fases: US1 compra (MVP) → US2 explorador → US3 nesting de
-  archivos → US4 totales y calidad en la web → US5 trazabilidad.
-- [ ] E2E con reconstrucción de imágenes, solo con aprobación y una estimación de espacio en C:.
+- [x] `/speckit-implement` (2026-10-04): las cinco historias están implementadas.
+  - **Backend**: 164 pruebas OK.
+  - **Regresión**: 0 diferencias en 148 registros.
+  - **SC-007**: ratio 1,07.
+  - **SC-009**: 0,47 s.
+  - **Frontend**: typecheck, lint y build OK.
+  - **Despliegue**: 16 pruebas OK.
+  - **Revisión manual** de Excel, PDF y PNG de la 001 y la 002 (§13 de la 002).
+- [x] T047 (2026-10-04, aprobado):
+  - imágenes reconstruidas;
+  - E2E por API con 0 fallos;
+  - auditor OK;
+  - UI con 51 comprobaciones, 0 fallos y axe en 0 violaciones en 3 anchos;
+  - proyectos de QA e imágenes huérfanas retirados.
+- [x] Enmienda 2 (2026-10-04, pedida por el usuario): estándar numérico único en toda la app
+  (FR-032 a FR-035, R-20).
+  - Flujo: spec y diseño, `/speckit-converge` (T049 a T055) y `/speckit-implement`.
+  - Verificación: 167 pruebas OK; QA de las 6 pantallas sin fallos; pantalla, PDF y «Resumen»
+    coherentes.
+- [x] Commit y push a la rama del PR #7, por instrucción del usuario.
 

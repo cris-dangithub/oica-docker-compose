@@ -16,4 +16,5 @@ Estado: borrador inicial; se consolidará con OICA Design System v1.
 12. No cambiar lógica, API ni semántica funcional para resolver un problema visual.
 13. Actualizar Figma, documentación y código cuando se añada una primitive o componente nuevo.
 14. Ejecutar visual QA y las verificaciones del frontend antes de declarar una migración terminada.
+15. Toda cifra visible usa el formato numérico de `DESIGN-SYSTEM.md` (coma decimal, punto de miles, espacio antes de la unidad) mediante los ayudantes `decimal`, `entero`, `pct`, `pp`, `kg`, `numero` y `metros`; nunca `toFixed` ni `toLocaleString` sueltos. Las entradas decimales usan `DecimalInput` o texto con `inputMode="decimal"` y `leerDecimal`.
 

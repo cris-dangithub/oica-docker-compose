@@ -321,3 +321,61 @@ el Excel y con `scripts/verify_sequential_result.py`).
 **Observación.** El entorno local mostró una variación de hasta ±20 % entre repeticiones del
 mismo código. Los tiempos absolutos no deben compararse entre sesiones sin repetir la medición
 del código previo en las mismas condiciones.
+
+## 13. Presentación (spec 002) — revisión manual de artefactos (2026-10-04)
+
+Cartillas 001 y 002, perfil balanceado, semilla 0 y condiciones físicas por defecto. Los
+artefactos se generaron con el código del árbol de trabajo cargado en memoria dentro del
+contenedor del backend y se revisaron fuera del repositorio (no se versionan). El plan es el de
+siempre: 002 con 8,86018 % y 13.955 barras; 001 con 5,1542 % y 38 barras.
+
+**Excel.**
+- Las 13 hojas en el orden del contrato, sin «Metricas».
+- «Resumen» con los 21 indicadores legibles; en la 002, cota de 7,596 % y brecha de 1,264 pp,
+  iguales a la §12.
+- Bloque «Totales de compra»: 13.955 barras y 151.868,781 kg, igual a la suma de «Resumen de
+  compra».
+- «Barras» sin `stock_id`; «Parámetros» legible; «Trazabilidad» con `parametros_resueltos`.
+
+**PDF.**
+- Encabezado con versión, perfil y fecha (hora de Colombia); luego la verificación, los
+  indicadores clave y la compra con totales por diámetro.
+- Cobertura de la tabla: «136 de 136 patrones, 13.955 de 13.955 barras (100 %)». Cobertura de
+  las imágenes: «60 de 136 patrones, 13.761 de 13.955 barras (98,6 %)».
+- Nesting en 4 páginas de hasta 18 patrones, con las medidas legibles sobre cada pieza.
+- Coma decimal y datos técnicos al final, con las referencias de pérdida y mínimo.
+
+**PNG.** 2.200 × 3.890 px a 200 dpi (8,56 MP, dentro del límite de 9 MP), con leyenda de etapas,
+pérdida, descarte y saldo, y pie de cobertura.
+
+**Corregido en la revisión.**
+- La leyenda se superponía al rótulo del eje cuando ocupaba dos filas.
+- Etapas consecutivas compartían color (pares oscuro/claro de `tab20`), y el par rojo se
+  confundía con el descarte. Ahora hay 18 colores sin rojo y un margen inferior de 1,0 pulgadas
+  (research R-03).
+
+**Explorador (US2).**
+- La vista de la versión 44 (002) da 136 patrones, 13.955 barras, 145 rangos de barras y
+  137 pedidos, en 0,47 s de mediana y con 79 KB de JSON
+  (`tests/benchmarks/2026-10-04-sc009-vista-patrones.json`).
+- La revisión en el navegador queda para el E2E aprobado (T047): en el entorno no hay Chromium
+  para Playwright.
+
+**SC-007 (tiempo) y regresión.**
+- Medianas en la misma sesión, con el mismo arnés: 25,58 s antes y 27,36 s después (ratio 1,07,
+  dentro del 1,10).
+- El costo está en los artefactos (+1,9 s); motor y análisis no cambian.
+- Las corridas «antes» variaron entre 21,5 y 28,4 s, así que el margen es estrecho; no hubo
+  intercalado de código previo y nuevo.
+- Regresión de 148 registros: 0 diferencias.
+- Evidencia: `tests/benchmarks/2026-10-04-sc007-presentacion-{antes,despues}.jsonl`,
+  `…-comparacion.json` y `2026-10-04-regresion-presentacion.jsonl`.
+
+**E2E en la app reconstruida (T047, 2026-10-04).**
+- Versión nueva de la 002 (perfil rápido): 14.301 barras y 135 patrones. La ruta `/patrones`
+  responde en 0,57 s, idéntica a la hoja «Patrones».
+- Explorador en el navegador: «Se muestran 135 de 135 patrones, que cubren 14.301 de 14.301
+  barras (100 %)». Con un pedido filtrado, la suma de aportes es igual a la demanda.
+- axe sin violaciones en 1440, 820 y 390 px.
+- La versión previa de la 002 (v1, 136 patrones; v2, 133) se explora sin reprocesar.
+- El auditor independiente pasa en las versiones nuevas y en las históricas.

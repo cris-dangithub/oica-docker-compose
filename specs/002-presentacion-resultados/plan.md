@@ -28,7 +28,16 @@ Reorganizar y completar lo que ve el usuario en cuatro salidas, sin tocar el pla
   ruta nueva de solo lectura**, `GET /patrones/<storage_uuid>`, que reutiliza `patterns.agrupar`
   y `report.patrones_rows`.
 
-El enfoque técnico está en [research.md](research.md) (R-01 a R-19). Los formatos, en
+**Enmienda 2 (2026-10-04, formato numérico)**: un estándar único para todo lo que lee el usuario
+(FR-032 a FR-035; research R-20).
+
+- **Backend**: un módulo nuevo, `backend/cutting/formato.py`, reutilizado por `report.py` y
+  `analysis.py`; solo cambia el texto del mensaje de error de dominio, no su cálculo.
+- **Frontend**: ayudantes de `file-detail/types.ts` en todas las pantallas; entradas decimales
+  como texto con `inputMode="decimal"`.
+- **Sin cambios** en la API, la base, el motor ni las celdas numéricas del Excel.
+
+El enfoque técnico está en [research.md](research.md) (R-01 a R-20). Los formatos, en
 [contracts/artefactos.md](contracts/artefactos.md), [contracts/ui.md](contracts/ui.md) y
 [contracts/api-patrones.md](contracts/api-patrones.md).
 

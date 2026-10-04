@@ -71,3 +71,10 @@
   - F1, lista por tramos: escenario 1 de la US2.
 
   Los 16 puntos siguen pasando.
+- Iteración 5 (2026-10-04, enmienda 2 «formato numérico»): FR-032 a FR-035, SC-013 y un caso
+  borde de entrada.
+  - FR-033 fija decimales por tipo de cifra: es una regla de presentación medible, no una
+    tecnología.
+  - FR-035 separa lo que lee el usuario de los datos para máquinas.
+  - No hay marcadores [NEEDS CLARIFICATION]: la decisión la dio el usuario. Los 16 puntos siguen
+    pasando.

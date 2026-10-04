@@ -21,6 +21,7 @@ import math
 import re
 import redis
 import threading
+from collections import OrderedDict
 from datetime import datetime
 from flask import Flask, request, jsonify, send_file
 from flask_cors import CORS
@@ -33,6 +34,7 @@ from celery_worker import celery_app, process_file_task
 from cutting.domain import normalize, default_catalog
 from cutting.io import read_rows
 from cutting.estimation import estimate
+from cutting.vista_patrones import vista as vista_de_patrones
 
 
 # ============================================================================
@@ -578,6 +580,47 @@ def download_image(uuid):
         download_name=f'grafica_{uuid}.png',
         mimetype='image/png'
     )
+
+
+# Vistas de patrones ya calculadas, por storage_uuid (spec 002, R-18). Una versión guardada no
+# cambia, así que la caché no puede quedar obsoleta; solo se guardan vistas disponibles.
+VISTAS_PATRONES = OrderedDict()
+MAX_VISTAS_PATRONES = 8
+
+
+@app.route('/patrones/<uuid>', methods=['GET'])
+def get_patterns(uuid):
+    """Todos los patrones de corte de una versión, de solo lectura (contracts/api-patrones.md)."""
+    from sqlalchemy.orm import defer
+    result = ProcessingResult.query.options(defer(ProcessingResult.resultados), defer(ProcessingResult.cartilla)) \
+        .filter_by(storage_uuid=uuid).first()
+    if result is None:
+        return jsonify({'error': 'Versión no encontrada'}), 404
+    metricas = result.metricas or {}
+    base = {'storage_uuid': uuid, 'version_number': result.version_number, 'motor': metricas.get('motor')}
+    # El plan quedó guardado aunque fallaran los artefactos (`error_generation`).
+    if result.result_status not in ('completed', 'error_generation'):
+        return jsonify({**base, 'disponible': False, 'motivo': 'La versión no tiene un plan terminado'})
+    if metricas.get('valido') is not True:
+        # Un plan no verificado nunca se presenta como patrones válidos (constitución, Principio I).
+        motivo = ('La versión es anterior a la verificación independiente del plan' if metricas.get('valido') is None
+                  else 'El plan de esta versión no pasó la verificación independiente')
+        return jsonify({**base, 'disponible': False, 'motivo': motivo})
+    vista = VISTAS_PATRONES.get(uuid)
+    if vista is None:
+        try:
+            vista = vista_de_patrones(result.resultados, metricas)
+        except ValueError as error:
+            app.logger.error('Vista de patrones de %s: %s', uuid, error)
+            return jsonify({'error': str(error)}), 500
+        if vista['disponible']:
+            VISTAS_PATRONES[uuid] = vista
+            while len(VISTAS_PATRONES) > MAX_VISTAS_PATRONES:
+                VISTAS_PATRONES.popitem(last=False)
+    else:
+        VISTAS_PATRONES.move_to_end(uuid)
+    # Un diccionario nuevo en cada respuesta: nada modifica la vista guardada en la caché.
+    return jsonify({**vista, **base})
 
 
 @app.route('/status/<task_id>', methods=['GET'])

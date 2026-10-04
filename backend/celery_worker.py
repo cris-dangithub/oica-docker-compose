@@ -253,11 +253,17 @@ def process_file_task(self, uploaded_file_id, perfil):
             result['metrics']['analisis_segundos'] = time.perf_counter() - analysis_started
             storage_uuid = str(uuid.uuid4())
             directory = os.path.join(os.environ.get('UPLOAD_PATH', '/usr/src/app/data/filestore'), storage_uuid)
+            # El número de versión va en el encabezado del PDF (spec 002, R-09); con concurrencia 1
+            # calcularlo antes de los artefactos no abre carreras nuevas.
+            latest = ProcessingResult.query.filter_by(uploaded_file_id=uploaded_file_id).order_by(
+                ProcessingResult.version_number.desc()).first()
+            version = latest.version_number + 1 if latest else 1
             artifacts_started = time.perf_counter()
             files = {}
             artifact_error = None
             try:
-                files = generate(problem, result, directory, record.file_name, config.get('visuals', True))
+                files = generate(problem, result, directory, record.file_name, config.get('visuals', True),
+                                 version=version)
             except Exception as error:
                 artifact_error = str(error)
                 # Retener los artefactos que sí se alcanzaron a generar.
@@ -268,9 +274,6 @@ def process_file_task(self, uploaded_file_id, perfil):
                     files[key] = path if os.path.isfile(path) and os.path.getsize(path) else None
             result['metrics']['artifacts_seconds'] = time.perf_counter() - artifacts_started
             result['metrics']['pipeline_seconds'] = time.perf_counter() - started
-            latest = ProcessingResult.query.filter_by(uploaded_file_id=uploaded_file_id).order_by(
-                ProcessingResult.version_number.desc()).first()
-            version = latest.version_number + 1 if latest else 1
             saved = ProcessingResult(uploaded_file_id=uploaded_file_id, version_number=version,
                 storage_uuid=storage_uuid, resultados=legacy_patterns(problem, result),
                 cartilla=[rows[o['row_id'] - 2] for o in problem['orders']],

@@ -86,9 +86,10 @@ Aplica, en este orden de comprobación, a:
 1. versiones sin plan terminado: `result_status` distinto de `completed` y de
    `error_generation`. Esta última conserva un plan guardado aunque fallaran los artefactos, y
    el explorador no depende de ellos;
-2. versiones cuyo plan no consta como verificado: `metricas.valido` distinto de `true`, con el
-   motivo «El plan de esta versión no pasó la verificación independiente» (FR-030; constitución,
-   Principio I);
+2. versiones cuyo plan no consta como verificado: `metricas.valido` distinto de `true` (FR-030;
+   constitución, Principio I). El motivo es «El plan de esta versión no pasó la verificación
+   independiente» si es `false`, y «La versión es anterior a la verificación independiente del
+   plan» si no existe (motor histórico);
 3. versiones sin `resultados`, sin `metricas.escala_longitudes` o sin `trazabilidad_cortes`
    (motor histórico o `secuencial-1`).
 
