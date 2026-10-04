@@ -1,7 +1,8 @@
 'use client';
 /**
- * Detalle de un proyecto (spec 001, contracts/ui.md): verificación, admisibilidad, compra,
- * calidad del plan, avisos y comparación de versiones. Los datos vienen de GET /file/<id>.
+ * Detalle de un proyecto (spec 001 y 002, contracts/ui.md): verificación, admisibilidad, compra,
+ * explorador de patrones, calidad del plan, avisos y comparación de versiones. Los datos vienen de
+ * GET /file/<id>; los patrones, de GET /patrones/<storage_uuid>.
  */
 import React, { useCallback, useEffect, useState } from 'react';
 import Link from 'next/link';
@@ -13,6 +14,7 @@ import { Field, Select } from '@/components/ui/form-controls';
 import { API_URL } from '@/lib/api';
 import AdmissibilitySection from './AdmissibilitySection';
 import MassWarnings from './MassWarnings';
+import PatternExplorer from './patterns/PatternExplorer';
 import PurchaseSummary from './PurchaseSummary';
 import QualitySection from './QualitySection';
 import { ArchivoDetalle, PERFIL_LABELS, pct } from './types';
@@ -124,7 +126,7 @@ export default function FileDetail({ id }: FileDetailProps) {
                      </Card>
                   ) : (
                      <div className="space-y-6">
-                        {/* Secciones de la spec 001 (contracts/ui.md), en orden. */}
+                        {/* Secciones de las specs 001 y 002 (contracts/ui.md), en orden. */}
                         <VerificationBanner
                            version={version}
                            fileStatus={file.status}
@@ -132,6 +134,7 @@ export default function FileDetail({ id }: FileDetailProps) {
                         />
                         <AdmissibilitySection version={version} />
                         <PurchaseSummary lineas={version.analisis?.resumen_compra} />
+                        <PatternExplorer storageUuid={version.storage_uuid} />
                         <QualitySection cota={version.analisis?.cota} desperdicioPlan={version.desperdicio_porcentaje} />
                         <MassWarnings avisos={version.analisis?.avisos_masa} />
                         <VersionsTable

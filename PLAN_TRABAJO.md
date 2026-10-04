@@ -20,6 +20,7 @@
 | G | Corte secuencial, inventarios y caso 002 | Completado en localhost; cierre académico pendiente | ALTA |
 | J | Rediseño visual y Design System | Dirección B aprobada; implementación code-first autorizada | ALTA |
 | K | Alineación con el título fijo (spec 001) | ✅ Cerrada (2026-10-04): en producción; queda la redacción de fuentes pendientes | ALTA |
+| L | Presentación de resultados y explorador de patrones (spec 002) | ✅ Implementada y validada (48/48, E2E incluido); falta commit y PR | ALTA |
 
 ---
 
@@ -333,3 +334,57 @@ fijo, sin alterar el plan de `secuencial-2` (constitución v1.0.0).
 - [ ] Revisión del director (objetivos); verificar IDU y la fuente de «nesting lineal».
 
 **Pendiente del usuario o el director:** datos de compra reales para OE5 (RIESGO-AC-009).
+
+## Bloque L — Presentación de resultados y explorador de patrones (spec 002)
+
+**Objetivo:** reorganizar lo que ve el usuario (Excel, PDF e imagen) y mostrar en la web
+**todos** los patrones de corte del proyecto de forma interactiva, sin alterar el plan de
+`secuencial-2`. Así se respaldan «patrones de corte» y «nesting» del título ante el taller y el
+jurado.
+
+- [x] Especificación, plan, research, data-model, contratos, quickstart y tareas de la spec 002
+  (2026-10-03, autora LizethGasca; rama `feat/spec-002-presentacion-resultados`).
+- [x] Enmienda del 2026-10-04 aprobada por el usuario:
+  - el explorador interactivo de todos los patrones sustituye la sección estática de los diez
+    más repetidos;
+  - solo visualización: el chequeo de taller queda fuera;
+  - prioridad P2.
+- [x] `/speckit-clarify` (5 preguntas), con estas decisiones:
+  - se retira `analisis-2`;
+  - escala común;
+  - rangos de barras por tramos de 100;
+  - orden del Excel con selector;
+  - filtro por pedido con sugerencias.
+- [x] `/speckit-plan`: R-16 a R-19 y la ruta de solo lectura `GET /patrones/<uuid>`, que
+  reconstruye los patrones desde `resultados` sin ejecutar el AG. La medición exploratoria da
+  unos 0,5 s para la 002 (136 patrones y 13.955 barras).
+- [x] `/speckit-tasks` (48 tareas) y `/speckit-analyze`, con 5 hallazgos corregidos:
+  confidencialidad de pedidos, planes no verificados, suma por pedido, medición sin reconstruir
+  y lista por tramos.
+- [x] Integración de `production` (cierre de la spec 001) en la rama de la spec 002.
+- [x] `/speckit-implement` (2026-10-04): las cinco historias están implementadas.
+  - **Backend**: 164 pruebas OK.
+  - **Regresión**: 0 diferencias en 148 registros.
+  - **SC-007**: ratio 1,07.
+  - **SC-009**: 0,47 s.
+  - **Frontend**: typecheck, lint y build OK.
+  - **Despliegue**: 16 pruebas OK.
+  - **Revisión manual** de Excel, PDF y PNG de la 001 y la 002 (§13 de la 002).
+- [x] T047 (2026-10-04, aprobado):
+  - imágenes reconstruidas;
+  - E2E por API con 0 fallos;
+  - auditor OK;
+  - UI con 51 comprobaciones, 0 fallos y axe en 0 violaciones en 3 anchos;
+  - proyectos de QA e imágenes huérfanas retirados.
+- [x] Enmienda 2 (2026-10-04, pedida por el usuario): estándar numérico único en toda la app
+  (FR-032 a FR-035, R-20).
+  - Flujo: spec y diseño, `/speckit-converge` (T049 a T055) y `/speckit-implement`.
+  - Verificación: 167 pruebas OK; QA de las 6 pantallas sin fallos; pantalla, PDF y «Resumen»
+    coherentes.
+- [x] Enmienda 3 (2026-10-04, decisión del usuario): punto decimal y sin separador de miles en toda
+  la app, por coherencia con la plantilla USCO.
+  - Flujo: spec y diseño, `/speckit-converge` (T056 a T061) y `/speckit-implement`.
+  - Stack reconstruido; QA de las 6 pantallas sin fallos.
+- [x] Commit y push a la rama del PR #7, y título y descripción del PR actualizados, por
+  instrucción del usuario.
+

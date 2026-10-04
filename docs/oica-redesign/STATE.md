@@ -1,6 +1,6 @@
 # Estado persistente del rediseño de OICA
 
-> Actualizado: 2026-09-29
+> Actualizado: 2026-10-04
 
 ## Fase actual
 
@@ -64,6 +64,10 @@ de A. Ver `DESIGN-DIRECTION.md` y ADR-UI-004.
   `Textarea`, `Field`, `CheckboxField`, `Dialog` (`components/ui/`). `Progress` admite `hideLabel`.
 - Shell: `Navbar` responsive con menú móvil; `layout.tsx` con `lang="es"`,
   metadata real y landmark `<main>`.
+- Detalle del proyecto (spec 002): explorador de patrones (`components/file-detail/patterns/`),
+  totales de compra en `PurchaseSummary` y `QualitySection` sin la tarjeta de cota simple. Tokens
+  nuevos `color/data/stage-1…6` (documentados en `DESIGN-SYSTEM.md`). Pendiente en Figma (regla
+  13) mientras siga bloqueado el cupo MCP.
 
 ## Tareas pendientes
 
@@ -75,6 +79,19 @@ de A. Ver `DESIGN-DIRECTION.md` y ADR-UI-004.
 6. Ejecutar QA visual, responsive, accesibilidad y regresión.
 
 ## Último QA realizado
+
+### 2026-10-04 — explorador de patrones (spec 002)
+
+- typecheck, lint y build OK con Node 22; imágenes reconstruidas con aprobación.
+- **axe-core**: 0 violaciones en 1440, 820 y 390 px, con la lista y con el detalle desplegado,
+  sobre la cartilla 002 (135 patrones).
+- **Teclado**: Enter abre el detalle y «Cerrar detalle» devuelve el foco a la fila.
+- Sin desbordamiento horizontal ni errores de consola.
+- Capturas fuera del repositorio (`tmp/qa-spec002/`).
+- **Formato numérico único** (spec 002, enmiendas 2 y 3, decisión del usuario): punto decimal, sin
+  separador de miles y espacio antes de la unidad en toda la app, como la plantilla USCO de la
+  tesis. Ver «Formato numérico» en `DESIGN-SYSTEM.md`.
+  - QA sobre el stack reconstruido: 6 pantallas en 1440, 820 y 390 px, 0 fallos y axe en 0.
 
 ### 2026-09-29 — inicio, tutorial y contacto migradas
 

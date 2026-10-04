@@ -1,6 +1,7 @@
 /**
- * Calidad del plan frente al mejor resultado posible (US4: FR-012 a FR-014). La cota solo mide:
- * el plan lo produce el algoritmo genético y no se afirma optimalidad.
+ * Calidad del plan frente al mejor resultado posible (spec 001, FR-012 a FR-014). La cota solo mide:
+ * el plan lo produce el algoritmo genético y no se afirma optimalidad. Spec 002 (FR-017): la cota
+ * simple deja de ser una cifra destacada y solo se menciona en el texto explicativo.
  */
 import React from 'react';
 import { Badge } from '@/components/ui/badge';
@@ -28,12 +29,11 @@ export default function QualitySection({ cota, desperdicioPlan }: QualitySection
             </p>
          ) : (
             <>
-               <dl className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+               <dl className="mt-4 grid gap-3 sm:grid-cols-3">
                   {[
                      { label: 'Desperdicio del plan', value: pct(desperdicioPlan) },
-                     { label: 'Cota por patrones', value: calculada ? pct(cota.proyecto?.desperdicio_pct) : NO_DISPONIBLE },
-                     { label: 'Cota simple', value: pct(cota.proyecto?.simple_desperdicio_pct) },
-                     { label: 'Brecha del plan', value: calculada ? pp(cota.proyecto?.brecha_pp) : NO_DISPONIBLE },
+                     { label: 'Cota por patrones', value: calculada ? pct(cota.proyecto?.desperdicio_pct, 3) : NO_DISPONIBLE },
+                     { label: 'Brecha del plan', value: calculada ? pp(cota.proyecto?.brecha_pp, 3) : NO_DISPONIBLE },
                   ].map(item => (
                      <div key={item.label} className="rounded-md border border-line bg-surface-interactive p-4">
                         <dt className="text-xs font-semibold text-content-muted">{item.label}</dt>
@@ -50,7 +50,7 @@ export default function QualitySection({ cota, desperdicioPlan }: QualitySection
                         <li key={d.diametro} className="rounded-md border border-line p-3 font-mono tabular-nums">
                            <span className="font-semibold text-content">{d.diametro}</span>
                            <span className="text-content-muted">
-                              {' · '}cota {pct(d.desperdicio_pct)} · brecha {pp(d.brecha_pp)}
+                              {' · '}cota {pct(d.desperdicio_pct, 3)} · brecha {pp(d.brecha_pp, 3)}
                               {!d.ajustada && ' · no ajustada'}
                            </span>
                         </li>
@@ -62,6 +62,9 @@ export default function QualitySection({ cota, desperdicioPlan }: QualitySection
                   corte de Gilmore–Gomory, relajación lineal con las etapas relajadas). Mide la calidad del plan; no lo
                   construye ni demuestra que sea óptimo. Una cota «no ajustada» sigue siendo válida, pero puede ser más
                   holgada.
+                  {cota.proyecto?.simple_desperdicio_pct != null && (
+                     <> Con aprovechamiento perfecto, el desperdicio sería {pct(cota.proyecto.simple_desperdicio_pct, 3)}.</>
+                  )}
                </p>
             </>
          )}

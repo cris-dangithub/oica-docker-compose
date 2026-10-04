@@ -14,7 +14,9 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 comercial (6, 9 y 12 metros) mediante un algoritmo genético. Es un monorepo:
 
 - `backend/`: Flask y Socket.IO (gevent), y el worker de Celery. El motor de corte vigente está en
-  `backend/cutting/`, versión `secuencial-2`, con el análisis `analisis-1` de la spec 001.
+  `backend/cutting/`, versión `secuencial-2`, con el análisis `analisis-1` de la spec 001. La spec
+  002 añade la ruta de solo lectura `GET /patrones/<storage_uuid>` (explorador de patrones), que
+  reconstruye los patrones desde `resultados` con `cutting/vista_patrones.py`, sin ejecutar el AG.
 - `frontend/`: Next.js 15, React 19 y Node 22.
 - `config/`, `scripts/`, `docker-compose.yaml` y los `compose.*.yaml`: infraestructura.
 - `services/`: copias históricas locales. **No editarlas ni borrarlas**; no se despliegan.
@@ -269,6 +271,9 @@ usa `backend/cutting/`. No hay bugs abiertos conocidos en el motor vigente.
 | `tests/benchmarks/2026-10-02-regresion-analisis-1.jsonl` | Regresión con `analisis-1`: 0 diferencias en 148 registros |
 | `tests/benchmarks/2026-10-02-cota-ensayos.jsonl` | Cota por patrones de los 148 registros (todos con desperdicio ≥ cota) |
 | `tests/benchmarks/2026-10-02-sc007-comparacion.json` | Tiempo con y sin la capa de análisis (+8,8 %) |
+| `tests/benchmarks/2026-10-04-regresion-presentacion.jsonl` | Regresión tras la spec 002: 0 diferencias en 148 registros |
+| `tests/benchmarks/2026-10-04-sc007-presentacion-comparacion.json` | Tiempo antes y después de la spec 002 (ratio 1,07; artefactos +1,9 s) |
+| `tests/benchmarks/2026-10-04-sc009-vista-patrones.json` | Vista de patrones de la 002: 136 patrones en 0,47 s (mediana) |
 
 ---
 

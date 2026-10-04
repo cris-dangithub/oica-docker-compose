@@ -79,6 +79,14 @@
   --color-data-warning: var(--primitive-amber-700);
   --color-data-grid: var(--primitive-neutral-200);
   --color-data-remaining-material: var(--primitive-cobalt-300);
+  /* Etapas de ejecución (spec 002, explorador de patrones): categóricas, en ciclo desde la 7.
+     Texto blanco sobre 1–4 y texto default sobre 5–6; todos ≥ 5,4:1 (AA). */
+  --color-data-stage-1: var(--primitive-cobalt-600);
+  --color-data-stage-2: var(--primitive-amber-700);
+  --color-data-stage-3: var(--primitive-teal-600);
+  --color-data-stage-4: var(--primitive-neutral-700);
+  --color-data-stage-5: var(--primitive-amber-200);
+  --color-data-stage-6: var(--primitive-neutral-300);
 
   /* Dimensions and motion. */
   --space-0: 0;

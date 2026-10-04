@@ -25,6 +25,8 @@
 | Formulario contacto | REFACTOR | primitives de formulario + labels persistentes |
 | `Resultados.js` | REMOVE | Legacy no usado; eliminar solo tras demostrar ausencia de imports/ruta |
 | `/resultados` | KEEP | Redirección de compatibilidad |
+| Campos decimales (`type="number"`) | REPLACE | `DecimalInput` (`components/ui/decimal-input.tsx`): coma o punto, texto conservado al editar (spec 002, FR-034) |
+| Explorador de patrones (spec 002) | NEW | `PatternExplorer` (carga diferida, filtros con `Field`/`Select`/`Input`, cobertura, leyenda), `PatternRow` (fila-botón con barra a escala común) y `PatternDetail` (región desplegable con piezas, pedidos y rangos por tramos), en `components/file-detail/patterns/`. Usa los tokens nuevos `color/data/stage-1…6` |
 
 ## Componentes v1 necesarios
 

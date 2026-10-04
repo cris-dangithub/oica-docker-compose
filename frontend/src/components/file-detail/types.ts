@@ -128,15 +128,99 @@ export interface ArchivoDetalle {
    processing_results?: VersionDetalle[];
 }
 
+/* Explorador de patrones (spec 002, contracts/api-patrones.md y contracts/ui.md «Tipos»). */
+
+export interface PedidoPiezas {
+   pedido: string;
+   piezas: number;
+}
+
+export interface PiezaPatron {
+   etapa: number;
+   longitud_m: number;
+   cantidad: number;
+   pedidos: PedidoPiezas[];
+}
+
+export interface RangoBarras {
+   desde: string;
+   hasta: string;
+   n: number;
+}
+
+export interface PatronExplorable {
+   patron_id: string;
+   diametro: string;
+   origen: string;
+   longitud_m: number;
+   secuencia: string;
+   repeticiones: number;
+   aprovechamiento_pct: number;
+   perdida_corte_m: number;
+   descartado_m: number;
+   saldo_m: number;
+   etapas: number[];
+   piezas: PiezaPatron[];
+   barras: { total: number; rangos: RangoBarras[] };
+}
+
+export type VistaPatrones =
+   | {
+        disponible: true;
+        storage_uuid: string;
+        version_number: number;
+        motor: string;
+        escala_m: number;
+        totales: { patrones: number; barras: number };
+        diametros: string[];
+        etapas: number[];
+        origenes: string[];
+        pedidos: PedidoPiezas[];
+        patrones: PatronExplorable[];
+     }
+   | {
+        disponible: false;
+        storage_uuid: string;
+        version_number: number;
+        motor: string | null;
+        motivo: string;
+     };
+
 export const NO_DISPONIBLE = 'no disponible';
 
-export const pct = (value?: number | null, digits = 3) =>
-   value != null ? `${value.toFixed(digits)} %` : NO_DISPONIBLE;
+/**
+ * Cifra con punto decimal, sin separador de miles y con `digits` decimales fijos («152039.571»), como
+ * el PDF y la plantilla de la tesis (spec 002, enmienda 3: FR-032). Evita el «-0.00».
+ */
+export function decimal(value: number, digits = 2): string {
+   const texto = Math.abs(value).toFixed(digits);
+   return value < 0 && Number(texto) !== 0 ? `-${texto}` : texto;
+}
 
-export const pp = (value?: number | null, digits = 3) =>
-   value != null ? `${value > 0 ? '+' : ''}${value.toFixed(digits)} pp` : NO_DISPONIBLE;
+/** Entero sin separador de miles («14301»). */
+export const entero = (value: number) => decimal(value, 0);
 
-export const kg = (value?: number | null) => (value != null ? `${value.toFixed(3)} kg` : NO_DISPONIBLE);
+/* Decimales por tipo de cifra (FR-033): porcentajes, pp y kg con 2; la cota y la brecha piden 3. */
+
+export const pct = (value?: number | null, digits = 2) =>
+   value != null ? `${decimal(value, digits)} %` : NO_DISPONIBLE;
+
+export const pp = (value?: number | null, digits = 2) =>
+   value != null ? `${value > 0 ? '+' : ''}${decimal(value, digits)} pp` : NO_DISPONIBLE;
+
+export const kg = (value?: number | null) => (value != null ? `${decimal(value, 2)} kg` : NO_DISPONIBLE);
+
+/**
+ * Lee un decimal escrito por el usuario con coma o punto (FR-034): «0,5» y «0.5» valen lo mismo.
+ * Devuelve `null` si el texto no es un número («0,5,1», «abc»).
+ */
+export function leerDecimal(texto: string): number | null {
+   const limpio = texto.trim();
+   return /^-?\d+([.,]\d+)?$/.test(limpio) ? Number(limpio.replace(',', '.')) : null;
+}
+
+/** Decimal escrito por el usuario, con punto, para la API (FR-035). */
+export const decimalParaApi = (texto: string) => texto.trim().replace(',', '.');
 
 export const ADMISIBILIDAD_LABELS: Record<EstadoAdmisibilidad, string> = {
    dentro: 'Dentro de lo admisible',

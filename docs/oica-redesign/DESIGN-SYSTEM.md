@@ -45,7 +45,14 @@ Todos son alias a primitivos. La sintaxis web usa el nombre CSS exacto indicado.
 | Border | `color/border/default`, `strong`, `focus`, `success`, `warning`, `error` |
 | Action | `color/action/primary`, `primary-hover`, `primary-active`, `primary-text`, `secondary`, `secondary-hover`, `danger`, `danger-hover` |
 | Status | `color/status/success-background`, `warning-background`, `error-background`, `info-background` y sus pares `*-text`/`*-border` |
-| Data | `color/data/primary`, `efficient`, `warning`, `grid`, `remaining-material` |
+| Data | `color/data/primary`, `efficient`, `warning`, `grid`, `remaining-material`, `stage-1` … `stage-6` |
+
+Etapas de ejecución (spec 002, explorador de patrones): `color/data/stage-1` … `stage-6` son
+categóricas y se repiten en ciclo desde la etapa 7. Alias: 1 cobalto 600, 2 ámbar 700, 3 teal
+600, 4 neutral 700, 5 ámbar 200 y 6 neutral 300. Llevan texto blanco en 1–4 (5,45–9,0:1) y
+`color/text/default` en 5–6 (10,3 y 9,21:1). No se usan cobalto 300 (saldo reutilizable) ni rojo
+(descarte), para que las etapas no se confundan con esos tramos. El color nunca es el único canal:
+la etapa se nombra «E1», «E2»… en la leyenda, en el nombre accesible y en el detalle.
 
 Pares de contraste base validados: texto default/background 14.44:1; texto
 muted/background 6.02:1; blanco/acción primaria 5.85:1; success text/background
@@ -66,6 +73,34 @@ texto informativo; para texto secundario se usa `color/text/muted`.
   12/16/600 y `metric/md` 20/24/600 mono.
 - No usar mayúsculas sostenidas para navegación o párrafos. Se reservan para
   microetiquetas técnicas de hasta tres palabras con tracking positivo.
+
+### Formato numérico
+
+Estándar único de la app (spec 002, enmienda 2: FR-032 a FR-035; research R-20). Aplica a todo
+lo que lee el usuario: pantallas, PDF, imagen, textos legibles del Excel y mensajes.
+
+- **Separadores** (enmienda 3, como la plantilla USCO de la tesis): punto decimal y sin separador
+  de miles, con un espacio entre la cifra y la unidad, también en el porcentaje: «8.86 %»,
+  «152039.57 kg», «13955 barras». Las diferencias llevan signo explícito: «+1.264 pp».
+- **Decimales por tipo de cifra**:
+  - porcentajes: 2;
+  - cota y brecha: 3;
+  - pp frente al umbral: 2;
+  - kg: 2;
+  - kg/m: 3;
+  - m y mm: hasta 3, sin ceros finales;
+  - segundos medidos: 1;
+  - rangos estimados: enteros;
+  - conteos: enteros sin separador de miles.
+- **Ayudantes**:
+  - Frontend: `decimal`, `entero`, `pct`, `pp`, `kg` y `leerDecimal` en
+    `components/file-detail/types.ts`; `numero` y `metros` en
+    `components/file-detail/patterns/filtros.ts`; `DecimalInput` en `components/ui/`.
+  - Backend: `cutting/formato.py`.
+- **Entradas**: los campos decimales aceptan coma o punto, conservan lo escrito y viajan a la API
+  con punto.
+- **Datos para máquinas**: API, JSON, celdas numéricas del Excel e inventario conservan números
+  nativos.
 
 ### Dimensions
 

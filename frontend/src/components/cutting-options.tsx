@@ -4,7 +4,10 @@ import { ChevronDown, FileUp, Plus, Trash2 } from 'lucide-react';
 import { useState } from 'react';
 import { Button, buttonVariants } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
+import { DecimalInput } from '@/components/ui/decimal-input';
 import { CheckboxField, Input } from '@/components/ui/form-controls';
+import { metros } from '@/components/file-detail/patterns/filtros';
+import { decimal, entero } from '@/components/file-detail/types';
 
 export interface StockRow {
    diametro: string;
@@ -25,9 +28,10 @@ export interface Timing {
 }
 
 export function TimingInfo({ timing }: { timing: Timing | null }) {
-   const range = (v: [number, number]) => `${Math.round(v[0])}–${Math.round(v[1])} s`;
+   // Rangos estimados en segundos enteros; el tiempo medido con un decimal (FR-033).
+   const range = (v: [number, number]) => `${entero(Math.round(v[0]))}–${entero(Math.round(v[1]))} s`;
    return <div className="my-4 rounded-md border border-line bg-surface-subtle p-4 text-sm leading-6 text-content-muted" aria-live="polite">
-      {timing?.elapsed_seconds !== undefined && <p className="font-medium text-content">Tiempo de procesamiento: {Math.round(timing.elapsed_seconds)} s</p>}
+      {timing?.elapsed_seconds !== undefined && <p className="font-medium text-content">Tiempo de procesamiento: {decimal(timing.elapsed_seconds, 1)} s</p>}
       {timing?.estimated_total_seconds
          ? <p>Duración estimada: {range(timing.estimated_total_seconds)}. Rango basado en ejecuciones anteriores.</p>
          : <p>Estimación: calibrando. Aún no hay suficientes ejecuciones comparables.</p>}
@@ -35,7 +39,7 @@ export function TimingInfo({ timing }: { timing: Timing | null }) {
       {timing?.calibration === 'fuera_del_rango_observado' && <p>La ejecución superó el rango observado; continúa procesando.</p>}
       <p>La espera en cola no forma parte de la estimación.</p>
       {timing?.parametros_corte && <p>Mínimos reutilizables: {Object.entries(timing.parametros_corte.minimos_por_diametro_m)
-         .map(([diameter, length]) => `${diameter}: ${length} m`).join('; ') || 'desactivados'}.</p>}
+         .map(([diameter, length]) => `${diameter}: ${metros(Number(length))}`).join('; ') || 'desactivados'}.</p>}
    </div>;
 }
 
@@ -72,7 +76,8 @@ export function CuttingOptions({ catalog, onCatalog, onInventory, visuals, onVis
                <ul aria-label="Catálogo de barras comerciales" className="space-y-2">
                   {catalog.map((row, i) => (
                      <li
-                        key={`${row.diametro}-${row.longitud_m}-${i}`}
+                        // Clave estable: editar la longitud o el diámetro no debe volver a montar la fila.
+                        key={`catalogo-${i}`}
                         className="grid grid-cols-[0.8fr_0.8fr_1.4fr_2.5rem] sm:grid-cols-[1fr_1fr_1.25fr_2.5rem] items-center gap-2 rounded-md border border-line bg-surface-subtle p-2 sm:gap-3"
                      >
                         <Input
@@ -81,14 +86,11 @@ export function CuttingOptions({ catalog, onCatalog, onInventory, visuals, onVis
                            value={row.diametro}
                            onChange={event => update(i, { diametro: event.target.value })}
                         />
-                        <Input
+                        <DecimalInput
                            aria-label={`Longitud en metros, fila ${i + 1}`}
                            className="px-2 font-mono tabular-nums sm:px-3"
-                           type="number"
-                           min="0"
-                           step="any"
                            value={row.longitud_m}
-                           onChange={event => update(i, { longitud_m: Number(event.target.value) })}
+                           onValue={longitud => update(i, { longitud_m: longitud })}
                         />
                         <Input
                            aria-label={`Cantidad, fila ${i + 1}`}

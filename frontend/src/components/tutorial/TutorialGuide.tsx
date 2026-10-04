@@ -55,7 +55,7 @@ const glosario = [
   },
   {
     termino: "Número de barra",
-    definicion: "Identifica el diámetro nominal según la NSR-10 (#3, #4, #5…). Por ejemplo, una barra #4 tiene 12,7 mm de diámetro y una masa de 0,994 kg/m.",
+    definicion: "Identifica el diámetro nominal según la NSR-10 (#3, #4, #5…). Por ejemplo, una barra #4 tiene 12.7 mm de diámetro y una masa de 0.994 kg/m.",
   },
   {
     termino: "Masa por metro lineal",

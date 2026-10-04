@@ -2,6 +2,7 @@
 
 El cálculo y los archivos son reales. No se conecta a Redis/PostgreSQL externos.
 """
+import copy
 import importlib
 import io
 import json
@@ -288,9 +289,12 @@ class CuttingApiTests(unittest.TestCase):
         self.assertEqual(int(compra['barras'].sum()), first.metricas['barras'])
         self.assertEqual(list(compra.columns), ['diametro', 'longitud_m', 'origen', 'barras', 'masa_kg',
                                                 'aprovechamiento_pct'])
-        indicadores = dict(zip(sheets['Metricas']['indicador'], sheets['Metricas']['valor']))
-        self.assertEqual(indicadores['admisibilidad_estado'], 'Dentro de lo admisible')
-        self.assertEqual(indicadores['analisis_version'], 'analisis-1')
+        # Spec 002: «Metricas» se reparte entre «Resumen» (legible) y «Trazabilidad» (técnico).
+        resumen = sheets['Resumen']
+        indicadores = dict(zip(resumen['indicador'], resumen['valor']))
+        self.assertEqual(indicadores['Estado de admisibilidad'], 'Dentro de lo admisible')
+        trazabilidad = dict(zip(sheets['Trazabilidad']['dato'], sheets['Trazabilidad']['valor']))
+        self.assertEqual(trazabilidad['analisis_version'], 'analisis-1')
 
     def test_pdf_con_admisibilidad(self):
         from cutting.analysis import analizar
@@ -314,7 +318,6 @@ class CuttingApiTests(unittest.TestCase):
         from cutting.domain import normalize
         from cutting.optimizer import optimize
         from cutting.report import generate
-        from cutting.io import read_rows
         from PIL import Image
         p = normalize([{'N° Orden': 'pedido', 'N° de Barra': '#3', 'Cantidad': 2,
                         'Longitud total (m)': 2, 'Masa total (kg)': 4}])
@@ -322,11 +325,12 @@ class CuttingApiTests(unittest.TestCase):
         files = generate(p, r, Path(self.directory.name) / 'visuales', '<Proyecto>', True)
         self.assertEqual(Path(files['pdf_path']).read_bytes()[:4], b'%PDF')
         with Image.open(files['graph_image_path']) as image:
-            self.assertLessEqual(image.width * image.height, 3_000_000)
-        rows = read_rows(files['excel_path'])
-        self.assertEqual(sum(int(row['piezas_por_barra']) for row in rows), 2)
+            # Límite fijo e independiente del número de barras (BUG-005); 9 MP por los 200 dpi (R-04).
+            self.assertLessEqual(image.width * image.height, 9_000_000)
         import pandas as pd
         sheets = pd.read_excel(files['excel_path'], sheet_name=None)
+        # Spec 002: la primera hoja es «Resumen»; las piezas se cuentan en «Barras».
+        self.assertEqual(int(sheets['Barras']['piezas_por_barra'].sum()), 2)
         patrones = sheets['Patrones']
         self.assertEqual(int(patrones['repeticiones'].sum()), len(sheets['Barras']))
         self.assertTrue(set(sheets['Barras']['patron_id']) <= set(patrones['patron_id']))
@@ -352,7 +356,89 @@ class CuttingApiTests(unittest.TestCase):
         self.assertIn('Se omitieron', html)
         self.assertEqual(Path(files['pdf_path']).read_bytes()[:4], b'%PDF')
         with Image.open(files['graph_image_path']) as image:
-            self.assertLessEqual(image.width * image.height, 3_000_000)
+            # Límite fijo e independiente del número de barras (BUG-005); 9 MP por los 200 dpi (R-04).
+            self.assertLessEqual(image.width * image.height, 9_000_000)
+
+    def version_guardada(self, status='completed', valido=True, sin_traza=False, alterar_top=False):
+        """ProcessingResult como lo guarda el worker (spec 002, ruta de patrones)."""
+        import uuid
+        from cutting.analysis import analizar
+        from cutting.domain import normalize
+        from cutting.optimizer import optimize
+        from cutting.report import legacy_patterns
+        p = normalize([{'N° Orden': '12', 'N° de Barra': '#3', 'Cantidad': 3, 'Longitud total (m)': 2.5,
+                        'Masa total (kg)': 7.5},
+                       {'N° Orden': '7', 'N° de Barra': '#3', 'Cantidad': 4, 'Longitud total (m)': 1.2,
+                        'Grupo de Ejecución': 2, 'Masa total (kg)': 4.8}], options={})
+        r = optimize(p)
+        r['metrics']['analisis'] = analizar(p, r)
+        metricas = json.loads(json.dumps(r['metrics']))
+        metricas['valido'] = valido
+        if alterar_top:
+            metricas['analisis']['patrones']['top'][0]['repeticiones'] += 1
+        resultados = json.loads(json.dumps(legacy_patterns(p, r)))
+        if sin_traza:
+            for registro in resultados:
+                registro.pop('trazabilidad_cortes')
+        archivo = self.server.UploadedFile(file_path='x.xlsx', file_name='x.xlsx', file_extension='xlsx')
+        self.db.session.add(archivo)
+        self.db.session.flush()
+        version = self.server.ProcessingResult(uploaded_file_id=archivo.id, version_number=1,
+                                               storage_uuid=str(uuid.uuid4()), resultados=resultados,
+                                               metricas=metricas, cartilla=[], result_status=status)
+        self.db.session.add(version)
+        self.db.session.commit()
+        return version, r
+
+    def test_patrones_de_una_version(self):
+        version, r = self.version_guardada()
+        antes = (version.updated_at, copy.deepcopy(version.resultados))
+        response = self.client.get(f'/patrones/{version.storage_uuid}')
+        self.assertEqual(response.status_code, 200, response.json)
+        data = response.json
+        self.assertTrue(data['disponible'])
+        self.assertEqual((data['storage_uuid'], data['version_number'], data['motor']),
+                         (version.storage_uuid, 1, r['metrics']['motor']))
+        self.assertEqual(data['totales']['barras'], len(r['bars']))
+        self.assertEqual(sum(p['repeticiones'] for p in data['patrones']), len(r['bars']))
+        self.assertEqual({x['pedido']: x['piezas'] for x in data['pedidos']}, {'7': 4, '12': 3})
+        for clave in ('escala_m', 'diametros', 'etapas', 'origenes'):
+            self.assertIn(clave, data)
+        # Solo lectura (FR-024): la fila no cambia, y una segunda llamada da lo mismo.
+        self.db.session.refresh(version)
+        self.assertEqual((version.updated_at, version.resultados), antes)
+        self.assertEqual(self.client.get(f'/patrones/{version.storage_uuid}').json, data)
+
+    def test_patrones_no_disponibles(self):
+        for opciones, motivo in [({'status': 'processing'}, 'plan terminado'),
+                                 ({'status': 'error_validation'}, 'plan terminado'),
+                                 ({'valido': False}, 'verificación'),
+                                 ({'valido': None}, 'verificación'),
+                                 ({'sin_traza': True}, 'trazabilidad de cortes')]:
+            with self.subTest(opciones):
+                version, _ = self.version_guardada(**opciones)
+                response = self.client.get(f'/patrones/{version.storage_uuid}')
+                self.assertEqual(response.status_code, 200)
+                self.assertFalse(response.json['disponible'])
+                self.assertIn(motivo, response.json['motivo'])
+                self.assertNotIn('patrones', response.json)
+
+    def test_patrones_con_error_en_artefactos(self):
+        # El plan quedó guardado aunque fallaran los artefactos: el explorador no depende de ellos.
+        version, _ = self.version_guardada(status='error_generation')
+        self.assertTrue(self.client.get(f'/patrones/{version.storage_uuid}').json['disponible'])
+
+    def test_patrones_version_inexistente(self):
+        response = self.client.get('/patrones/00000000-0000-4000-8000-000000000000')
+        self.assertEqual(response.status_code, 404)
+        self.assertEqual(response.json, {'error': 'Versión no encontrada'})
+
+    def test_patrones_inconsistentes(self):
+        version, _ = self.version_guardada(alterar_top=True)
+        response = self.client.get(f'/patrones/{version.storage_uuid}')
+        self.assertEqual(response.status_code, 500)
+        self.assertIn('Patrones inconsistentes', response.json['error'])
+        self.assertNotIn('patrones', response.json)
 
 
 if __name__ == '__main__':

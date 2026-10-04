@@ -1,4 +1,84 @@
-# Estado actual — 2026-10-02
+# Estado actual — 2026-10-04
+
+## Bloque L — Spec 002: presentación de resultados y explorador de patrones
+
+Rama `feat/spec-002-presentacion-resultados`, que ya integra `production` (cierre de la spec
+001). `.specify/feature.json` → `specs/002-presentacion-resultados` (local; si falta, usar
+`SPECIFY_FEATURE_DIRECTORY`).
+
+- **Estado** (2026-10-04): **implementada y validada, 48 de 48 tareas**, E2E incluido. Los
+  cambios están sin commit en la rama.
+- **Stack local**: corre con las imágenes nuevas. Las anteriores se retiraron por ID, sin
+  `prune`. C: quedó con unos 102 GB libres.
+- **Playwright**: hay Chromium headless en `~/.cache/ms-playwright` (266 MB) y `libgbm` y
+  `libwayland-server` extraídas en `tmp/qa-spec002/libs` (sin instalar en el sistema).
+- **Alcance**:
+  - Excel con «Resumen», totales y «Trazabilidad».
+  - PDF con la compra primero y el nesting por páginas.
+  - PNG legible.
+  - En la web, un **explorador interactivo de todos los patrones**: escala común, filtros por
+    diámetro, etapa, origen y pedido, y detalle con pedidos y rangos de barras.
+  - Totales de compra en pantalla y sin la tarjeta de cota simple.
+- **Decisiones de la enmienda**:
+  - se retira `analisis-2`: el análisis sigue en `analisis-1`;
+  - una única ruta nueva de solo lectura, `GET /patrones/<storage_uuid>`, que reconstruye los
+    patrones desde `ProcessingResult.resultados` con `patterns.agrupar` y
+    `report.patrones_rows`, sin ejecutar el AG;
+  - si el plan no consta como verificado, responde «no disponible»;
+  - el chequeo de taller queda fuera de alcance.
+- **Medición exploratoria** (solo lectura, stack local): la versión de la 002 da 136 patrones y
+  13.955 barras en unos 0,5 s (lectura 0,33 s + agrupación 0,13 s), con 145 rangos de barras y
+  137 pedidos. Las versiones `secuencial-1` y del motor histórico no son reconstruibles («no
+  disponible»).
+- **Riesgos declarados**:
+  - el `json.loads` de unos 12,5 MB bloquea gevent unos 0,3 s (mitigado con una LRU por uuid);
+  - los pedidos de 001 y 002 se muestran en la web: la demostración debe usar datos
+    anonimizados (constitución, Principio V).
+- **Puertas ejecutadas**:
+  - Backend: 164 pruebas OK.
+  - Regresión: 0 diferencias en 148 registros (`2026-10-04-regresion-presentacion.jsonl`).
+  - SC-007: medianas de 25,58 s y 27,36 s, ratio 1,07 (los artefactos suman +1,9 s).
+  - SC-009: 0,47 s.
+  - Frontend: typecheck, lint y build OK con Node 22 (nvm).
+  - Despliegue: 16 pruebas OK.
+- **Cambios no previstos en las tareas**:
+  - El arnés `check_cutting_container.py` acepta las hojas nuevas o las previas, y un PNG de
+    hasta 9 MP.
+  - Nuevo `scripts/medir_vista_patrones.py`.
+  - La paleta de etapas del PNG excluye el rojo (R-03).
+- **Revisión manual** de Excel, PDF y PNG de la 001 y la 002: correcta (§13 de
+  `tests/data/002/ANALISIS_RESULTADOS.md`).
+- **E2E (T047)**:
+  - API: 0 fallos.
+  - Auditor (SC-005): OK.
+  - UI: 51 comprobaciones; axe en 0 violaciones en 1440, 820 y 390 px; teclado y foco correctos.
+- **Estándar numérico único** (enmiendas 2 y 3, decisión del usuario; FR-032 a FR-035, R-20):
+  - **punto decimal y sin separador de miles** (enmienda 3, como la plantilla USCO de la tesis) y
+    espacio antes de la unidad;
+  - decimales fijos por tipo de cifra;
+  - entradas que aceptan coma o punto (`DecimalInput`, `leerDecimal`);
+  - `cutting/formato.py` en el backend.
+- **Verificación**: QA de las 6 pantallas en 3 anchos; pantalla, PDF y «Resumen» coherentes.
+- **Stack local**: reconstruido con la enmienda 3. Las imágenes anteriores se retiraron por ID y
+  C: quedó con unos 101 GB libres.
+- **Commit y push** (2026-10-04, por instrucción del usuario) a la rama del PR #7, integrando el
+  registro del documento Word de la rama remota (`997d5ad`).
+- **Coherencia con la tesis**: la app usa el mismo formato que la plantilla USCO del documento Word
+  (punto decimal, miles sin separador), así que las cifras se pueden citar sin reescribirlas.
+
+## Documento Word de la tesis (`docs/tesis-doc/Tesis_F.docx`, 2026-10-03)
+
+A pedido del usuario se generó `Tesis_F.docx` (61 páginas, sin commit) sobre la plantilla USCO
+(`Downloads/Tesis.docx`): estilos, numeración de títulos, secciones, encabezados y logo de la
+plantilla. Contenido: capítulos 1–4 de `docs/tesis-doc/*.md` reorganizados según la plantilla, más
+un Cap. 5 de conclusiones **preliminares** por objetivo, dos anexos (cartillas anonimizadas y
+evidencia) y bibliografía APA limitada a fuentes con ficha o marcadas «pendiente de verificación».
+Del borrador «Tesis final 1» solo se tomó contexto cualitativo (motivación, clasificación 1D/2D,
+arquitectura, tabla NSR-10 C.3.5.3-2 con masas verificadas); sus resultados no se usaron
+(RIESGO-AC-010). Convenciones de la plantilla: decimales con punto, miles sin separador, márgenes
+simétricos de 2.54 cm, capítulos en página impar. 15 «Nota pendiente» resaltadas marcan tareas del
+autor. Generador y figuras en el scratchpad de la sesión (no versionados). Pendiente: procedencia de
+la cartilla 001, revisión del director, fichas del software y de las fuentes heredadas.
 
 ## Bloque K — Alineación con el título fijo de la tesis (spec 001)
 

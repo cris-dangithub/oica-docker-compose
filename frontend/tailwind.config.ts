@@ -64,6 +64,12 @@ export default {
           warning: "var(--color-data-warning)",
           grid: "var(--color-data-grid)",
           remaining: "var(--color-data-remaining-material)",
+          "stage-1": "var(--color-data-stage-1)",
+          "stage-2": "var(--color-data-stage-2)",
+          "stage-3": "var(--color-data-stage-3)",
+          "stage-4": "var(--color-data-stage-4)",
+          "stage-5": "var(--color-data-stage-5)",
+          "stage-6": "var(--color-data-stage-6)",
         },
       },
       fontFamily: {

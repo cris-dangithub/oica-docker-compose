@@ -1,5 +1,7 @@
 # Contrato de interfaz — frontend Next.js
 
+> **Sustituido en parte por `specs/002-presentacion-resultados/contracts/` (2026-10-04).** Lo que la spec 002 cambia rige desde allí; el resto de este contrato sigue vigente.
+
 Antes de implementar hay que leer `docs/oica-redesign/AI-DESIGN-RULES.md` y `STATE.md`. La
 interfaz va en español y con tres espacios de indentación. HTTP solo usa `API_URL` (`/api`).
 La interfaz MUST NOT introducir violaciones nuevas de axe.

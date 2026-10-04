@@ -1,0 +1,53 @@
+{
+ "tarea": "T025",
+ "criterio": "SC-009: mediana total ≤ 2 s con la cartilla 002",
+ "descripcion": "Lectura de resultados y metricas desde PostgreSQL + vista_patrones.vista, código del árbol de trabajo cargado en memoria; solo lectura",
+ "mediciones": [
+  {
+   "resultado_id": 44,
+   "storage_uuid": "699d8bfc-e2e3-47cb-a935-3d33c428d099",
+   "motor": "secuencial-2",
+   "valido": true,
+   "lectura_s": 0.35159384699909424,
+   "vista_s": 0.1332205190010427,
+   "total_s": 0.48481436600013694,
+   "json_bytes": 79306,
+   "patrones": 136,
+   "barras": 13955,
+   "rangos": 145,
+   "pedidos": 137
+  },
+  {
+   "resultado_id": 44,
+   "storage_uuid": "699d8bfc-e2e3-47cb-a935-3d33c428d099",
+   "motor": "secuencial-2",
+   "valido": true,
+   "lectura_s": 0.37308718399981444,
+   "vista_s": 0.09985745900121401,
+   "total_s": 0.47294464300102845,
+   "json_bytes": 79306,
+   "patrones": 136,
+   "barras": 13955,
+   "rangos": 145,
+   "pedidos": 137
+  },
+  {
+   "resultado_id": 44,
+   "storage_uuid": "699d8bfc-e2e3-47cb-a935-3d33c428d099",
+   "motor": "secuencial-2",
+   "valido": true,
+   "lectura_s": 0.3583484849987144,
+   "vista_s": 0.10451533900049981,
+   "total_s": 0.4628638239992142,
+   "json_bytes": 79306,
+   "patrones": 136,
+   "barras": 13955,
+   "rangos": 145,
+   "pedidos": 137
+  }
+ ],
+ "mediana_total_s": 0.47294464300102845,
+ "mediana_lectura_s": 0.3583484849987144,
+ "mediana_vista_s": 0.10451533900049981,
+ "cumple": true
+}

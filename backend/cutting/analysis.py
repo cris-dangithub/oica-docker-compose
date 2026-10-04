@@ -7,6 +7,7 @@ import copy
 from decimal import Decimal
 
 from . import bound, nominal, patterns
+from .formato import numero
 
 VERSION_ANALISIS = 'analisis-1'
 COMPROBACIONES = ['demanda', 'diametro', 'capacidad', 'etapas', 'inventario']
@@ -126,8 +127,9 @@ def evaluar_cota(problem, metrics, admisibilidad):
 
     def comprobar(ambito, desperdicio_plan, desperdicio_cota):
         if desperdicio_cota is not None and desperdicio_plan < desperdicio_cota - 1e-9:
-            raise ValueError(f'Error de dominio: en {ambito} el desperdicio del plan ({desperdicio_plan:.6f}%) '
-                             f'es menor que la cota inferior ({desperdicio_cota:.6f}%)')
+            # Texto para el usuario con el formato de la app (FR-032); el cálculo no cambia.
+            raise ValueError(f'Error de dominio: en {ambito} el desperdicio del plan ({numero(desperdicio_plan, 6)} %) '
+                             f'es menor que la cota inferior ({numero(desperdicio_cota, 6)} %)')
         return None if desperdicio_cota is None else desperdicio_plan - desperdicio_cota
 
     for item in cota['por_diametro']:

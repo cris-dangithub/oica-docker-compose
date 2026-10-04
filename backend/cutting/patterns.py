@@ -53,9 +53,9 @@ def verificar(problem, patrones, bars):
 
 
 def secuencia_legible(problem, patron):
-    """«E1: 2×2,35 m + 1×1,10 m | E2: 3×0,80 m» (contracts/artefactos.md)."""
+    """«E1: 2×2.35 m + 1×1.1 m | E2: 3×0.8 m» (contracts/artefactos.md; spec 002, enmienda 3)."""
     def metros(value):
-        return f'{value / problem["scale"]:.3f}'.rstrip('0').rstrip('.').replace('.', ',')
+        return f'{value / problem["scale"]:.3f}'.rstrip('0').rstrip('.')
     etapas = []
     for grupo, longitud, cantidad in patron['secuencia']:
         texto = f'{cantidad}×{metros(longitud)} m'
