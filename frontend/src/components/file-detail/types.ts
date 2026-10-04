@@ -189,17 +189,15 @@ export type VistaPatrones =
 export const NO_DISPONIBLE = 'no disponible';
 
 /**
- * Cifra con coma decimal y punto de miles, con `digits` decimales fijos («152.039,571»), como el PDF
- * (spec 002, R-05). Es manual para que el servidor y el navegador produzcan el mismo texto.
+ * Cifra con punto decimal, sin separador de miles y con `digits` decimales fijos («152039.571»), como
+ * el PDF y la plantilla de la tesis (spec 002, enmienda 3: FR-032). Evita el «-0.00».
  */
 export function decimal(value: number, digits = 2): string {
-   const [entero, decimales] = Math.abs(value).toFixed(digits).split('.');
-   const miles = entero.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
-   const signo = value < 0 && Number(`${entero}.${decimales ?? 0}`) !== 0 ? '-' : '';
-   return `${signo}${miles}${decimales ? `,${decimales}` : ''}`;
+   const texto = Math.abs(value).toFixed(digits);
+   return value < 0 && Number(texto) !== 0 ? `-${texto}` : texto;
 }
 
-/** Entero con punto de miles («14.301»). */
+/** Entero sin separador de miles («14301»). */
 export const entero = (value: number) => decimal(value, 0);
 
 /* Decimales por tipo de cifra (FR-033): porcentajes, pp y kg con 2; la cota y la brecha piden 3. */

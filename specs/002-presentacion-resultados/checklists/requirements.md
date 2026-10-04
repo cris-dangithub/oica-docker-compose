@@ -78,3 +78,6 @@
   - FR-035 separa lo que lee el usuario de los datos para máquinas.
   - No hay marcadores [NEEDS CLARIFICATION]: la decisión la dio el usuario. Los 16 puntos siguen
     pasando.
+- Iteración 6 (2026-10-04, enmienda 3 «separadores»): FR-032 pasa a punto decimal y sin separador
+  de miles, y SC-013 se ajusta. La decisión es del usuario, por coherencia con la plantilla de la
+  tesis. Los 16 puntos siguen pasando.

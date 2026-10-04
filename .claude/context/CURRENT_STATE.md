@@ -52,19 +52,19 @@ Rama `feat/spec-002-presentacion-resultados`, que ya integra `production` (cierr
   - API: 0 fallos.
   - Auditor (SC-005): OK.
   - UI: 51 comprobaciones; axe en 0 violaciones en 1440, 820 y 390 px; teclado y foco correctos.
-- **Estándar numérico único** (enmienda 2, decisión del usuario; FR-032 a FR-035, R-20):
-  - coma decimal, punto de miles y espacio antes de la unidad;
+- **Estándar numérico único** (enmiendas 2 y 3, decisión del usuario; FR-032 a FR-035, R-20):
+  - **punto decimal y sin separador de miles** (enmienda 3, como la plantilla USCO de la tesis) y
+    espacio antes de la unidad;
   - decimales fijos por tipo de cifra;
   - entradas que aceptan coma o punto (`DecimalInput`, `leerDecimal`);
   - `cutting/formato.py` en el backend.
 - **Verificación**: QA de las 6 pantallas en 3 anchos; pantalla, PDF y «Resumen» coherentes.
-- **Pendiente**: las imágenes Docker del stack aún no incluyen la enmienda 2. Reconstruirlas
-  requiere aprobación.
+- **Stack local**: reconstruido con la enmienda 3. Las imágenes anteriores se retiraron por ID y
+  C: quedó con unos 101 GB libres.
 - **Commit y push** (2026-10-04, por instrucción del usuario) a la rama del PR #7, integrando el
   registro del documento Word de la rama remota (`997d5ad`).
-- **Observación**: el documento Word (`Tesis_F.docx`) sigue la plantilla USCO, con punto decimal y
-  sin separador de miles, distinto del estándar de la app (enmienda 2). Si las cifras se citan en la
-  tesis, hay que decidir qué convención usar.
+- **Coherencia con la tesis**: la app usa el mismo formato que la plantilla USCO del documento Word
+  (punto decimal, miles sin separador), así que las cifras se pueden citar sin reescribirlas.
 
 ## Documento Word de la tesis (`docs/tesis-doc/Tesis_F.docx`, 2026-10-03)
 

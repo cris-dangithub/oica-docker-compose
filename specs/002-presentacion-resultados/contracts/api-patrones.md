@@ -32,7 +32,7 @@ elimina el prefijo y el frontend la llama como `${API_URL}/patrones/<storage_uui
       "diametro": "#4",
       "origen": "comercial",
       "longitud_m": 12.0,
-      "secuencia": "E1: 2×4,2 m + 1×3,5 m",
+      "secuencia": "E1: 2×4.2 m + 1×3.5 m",
       "repeticiones": 230,
       "aprovechamiento_pct": 99.2,
       "perdida_corte_m": 0.003,

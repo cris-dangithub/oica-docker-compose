@@ -27,6 +27,13 @@ toda la app." La spec define un estándar numérico único (FR-032 a FR-035) par
 usuario: pantalla, PDF, imagen, textos legibles del Excel y mensajes. Los datos para máquinas
 (API, JSON, celdas numéricas del Excel, inventario reimportable) siguen con números nativos.
 
+**Enmienda 3 (2026-10-04, separadores)** (decisión del usuario): "Entonces deberíamos de usar sin
+separador de miles y punto decimal para toda la app". El motivo es la coherencia con el documento
+de tesis, cuya plantilla USCO usa punto decimal y miles sin separador. FR-032 cambia de coma decimal
+y punto de miles a **punto decimal y sin separador de miles**. Los decimales por tipo de cifra
+(FR-033), el espacio antes de la unidad, las entradas que aceptan coma o punto (FR-034) y los datos
+nativos (FR-035) no cambian.
+
 ## Contexto
 
 La spec 001 añadió a la aplicación el resumen de compra, los patrones de corte, la cota inferior,
@@ -84,9 +91,10 @@ Actores:
   pedidos que existen en la versión. Se elige un pedido a la vez, y cada patrón mostrado indica
   cuántas piezas de ese pedido aporta (FR-027).
 - Q: ¿Qué formato numérico usa la aplicación? → A: Uno solo en toda la app, para todo lo que lee el
-  usuario: coma decimal, punto de miles, espacio antes de la unidad y una cantidad fija de
-  decimales por tipo de cifra. Las entradas aceptan coma o punto. Los datos para máquinas siguen
-  con números nativos (enmienda 2; FR-032 a FR-035).
+  usuario: **punto decimal y sin separador de miles** (enmienda 3, por coherencia con la plantilla
+  USCO de la tesis; reemplaza la coma decimal y el punto de miles de la enmienda 2). Además,
+  espacio antes de la unidad y una cantidad fija de decimales por tipo de cifra. Las entradas
+  aceptan coma o punto, y los datos para máquinas siguen con números nativos (FR-032 a FR-035).
 
 ## User Scenarios & Testing *(mandatory)*
 
@@ -188,7 +196,7 @@ indica cuántos patrones y cuántas barras representa del total.
 el taller ejecuta. Hoy las piezas no tienen medida legible y la imagen no está en el PDF.
 
 **Independent Test**: procesar la cartilla 002, abrir el PDF y comprobar que incluye la imagen y
-la tabla de los 136 patrones con la línea de cobertura «136 de 136 patrones, 13.955 de 13.955
+la tabla de los 136 patrones con la línea de cobertura «136 de 136 patrones, 13955 de 13955
 barras (100 %)». En la imagen, comprobar la leyenda, las longitudes legibles y una línea de
 cobertura con menos del 100 % de los patrones (60 de 136).
 
@@ -353,7 +361,7 @@ versión nueva y una histórica; reimportar el inventario final de una versión 
   porcentaje.
 - **FR-011**: Las cifras del PDF dirigidas al usuario MUST usar coma decimal, con dos decimales
   en general y tres en la cota y la brecha. *(Enmienda 2: se generaliza a toda la aplicación en
-  FR-032 y FR-033.)*
+  FR-032 y FR-033. Enmienda 3: el separador pasa a punto decimal, sin separador de miles.)*
 
 **Imagen**
 
@@ -426,11 +434,12 @@ versión nueva y una histórica; reimportar el inventario final de una versión 
 
 **Formato numérico en toda la aplicación** *(enmienda 2, 2026-10-04)*
 
-- **FR-032**: Toda cifra que lee el usuario (pantallas, PDF, imagen de nesting, textos legibles
-  del Excel y mensajes de estado o error que genere la aplicación) MUST usar coma decimal y punto
-  de miles en la parte entera desde 1.000 (por ejemplo, «152.039,57 kg» o «13.955 barras»). La
-  unidad MUST ir separada de la cifra por un espacio, incluido el porcentaje («8,86 %»). Las
-  diferencias en puntos porcentuales MUST llevar signo explícito («+1,26 pp» o «-1,14 pp»).
+- **FR-032** *(reescrito en la enmienda 3)*: Toda cifra que lee el usuario (pantallas, PDF, imagen
+  de nesting, textos legibles del Excel y mensajes de estado o error que genere la aplicación) MUST
+  usar **punto decimal y ningún separador de miles** (por ejemplo, «152039.57 kg» o
+  «13955 barras»). La unidad MUST ir separada de la cifra por un espacio, incluido el porcentaje
+  («8.86 %»). Las diferencias en puntos porcentuales MUST llevar signo explícito («+1.26 pp» o
+  «-1.14 pp»).
 - **FR-033**: La cantidad de decimales MUST depender del tipo de cifra, igual en todas las
   salidas:
   - porcentajes de desperdicio, aprovechamiento, pérdidas y umbral: 2;
@@ -438,9 +447,9 @@ versión nueva y una histórica; reimportar el inventario final de una versión 
   - diferencias frente al umbral (pp): 2;
   - masas (kg): 2;
   - masa por metro (kg/m): 3;
-  - longitudes (m) y pérdida por corte (mm): hasta 3, sin ceros finales («4,2 m», «0,37 m»);
+  - longitudes (m) y pérdida por corte (mm): hasta 3, sin ceros finales («4.2 m», «0.37 m»);
   - tiempos: 1 decimal en segundos medidos y enteros en rangos estimados;
-  - conteos (barras, piezas, patrones, repeticiones): enteros con punto de miles.
+  - conteos (barras, piezas, patrones, repeticiones): enteros sin separador de miles.
 - **FR-034**: Los campos de entrada decimales (umbral, pérdida por corte, mínimo reutilizable y
   longitudes del catálogo) MUST aceptar coma o punto como separador decimal, con el mismo
   comportamiento en cualquier navegador o idioma del sistema. Los valores escritos por el usuario
@@ -522,7 +531,7 @@ versión nueva y una histórica; reimportar el inventario final de una versión 
   100.
 - **SC-013** *(enmienda 2)*: En el 100 % de las pantallas de la aplicación (inicio, carga, lista,
   detalle, tutorial y contacto), en los tres anchos de verificación, ninguna cifra con unidad
-  aparece con punto decimal ni pegada a su unidad. Con la cartilla 002, las mismas magnitudes
+  aparece con coma decimal, con separador de miles ni pegada a su unidad (enmienda 3). Con la cartilla 002, las mismas magnitudes
   (desperdicio, masa comprada, cota y brecha) se leen igual en la pantalla, el PDF y la hoja
   «Resumen».
 

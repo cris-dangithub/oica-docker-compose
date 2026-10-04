@@ -79,9 +79,9 @@ texto informativo; para texto secundario se usa `color/text/muted`.
 Estándar único de la app (spec 002, enmienda 2: FR-032 a FR-035; research R-20). Aplica a todo
 lo que lee el usuario: pantallas, PDF, imagen, textos legibles del Excel y mensajes.
 
-- **Separadores**: coma decimal y punto de miles desde 1.000, con un espacio entre la cifra y la
-  unidad, también en el porcentaje: «8,86 %», «152.039,57 kg», «13.955 barras». Las diferencias
-  llevan signo explícito: «+1,264 pp».
+- **Separadores** (enmienda 3, como la plantilla USCO de la tesis): punto decimal y sin separador
+  de miles, con un espacio entre la cifra y la unidad, también en el porcentaje: «8.86 %»,
+  «152039.57 kg», «13955 barras». Las diferencias llevan signo explícito: «+1.264 pp».
 - **Decimales por tipo de cifra**:
   - porcentajes: 2;
   - cota y brecha: 3;
@@ -91,7 +91,7 @@ lo que lee el usuario: pantallas, PDF, imagen, textos legibles del Excel y mensa
   - m y mm: hasta 3, sin ceros finales;
   - segundos medidos: 1;
   - rangos estimados: enteros;
-  - conteos: enteros con punto de miles.
+  - conteos: enteros sin separador de miles.
 - **Ayudantes**:
   - Frontend: `decimal`, `entero`, `pct`, `pp`, `kg` y `leerDecimal` en
     `components/file-detail/types.ts`; `numero` y `metros` en

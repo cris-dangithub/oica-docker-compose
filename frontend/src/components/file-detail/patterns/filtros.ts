@@ -72,17 +72,14 @@ export function cobertura(filtrados: PatronExplorable[], totales: { patrones: nu
    return { n: filtrados.length, m: totales.patrones, b, t: totales.barras, pct: totales.barras ? (100 * b) / totales.barras : 0 };
 }
 
-/**
- * Cifra con punto de miles y coma decimal, sin ceros finales, como en el PDF (R-05).
- * Es manual para que el servidor y el navegador produzcan el mismo texto.
- */
+/** Cifra con punto decimal y sin ceros finales, como en el PDF (enmienda 3: FR-032). */
 export function numero(valor: number, digits = 2): string {
    const texto = decimal(valor, digits);
-   // Solo se quitan ceros después de la coma: «4,200» → «4,2»; «13.000» queda igual.
-   return texto.includes(',') ? texto.replace(/0+$/, '').replace(/,$/, '') : texto;
+   // Solo se quitan ceros después del punto: «4.200» → «4.2»; «13000» queda igual.
+   return texto.includes('.') ? texto.replace(/0+$/, '').replace(/\.$/, '') : texto;
 }
 
-/** Longitud legible: «4,2 m». */
+/** Longitud legible: «4.2 m». */
 export function metros(valor: number): string {
    return `${numero(valor, 3)} m`;
 }

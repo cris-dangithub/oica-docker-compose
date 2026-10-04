@@ -98,8 +98,8 @@ Secciones, en este orden (FR-009):
    diámetro y total general (compra separada del inventario).
 5. **Patrones de corte**:
    - Dos líneas de cobertura (research R-13): una para la **tabla** (por ejemplo, «136 de 136
-     patrones, 13.955 de 13.955 barras (100 %)») y otra para las **imágenes** (por ejemplo,
-     «60 de 136 patrones, B de 13.955 barras (x %)»).
+     patrones, 13955 de 13955 barras (100 %)») y otra para las **imágenes** (por ejemplo,
+     «60 de 136 patrones, B de 13955 barras (x %)»).
    - Las imágenes de nesting incrustadas en **bloques de 18 patrones por página** (hasta 60
      patrones, los mismos del PNG), a escala casi real para imprimir en A4, o «imagen no
      disponible» (research R-01).
@@ -138,8 +138,9 @@ y la brecha.
 
 ## Formato numérico de los artefactos (enmienda 2; FR-032 a FR-035; research R-20)
 
-- **PDF y PNG**: coma decimal, punto de miles y espacio antes de la unidad. Los decimales siguen
-  FR-033. Las repeticiones del PNG usan punto de miles («P-#3-001 ×2.199»).
+- **PDF y PNG** (enmienda 3): punto decimal, sin separador de miles y con un espacio antes de la
+  unidad. Los decimales siguen FR-033. Las repeticiones del PNG van sin separador
+  («P-#3-001 ×2199»), y la secuencia queda como «E1: 2×4.2 m».
 - **Excel**: las celdas numéricas siguen siendo números (FR-035). Los textos legibles
   («Parámetros», «secuencia» y los estados de «Resumen») usan el formato del usuario.
 - **Backend**: un solo módulo de formato, `cutting/formato.py`, para `report.py` y los mensajes de

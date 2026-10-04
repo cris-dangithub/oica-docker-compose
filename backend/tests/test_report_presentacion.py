@@ -38,13 +38,14 @@ def hojas(files):
 class AyudantesTests(unittest.TestCase):
     """T003: formato con coma decimal y cobertura de las vistas acotadas."""
 
-    def test_numero_coma_decimal_y_miles(self):
+    def test_numero_punto_decimal_sin_miles(self):
         from cutting.report import numero
-        self.assertEqual(numero(152039.574), '152.039,57')
-        self.assertEqual(numero(7.5958, 3), '7,596')
-        self.assertEqual(numero(13955, 0), '13.955')
-        self.assertEqual(numero(-1.264, 3), '-1,264')
-        self.assertEqual(numero(0), '0,00')
+        # Enmienda 3 (FR-032): punto decimal y sin separador de miles, como la plantilla de la tesis.
+        self.assertEqual(numero(152039.574), '152039.57')
+        self.assertEqual(numero(7.5958, 3), '7.596')
+        self.assertEqual(numero(13955, 0), '13955')
+        self.assertEqual(numero(-1.264, 3), '-1.264')
+        self.assertEqual(numero(0), '0.00')
         self.assertEqual(numero(None), 'no disponible')
 
     def test_cobertura_total(self):
@@ -61,7 +62,7 @@ class AyudantesTests(unittest.TestCase):
         self.assertLessEqual(c['b'], c['t'])
         self.assertEqual(c['b'], 3974)
         self.assertIn('2 de 136 patrones', c['texto'])
-        self.assertIn('3.974 de 13.955 barras (28,5 %)', c['texto'])
+        self.assertIn('3974 de 13955 barras (28.5 %)', c['texto'])
 
     def test_cobertura_con_plan_real(self):
         from cutting.analysis import patrones_de
@@ -192,7 +193,7 @@ class PdfInicioTests(unittest.TestCase):
         self.assertEqual(posiciones, sorted(posiciones))
         self.assertLess(self.html.index('Total comprado'), self.html.index('Patrones de corte'))
 
-    def test_coma_decimal(self):
+    def test_formato_decimal(self):
         from cutting.report import numero
         m = self.result['metrics']
         self.assertIn(f"{numero(m['desperdicio_porcentaje'])} %", self.html)
@@ -258,10 +259,10 @@ class NestingTests(unittest.TestCase):
     def test_rotulo_solo_si_cabe(self):
         from cutting.report import cabe_rotulo
         pulgadas_por_metro = 9.5 / 12
-        self.assertTrue(cabe_rotulo(0.37, '0,37', pulgadas_por_metro))
-        self.assertTrue(cabe_rotulo(4.2, '4,2', pulgadas_por_metro))
-        self.assertFalse(cabe_rotulo(0.1, '0,1', pulgadas_por_metro))
-        self.assertFalse(cabe_rotulo(0.2, '0,215', pulgadas_por_metro))
+        self.assertTrue(cabe_rotulo(0.37, '0.37', pulgadas_por_metro))
+        self.assertTrue(cabe_rotulo(4.2, '4.2', pulgadas_por_metro))
+        self.assertFalse(cabe_rotulo(0.1, '0.1', pulgadas_por_metro))
+        self.assertFalse(cabe_rotulo(0.2, '0.215', pulgadas_por_metro))
 
 
 class CoberturaPdfTests(unittest.TestCase):
@@ -307,15 +308,15 @@ class FormatoTests(unittest.TestCase):
 
     def test_modulo_comun(self):
         from cutting import formato, report
-        self.assertEqual(formato.numero(152039.574), '152.039,57')
-        self.assertEqual(formato.numero(13955, 0), '13.955')
-        self.assertEqual(formato.con_signo(1.2644, 3), '+1,264')
-        self.assertEqual(formato.con_signo(-1.14), '-1,14')
-        self.assertEqual(formato.metros(4.2), '4,2 m')
+        self.assertEqual(formato.numero(152039.574), '152039.57')
+        self.assertEqual(formato.numero(13955, 0), '13955')
+        self.assertEqual(formato.con_signo(1.2644, 3), '+1.264')
+        self.assertEqual(formato.con_signo(-1.14), '-1.14')
+        self.assertEqual(formato.metros(4.2), '4.2 m')
         self.assertEqual(formato.metros(12), '12 m')
         self.assertIs(report.numero, formato.numero, 'report reutiliza el módulo común')
 
-    def test_mensaje_de_dominio_con_coma(self):
+    def test_mensaje_de_dominio_con_punto_decimal(self):
         from unittest.mock import patch
         from cutting.analysis import analizar
         problem = normalize(ROWS, None, None, {})
@@ -331,10 +332,10 @@ class FormatoTests(unittest.TestCase):
                 analizar(problem, result)
         mensaje = str(error.exception)
         self.assertIn('Error de dominio', mensaje)
-        self.assertIn('(99,123456 %)', mensaje)
-        self.assertNotRegex(mensaje, r'\d\.\d')
+        self.assertIn('(99.123456 %)', mensaje)
+        self.assertNotRegex(mensaje, r'\d,\d')
 
-    def test_repeticiones_del_png_con_punto_de_miles(self):
+    def test_repeticiones_del_png_sin_separador_de_miles(self):
         import matplotlib.pyplot as plt
         from cutting.report import dibujar_nesting
         problem = normalize(ROWS, None, None, {})
@@ -344,7 +345,7 @@ class FormatoTests(unittest.TestCase):
         fig, _ = dibujar_nesting(problem, [patron], 1, 2199)
         etiquetas = [t.get_text() for t in fig.axes[0].get_yticklabels()]
         plt.close(fig)
-        self.assertEqual(etiquetas, ['P-#3-001 ×2.199'])
+        self.assertEqual(etiquetas, ['P-#3-001 ×2199'])
 
 
 class TrazabilidadTests(unittest.TestCase):
@@ -383,8 +384,8 @@ class TrazabilidadTests(unittest.TestCase):
         valores = dict(zip(filas['condicion'], filas['valor']))
         self.assertEqual(valores['Pérdida por corte'], 'Disco, 1 mm')
         self.assertEqual(valores['Mínimo reutilizable'], 'Automático: menor longitud demandada por diámetro')
-        self.assertEqual(valores['Mínimo reutilizable #3'], '1,2 m')
-        self.assertEqual(valores['Mínimo reutilizable #4'], '0,8 m')
+        self.assertEqual(valores['Mínimo reutilizable #3'], '1.2 m')
+        self.assertEqual(valores['Mínimo reutilizable #4'], '0.8 m')
         self.assertEqual(valores['Momento del descarte'], 'Inmediato, tras cada corte')
         self.assertEqual(valores['Pérdida efectiva aplicada'], '1 mm')
         referencias = dict(zip(filas['condicion'], filas['referencia'].fillna('')))
@@ -403,7 +404,7 @@ class TrazabilidadTests(unittest.TestCase):
         problem = normalize(ROWS, None, None, {'proceso': 'cizalla', 'modo_minimo': 'manual', 'minimo_m': '0.5'})
         valores = {r['condicion']: r['valor'] for r in parametros_rows(problem)}
         self.assertEqual(valores['Pérdida por corte'], 'Cizalla, 0 mm')
-        self.assertEqual(valores['Mínimo reutilizable'], 'Manual común: 0,5 m')
+        self.assertEqual(valores['Mínimo reutilizable'], 'Manual común: 0.5 m')
 
     def test_barras_sin_codigo_de_catalogo(self):
         self.assertEqual(list(self.sheets['Barras'].columns),

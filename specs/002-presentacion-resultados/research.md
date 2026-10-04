@@ -415,3 +415,22 @@ de patrones) retira R-10, reescribe R-11, ajusta R-14 y añade R-16 a R-19; el r
   - `locale` de Python: depende de los *locales* instalados en la imagen Alpine (R-05).
   - Mantener `type="number"`: el separador aceptado depende del navegador y del idioma del
     sistema (FR-034).
+
+### R-20, actualización por la enmienda 3 (2026-10-04): punto decimal y sin separador de miles
+
+- **Decision**: los mismos ayudantes cambian de separadores.
+  - Backend: `formato.numero` → `f'{valor:.{d}f}'`; `metros`, `_cifra` de `report.py` y
+    `patterns.secuencia_legible` dejan de reemplazar el punto. La secuencia queda como
+    «E1: 2×4.2 m + 1×3.5 m».
+  - Frontend: `decimal` → `toFixed(d)` sin agrupar; `entero` → sin separador; `numero` y `metros`
+    quitan los ceros finales con punto; `DecimalInput` muestra el valor con punto.
+  - Se mantienen: los decimales por tipo (FR-033), el espacio antes de la unidad, las entradas
+    que aceptan coma o punto (FR-034) y los datos nativos (FR-035).
+- **Rationale**: la decisión es del usuario, por coherencia con la plantilla USCO del documento de
+  tesis («decimales con punto, miles sin separador»; ver `.claude/context/CURRENT_STATE.md`).
+  Así, una cifra copiada de la app al documento no hay que reescribirla. Como cada lado tiene un
+  solo ayudante, el cambio se hace en unos pocos puntos.
+- **Alternatives considered**: mantener la coma de la enmienda 2. Se descarta porque la tesis y
+  la app quedarían con convenciones distintas.
+- **Riesgo declarado**: sin separador de miles, las cifras grandes son menos legibles
+  («151868.78 kg»). El usuario lo acepta en favor de la coherencia con la tesis.

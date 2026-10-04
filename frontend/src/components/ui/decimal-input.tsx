@@ -12,7 +12,8 @@ interface DecimalInputProps extends Omit<React.InputHTMLAttributes<HTMLInputElem
    onValue: (value: number) => void;
 }
 
-const mostrar = (value: number | null) => (value == null ? '' : String(value).replace('.', ','));
+// Se muestra con punto decimal (FR-032); al escribir se acepta coma o punto (FR-034).
+const mostrar = (value: number | null) => (value == null ? '' : String(value));
 
 function DecimalInput({ value, onValue, ...props }: DecimalInputProps) {
    const [texto, setTexto] = React.useState(() => mostrar(value));

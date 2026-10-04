@@ -29,7 +29,8 @@ Reorganizar y completar lo que ve el usuario en cuatro salidas, sin tocar el pla
   y `report.patrones_rows`.
 
 **Enmienda 2 (2026-10-04, formato numérico)**: un estándar único para todo lo que lee el usuario
-(FR-032 a FR-035; research R-20).
+(FR-032 a FR-035; research R-20). La **enmienda 3** lo fija en punto decimal y sin separador de
+miles, como la plantilla USCO de la tesis.
 
 - **Backend**: un módulo nuevo, `backend/cutting/formato.py`, reutilizado por `report.py` y
   `analysis.py`; solo cambia el texto del mensaje de error de dominio, no su cálculo.

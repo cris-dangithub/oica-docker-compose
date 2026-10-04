@@ -88,12 +88,10 @@ de A. Ver `DESIGN-DIRECTION.md` y ADR-UI-004.
 - **Teclado**: Enter abre el detalle y «Cerrar detalle» devuelve el foco a la fila.
 - Sin desbordamiento horizontal ni errores de consola.
 - Capturas fuera del repositorio (`tmp/qa-spec002/`).
-- **Coma decimal en toda la app** (decisión del usuario, 2026-10-04): el detalle del proyecto y
-  la lista `/archivos` usan coma decimal y punto de miles, con ayudantes `decimal`/`entero` en
-  `file-detail/types.ts`.
-  - QA con un `build` local detrás de un proxy hacia el stack: sin cifras con punto decimal, axe
-    en 0 violaciones y sin desbordamiento en 1440, 820 y 390 px.
-  - La imagen Docker del frontend aún no incluye este cambio.
+- **Formato numérico único** (spec 002, enmiendas 2 y 3, decisión del usuario): punto decimal, sin
+  separador de miles y espacio antes de la unidad en toda la app, como la plantilla USCO de la
+  tesis. Ver «Formato numérico» en `DESIGN-SYSTEM.md`.
+  - QA sobre el stack reconstruido: 6 pantallas en 1440, 820 y 390 px, 0 fallos y axe en 0.
 
 ### 2026-09-29 — inicio, tutorial y contacto migradas
 

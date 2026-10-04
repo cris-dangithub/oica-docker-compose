@@ -719,3 +719,35 @@ Task: "T018 [P] [US2] Tipos del explorador en frontend/src/components/file-detai
       encontró que el PDF mostraba la brecha sin signo; se corrigió y se probó.
     - **Regresión no ejecutada**: los cambios de `report.py` y `analysis.py` son solo de texto
       (formato de mensajes y etiquetas) y no tocan el plan ni sus métricas.
+
+---
+
+## Phase 10: Convergence
+
+<!-- Agregada por /speckit-converge (2026-10-04) para la enmienda 3 «separadores» (FR-032 reescrito; R-20, actualización). -->
+
+- [X] T056 Actualizar `backend/tests/test_report_presentacion.py` al formato con punto decimal y sin separador de miles, antes de cambiar el código (deben fallar): `numero`, `cobertura`, `formato.*`, el mensaje de dominio, `cabe_rotulo`, «Parámetros» y las repeticiones del PNG («×2199») per FR-032 (contradicts)
+- [X] T057 Aplicar punto decimal y sin separador de miles en el backend per FR-032 (contradicts):
+  - `backend/cutting/formato.py`: `numero` sin agrupar y con punto; `metros` con punto.
+  - `report.py`: `_cifra` sin reemplazar el punto; `cobertura` quita «.0».
+  - `patterns.secuencia_legible`: «E1: 2×4.2 m».
+- [X] T058 Aplicar punto decimal y sin separador de miles en el frontend per FR-032 y FR-033 (contradicts): `decimal` y `entero` en `frontend/src/components/file-detail/types.ts`, `numero` en `file-detail/patterns/filtros.ts` y `mostrar` en `components/ui/decimal-input.tsx`
+- [X] T059 Pasar a punto los textos estáticos de `frontend/src/app/page.tsx` y `frontend/src/components/tutorial/TutorialGuide.tsx` per FR-032 (contradicts)
+- [X] T060 Actualizar los ejemplos de formato en `specs/002-presentacion-resultados/quickstart.md`, `contracts/artefactos.md`, `contracts/api-patrones.md` y el escenario de la US3 en `spec.md` per FR-032 (partial)
+- [X] T061 Verificar SC-013 con la regla nueva (missing):
+  - Batería del backend.
+  - typecheck, lint y build.
+  - QA con Playwright de las 6 pantallas en 3 anchos: sin coma decimal, sin separador de miles y sin cifras pegadas a la unidad; axe sin violaciones; sin desbordamiento.
+  - Contraste de la 002 entre la pantalla, el PDF y «Resumen».
+  - Sin regresión de 148 registros, porque solo cambia texto; declararlo.
+  - *Hecho (2026-10-04)*, sobre el stack reconstruido con aprobación:
+    - Backend: 167 pruebas OK (primero en rojo con el formato nuevo).
+    - Frontend: typecheck, lint y build OK.
+    - QA de las 6 pantallas en 3 anchos: 70 comprobaciones, 0 fallos (sin coma decimal, sin
+      separador de miles, sin cifras pegadas a la unidad; axe en 0; sin desbordamiento).
+    - Entradas: «1,5» y «1.5» se aceptan y «1,5,2» muestra error.
+    - El PDF y los textos del Excel no tienen ninguna coma decimal («E5: 7×1.28 m», «0.37 m»).
+    - Con la 002: 8.86 %, 151868.78 kg, 7.596 % y +1.264 pp, iguales en la pantalla, el PDF y
+      «Resumen».
+    - Regresión no ejecutada: solo cambia texto. El proyecto de QA 55 y las imágenes anteriores
+      se retiraron.

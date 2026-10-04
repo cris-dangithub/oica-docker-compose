@@ -60,7 +60,7 @@ export default function Inicio() {
           </div>
           <p className="mt-1 text-xs text-content-muted">Barra #4 · 12 m</p>
           <div className="mt-5 flex h-12 overflow-hidden rounded-md border border-line-strong" role="img"
-            aria-label="Barra de 12 metros dividida en piezas de 4,2, 3,5 y 2,8 metros y un saldo reutilizable de 1,5 metros">
+            aria-label="Barra de 12 metros dividida en piezas de 4.2, 3.5 y 2.8 metros y un saldo reutilizable de 1.5 metros">
             {tramos.map((t, i) => (
               <div
                 key={i}
@@ -79,7 +79,7 @@ export default function Inicio() {
           <dl className="mt-5 grid grid-cols-3 gap-2">
             {[
               ['3', 'piezas'],
-              ['1,5 m', 'saldo reutilizable'],
+              ['1.5 m', 'saldo reutilizable'],
               ['0 m', 'descarte'],
             ].map(([valor, etiqueta]) => (
               <div key={etiqueta} className="flex flex-col rounded-md border border-line bg-surface-interactive p-3">

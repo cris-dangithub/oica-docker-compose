@@ -381,5 +381,10 @@ jurado.
   - Flujo: spec y diseño, `/speckit-converge` (T049 a T055) y `/speckit-implement`.
   - Verificación: 167 pruebas OK; QA de las 6 pantallas sin fallos; pantalla, PDF y «Resumen»
     coherentes.
-- [x] Commit y push a la rama del PR #7, por instrucción del usuario.
+- [x] Enmienda 3 (2026-10-04, decisión del usuario): punto decimal y sin separador de miles en toda
+  la app, por coherencia con la plantilla USCO.
+  - Flujo: spec y diseño, `/speckit-converge` (T056 a T061) y `/speckit-implement`.
+  - Stack reconstruido; QA de las 6 pantallas sin fallos.
+- [x] Commit y push a la rama del PR #7, y título y descripción del PR actualizados, por
+  instrucción del usuario.
 

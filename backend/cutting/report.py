@@ -47,7 +47,7 @@ def cobertura(mostrados, total_patrones, total_barras):
     """
     n, b = len(mostrados), sum(p['repeticiones'] for p in mostrados)
     pct = 100 * b / total_barras if total_barras else 0.0
-    porcentaje = numero(pct, 1).removesuffix(',0')
+    porcentaje = numero(pct, 1).removesuffix('.0')
     return {'n': n, 'm': total_patrones, 'b': b, 't': total_barras, 'pct': pct,
             'texto': f'Se muestran {numero(n, 0)} de {numero(total_patrones, 0)} patrones, que cubren '
                      f'{numero(b, 0)} de {numero(total_barras, 0)} barras ({porcentaje} %)'}
@@ -148,8 +148,8 @@ def trazabilidad_rows(problem, result, analisis):
 
 
 def _cifra(texto):
-    """'1.000' → '1'; '0.37' → '0,37' (parámetros guardados como texto decimal)."""
-    return format(Decimal(texto).normalize(), 'f').replace('.', ',')
+    """'1.000' → '1'; '0.370' → '0.37' (parámetros guardados como texto decimal)."""
+    return format(Decimal(texto).normalize(), 'f')
 
 
 def _referencia(ficha):

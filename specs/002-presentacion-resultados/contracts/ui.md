@@ -54,7 +54,7 @@ Reglas generales:
    - **Lista de patrones** (R-17):
      - Se pinta por tramos de 50, con «Mostrar más patrones (quedan K)».
      - Cada fila es un `<button aria-expanded aria-controls>` con `aria-label`, por ejemplo
-       «P-#4-001, barra #4 de 12 m, 230 repeticiones, aprovechamiento 99,2 %». Cuando hay un
+       «P-#4-001, barra #4 de 12 m, 230 repeticiones, aprovechamiento 99.20 %». Cuando hay un
        pedido filtrado, añade «, aporta P piezas del pedido X».
      - Contenido visible de la fila:
        - el identificador (mono);
@@ -90,13 +90,13 @@ Reglas generales:
 7. **Avisos de masa nominal NSR-10**: sin cambios.
 8. **Versiones**: sin cambios.
 
-## Formato numérico en toda la app (enmienda 2; FR-032 a FR-035; research R-20)
+## Formato numérico en toda la app (enmiendas 2 y 3; FR-032 a FR-035; research R-20)
 
 Aplica a todas las pantallas (`/`, `/subir-cartilla`, `/archivos`, `/archivos/[id]`, `/tutorial`
 y `/contact-us`).
 
-- **Presentación**: coma decimal, punto de miles desde 1.000 y espacio antes de la unidad
-  («8,86 %», «152.039,57 kg», «13.955 barras», «+1,264 pp»).
+- **Presentación** (enmienda 3): punto decimal, sin separador de miles y con un espacio antes de
+  la unidad («8.86 %», «152039.57 kg», «13955 barras», «+1.264 pp»).
 - **Decimales (FR-033)**:
   - porcentajes: 2;
   - cota y brecha: 3;
@@ -106,7 +106,7 @@ y `/contact-us`).
   - metros y mm: hasta 3, sin ceros finales;
   - segundos medidos: 1;
   - rangos estimados: enteros;
-  - conteos: enteros con punto de miles.
+  - conteos: enteros sin separador de miles.
 - **Ayudantes obligatorios**: `decimal`, `entero`, `pct`, `pp` y `kg` de
   `file-detail/types.ts`, y `numero` y `metros` de `file-detail/patterns/filtros.ts`. No se usan
   `toFixed` ni `toLocaleString` sueltos para texto visible.

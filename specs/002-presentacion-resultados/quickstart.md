@@ -63,7 +63,7 @@ Revisión manual:
 - **PDF**:
   - Encabezado con versión, perfil y fecha.
   - Compra con totales en la primera página.
-  - Cobertura de la tabla «136 de 136 patrones, 13.955 de 13.955 barras (100 %)» en la 002, y
+  - Cobertura de la tabla «136 de 136 patrones, 13955 de 13955 barras (100 %)» en la 002, y
     cobertura de las imágenes «60 de 136 patrones…».
   - Nesting en páginas de hasta 18 patrones, legible al imprimir en A4.
   - Coma decimal; datos técnicos al final.
@@ -125,7 +125,7 @@ en el §1, sin reconstruir.
    nada. Esperado: 0 diferencias.
 3. **Pantalla** `/archivos/<id>` de la versión de la 002:
    - La sección carga al hacer scroll hasta ella, no al abrir la página.
-   - La cobertura dice «Se muestran 136 de 136 patrones, que cubren 13.955 de 13.955 barras
+   - La cobertura dice «Se muestran 136 de 136 patrones, que cubren 13955 de 13955 barras
      (100 %)».
    - Filtrar solo por un pedido: cada fila muestra el aporte del pedido, y la suma de los aportes
      es igual a la cantidad del pedido en la cartilla (FR-027).
