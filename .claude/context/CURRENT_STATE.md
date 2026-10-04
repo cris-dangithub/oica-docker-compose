@@ -2,12 +2,15 @@
 
 ## Bloque L — Spec 002: presentación de resultados y explorador de patrones
 
-Rama `feat/spec-002-presentacion-resultados`, que ya integra `production` (cierre de la spec
-001). `.specify/feature.json` → `specs/002-presentacion-resultados` (local; si falta, usar
-`SPECIFY_FEATURE_DIRECTORY`).
+**Cerrada (2026-10-04).** El PR #7 se fusionó en `production` (`5b1e2d5`) y «Publicar
+producción» terminó con éxito.
+- Verificado en https://oica.cris-munoz.me: inicio 200, `GET /api/patrones/<uuid>` existe y las
+  cifras van con punto decimal.
+- La rama local `feat/spec-002-presentacion-resultados` se borró; la remota se conserva.
+- `.specify/feature.json` sigue apuntando a `specs/002-presentacion-resultados` (local).
 
-- **Estado** (2026-10-04): **implementada y validada, 48 de 48 tareas**, E2E incluido. Los
-  cambios están sin commit en la rama.
+- **Estado**: **implementada, validada y publicada**: 61 tareas (48 + las convergencias T049 a
+  T061).
 - **Stack local**: corre con las imágenes nuevas. Las anteriores se retiraron por ID, sin
   `prune`. C: quedó con unos 102 GB libres.
 - **Playwright**: hay Chromium headless en `~/.cache/ms-playwright` (266 MB) y `libgbm` y
@@ -65,6 +68,13 @@ Rama `feat/spec-002-presentacion-resultados`, que ya integra `production` (cierr
   registro del documento Word de la rama remota (`997d5ad`).
 - **Coherencia con la tesis**: la app usa el mismo formato que la plantilla USCO del documento Word
   (punto decimal, miles sin separador), así que las cifras se pueden citar sin reescribirlas.
+
+## Bloque M — Tesis tras la spec 002 (en curso)
+
+- Actualizar los capítulos 3 y 4 (salidas reorganizadas y explorador de patrones) y pasar las
+  cifras de los capítulos 1 a 4 a punto decimal y sin separador de miles.
+- `Tesis_F.docx` **no está en el disco** y su generador quedó en el scratchpad de otra sesión, sin
+  versionar. Hay que regenerarlo desde los `.md` actualizados.
 
 ## Documento Word de la tesis (`docs/tesis-doc/Tesis_F.docx`, 2026-10-03)
 

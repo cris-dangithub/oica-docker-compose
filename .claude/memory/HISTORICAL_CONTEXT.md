@@ -176,3 +176,30 @@ aprobadas.
 
 **Fuentes.** Verificadas: NSR-10 Tabla C.3.5.3-2 y las Res. 472/2017 y 1257/2021. Pendientes:
 INVIAS 640 e IDU (los portales oficiales exigen descarga desde navegador).
+
+## 2026-10-04 — Spec 002: presentación de resultados, explorador y formato numérico
+
+**Spec 002**, autora LizethGasca, enmendada por el usuario. Cerrada y en producción con el PR #7
+(`5b1e2d5`), sin cambiar el plan de `secuencial-2` ni el análisis (`analisis-1`).
+- **Salidas reorganizadas**:
+  - Excel de 13 hojas: «Resumen» primero, «Trazabilidad» al final, «Parámetros» legible, sin
+    «Metricas» ni `stock_id`.
+  - PDF con la compra primero y el nesting por páginas de 18 patrones.
+  - PNG a 200 dpi.
+- **Explorador de patrones** en `/archivos/[id]`, con una ruta de solo lectura
+  `GET /patrones/<uuid>` que reconstruye los patrones desde `resultados` sin ejecutar el AG. Se
+  retiró `analisis-2`.
+- **Validación**:
+  - regresión con 0 diferencias en 148 registros;
+  - SC-007, ratio 1.07;
+  - SC-009, 0.47 s;
+  - E2E y axe correctos sobre imágenes reconstruidas.
+
+**Cambio de dirección: formato numérico.** No había estándar.
+- La enmienda 2 fijó coma decimal y punto de miles.
+- Después, el usuario decidió **punto decimal y sin separador de miles** (enmienda 3), para
+  coincidir con la plantilla USCO del documento de tesis.
+- Rige en toda la app (pantallas, PDF, PNG, textos del Excel y mensajes). La API, el JSON y las
+  celdas numéricas del Excel siguen con números nativos.
+- Los capítulos `.md` de la tesis se pasan al mismo formato en el Bloque M.
+

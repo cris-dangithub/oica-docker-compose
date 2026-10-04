@@ -20,7 +20,8 @@
 | G | Corte secuencial, inventarios y caso 002 | Completado en localhost; cierre académico pendiente | ALTA |
 | J | Rediseño visual y Design System | Dirección B aprobada; implementación code-first autorizada | ALTA |
 | K | Alineación con el título fijo (spec 001) | ✅ Cerrada (2026-10-04): en producción; queda la redacción de fuentes pendientes | ALTA |
-| L | Presentación de resultados y explorador de patrones (spec 002) | ✅ Implementada y validada (48/48, E2E incluido); falta commit y PR | ALTA |
+| L | Presentación de resultados y explorador de patrones (spec 002) | ✅ Cerrada (2026-10-04): en producción con el PR #7 | ALTA |
+| M | Tesis tras la spec 002 (capítulos 3 y 4, cifras con punto decimal) | 🔄 En curso | ALTA |
 
 ---
 
@@ -387,4 +388,24 @@ jurado.
   - Stack reconstruido; QA de las 6 pantallas sin fallos.
 - [x] Commit y push a la rama del PR #7, y título y descripción del PR actualizados, por
   instrucción del usuario.
+- [x] PR #7 fusionado por el usuario en `production` (`5b1e2d5`, 2026-10-04). «Publicar
+  producción» terminó con éxito.
+  - Verificado en https://oica.cris-munoz.me: inicio 200, `GET /api/patrones/<uuid>` existe (404
+    con un uuid inexistente) y las cifras van con punto decimal.
+- [x] Cierre documental: la spec pasa a «Implementada y cerrada» (commit directo a `production`,
+  por instrucción del usuario).
+
+## Bloque M — Tesis tras la spec 002
+
+**Objetivo:** que el documento describa lo que la app ya hace y use el mismo formato numérico que
+la app y la plantilla USCO.
+
+- [ ] Cifras de los capítulos 1 a 4 a punto decimal y sin separador de miles. Los valores no
+  cambian; los números de sección, las normas y los años no se tocan.
+- [ ] Cap. 3: reescribir §3.8 (Excel de 13 hojas, PDF, PNG y formato numérico), corregir §3.9
+  «Dónde se presentan» (con el explorador de patrones) y añadir a §3.2 la ruta de solo lectura.
+- [ ] Cap. 4: nueva §4.11 con la validación de la spec 002 (regresión 0/148, SC-007, SC-009, E2E
+  y QA), y una aclaración de fecha en las «siete hojas» del Excel de 2026-09-13.
+- [ ] Regenerar `Tesis_F.docx` desde los `.md` actualizados. Su generador no se versionó.
+- [ ] RIESGO-AC-010 (borrador «Tesis final 1»): pendiente del autor.
 
