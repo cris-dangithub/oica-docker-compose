@@ -48,3 +48,26 @@
     PNG se lee en pantalla.
   - FR-014: fija el nuevo límite en 9 MP, que sigue sin depender del número de barras.
   Los 16 puntos siguen pasando.
+- Iteración 3 (2026-10-04, enmienda «explorador de patrones»):
+  - Nueva US2 (P2) y FR-024 a FR-031; FR-015 reescrito, FR-018 ampliado y FR-019 retirado (sin
+    renumerar, por trazabilidad); SC-009 a SC-012. Las historias anteriores 2–4 pasan a 3–5.
+  - Los requisitos nuevos hablan de una «consulta de solo lectura» y de los «datos que la versión ya
+    tiene guardados», sin nombrar rutas, tablas ni componentes: eso va en el plan.
+  - SC-009 (≤ 2 s) se mide en el entorno local de validación, porque la VPS no es el entorno de
+    prueba. Es una meta de experiencia, no de tecnología.
+  - La nota anterior sobre `analisis-2` queda superada: con la enmienda no hay versión nueva del
+    análisis.
+  - No quedan marcadores [NEEDS CLARIFICATION]; los puntos de diseño abiertos (escala, listas
+    largas de barras, orden por defecto) se tratan en `/speckit-clarify`. Los 16 puntos pasan.
+  - Tras `/speckit-clarify` (5 preguntas, 2026-10-04): se confirmó el retiro de `analisis-2`, la
+    escala común, los rangos de barras por tramos de 100, el orden del Excel con selector y el
+    filtro por pedido con sugerencias. Esto añadió FR-031 y SC-012. Los 16 puntos siguen pasando.
+- Iteración 4 (2026-10-04, tras `/speckit-analyze`): se corrigieron cinco hallazgos.
+  - C1, confidencialidad de los pedidos: nuevo supuesto en la spec, quickstart §7 punto 7 y T047.
+  - C2, planes no verificados: FR-030, contracts/api-patrones.md, T014 y T016.
+  - A1, suma de aportes por pedido: FR-027 y quickstart §7.
+  - E1, medición de SC-009 sin reconstruir: nueva T025; las tareas siguientes se renumeraron a
+    T026–T048.
+  - F1, lista por tramos: escenario 1 de la US2.
+
+  Los 16 puntos siguen pasando.

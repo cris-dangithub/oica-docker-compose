@@ -1,7 +1,8 @@
 # Research — Presentación de resultados (spec 002)
 
 No había marcadores [NEEDS CLARIFICATION] en el contexto técnico. Las decisiones siguientes
-resuelven los puntos de diseño que la spec deja abiertos. Se basan en el código vigente
+resuelven los puntos de diseño que la spec deja abiertos. La enmienda del 2026-10-04 (explorador
+de patrones) retira R-10, reescribe R-11, ajusta R-14 y añade R-16 a R-19; el resto sigue vigente. Se basan en el código vigente
 (`backend/cutting/report.py`, `analysis.py`, `patterns.py`, `celery_worker.py`,
 `scripts/verify_sequential_result.py`, `frontend/src/components/file-detail/`).
 
@@ -153,36 +154,41 @@ resuelven los puntos de diseño que la spec deja abiertos. Se basan en el códig
   - `ZoneInfo('America/Bogota')`: requiere `tzdata`, que podría faltar en la imagen.
   - Omitir la versión: el usuario pidió verla.
 
-## R-10 — `analisis-2`
+## R-10 — `analisis-2` *(retirada en la enmienda 2026-10-04)*
 
-- **Decision**:
-  - En `resumen_patrones`, añadir `secuencia: secuencia_legible(problem, p)` a cada patrón del
-    `top`.
-  - `VERSION_ANALISIS = 'analisis-2'`.
-  - Ningún otro cálculo cambia.
-  - Las pruebas que esperan `'analisis-1'` se actualizan.
-  - La regresión no se ve afectada, porque `IGNORED` excluye `analisis`.
-- **Rationale**: la pantalla necesita la secuencia, y no se puede derivar del resumen actual sin
-  volver a leer las barras. Versionar el cambio lo hace trazable (Principio III).
-- **Alternatives considered**: calcularla en el servidor al pedir el detalle. Obligaría a
-  reconstruir los patrones desde `resultados` en cada consulta, y las versiones históricas no
-  la tendrían de forma homogénea.
+- **Estado**: **retirada**. La sustituye R-16.
+- **Decisión original (2026-10-03)**: añadir `secuencia` al `top` de `resumen_patrones` y pasar a
+  `VERSION_ANALISIS = 'analisis-2'`. Se descartó la alternativa de «calcularla en el servidor al
+  pedir el detalle» porque obligaba a reconstruir los patrones en cada consulta y las versiones
+  históricas no la tendrían de forma homogénea.
+- **Por qué se retira**: el explorador (US2) necesita **todos** los patrones, con sus pedidos y
+  sus barras, no solo la secuencia de los 10 primeros. La reconstrucción desde `resultados`
+  cuesta unos 0,5 s con la cartilla 002 (R-18). Además, funciona igual con las versiones
+  `secuencial-2` ya procesadas, que es más homogéneo que `analisis-2`, el cual solo cubriría las
+  versiones nuevas. Con eso desaparecen las dos razones del descarte original.
+- **Consecuencia**: `analysis.py` no cambia, `VERSION_ANALISIS` sigue en `analisis-1` y las
+  pruebas que esperan `'analisis-1'` siguen igual.
 
-## R-11 — Sección «Patrones de corte» en pantalla
+## R-11 — Sección «Patrones de corte» en pantalla *(reescrita en la enmienda 2026-10-04)*
 
-- **Decision**: crear `PatternsSection.tsx`, que lee `version.analisis.patrones`
-  (`total`, `barras`, `top`).
-  - Tabla en escritorio y tarjetas en móvil, siguiendo el patrón de `PurchaseSummary`.
-  - Vista previa con `<img src={`${API_URL}/descargar-imagen/${storage_uuid}`} loading="lazy">`.
-    Las etiquetas `img` ignoran `Content-Disposition: attachment`, así que no hace falta un
-    endpoint nuevo.
-  - Si la imagen falla (`onError`), se muestra un aviso.
-  - Texto alternativo: «Nesting lineal de los N patrones más repetidos de M (B de T barras)».
-  - Si `secuencia` falta (`analisis-1`), la columna muestra «no disponible».
+- **Decision**: la sección se convierte en el **explorador de patrones**, en
+  `frontend/src/components/file-detail/patterns/` y montado en `FileDetail.tsx` entre
+  `PurchaseSummary` y `QualitySection`.
+  - Pide los datos al endpoint de R-16 (`contracts/api-patrones.md`) **solo cuando la sección
+    entra en pantalla o el usuario la abre**, no al cargar el detalle, para no penalizar a quien
+    no la usa.
+  - Filtros, orden y cobertura se calculan **en el navegador** sobre la respuesta, que es pequeña
+    (R-18). No hay más peticiones al filtrar.
+  - El dibujo sigue R-17; el detalle del patrón y los rangos de barras siguen R-18 y R-19.
+  - La imagen PNG **ya no** se muestra como vista previa. Su descarga sigue en los enlaces de
+    `VersionsTable.tsx` (`/descargar-imagen/<uuid>`).
   - Antes de implementar, leer `docs/oica-redesign/AI-DESIGN-RULES.md` y `STATE.md`.
-- **Rationale**: no cambia la API y reutiliza la imagen ya generada.
-- **Alternatives considered**: un endpoint de miniatura. Añade código de servidor y
-  almacenamiento sin necesidad.
+- **Rationale**: una sola fuente para la tabla, el dibujo y el detalle evita incoherencias entre
+  ellos. El PNG es una selección fija de 60 patrones y no sirve para explorar.
+- **Alternatives considered**:
+  - Mantener la tabla de los 10 más repetidos y la vista previa del PNG junto al explorador:
+    repite información (decisión del usuario, enmienda).
+  - Filtrar en el servidor: añade peticiones y latencia sin necesidad, con unos 136 patrones.
 
 ## R-12 — Totales de compra en pantalla
 
@@ -204,7 +210,9 @@ resuelven los puntos de diseño que la spec deja abiertos. Se basan en el códig
 
 - **Decision**:
   - Los artefactos solo se generan para versiones nuevas; los ya guardados no se regeneran.
-  - La pantalla trata como opcionales `analisis`, `patrones`, `top` y `secuencia`, y la imagen.
+  - La pantalla trata como opcionales `analisis` y sus partes.
+  - *(Enmienda)* El explorador no depende de `analisis`: reconstruye los patrones de cualquier
+    versión con `resultados` reconstruibles (R-16), y para las demás responde «no disponible».
 - **Rationale**: Principio III y FR-020.
 
 ## R-15 — Medición de SC-007
@@ -215,3 +223,149 @@ resuelven los puntos de diseño que la spec deja abiertos. Se basan en el códig
   las medianas del total. El resultado se guarda en un JSON nuevo en `tests/benchmarks/`
   (sin sobrescribir).
 - **Rationale**: es el mismo arnés y la misma configuración que la línea base declarada en la spec.
+
+## R-16 — Fuente de datos del explorador: reconstrucción desde `resultados` *(enmienda)*
+
+- **Decision**: crear un módulo puro `backend/cutting/vista_patrones.py`, que no toca la base ni
+  los archivos.
+  - `barras_desde_resultados(resultados, escala)` rehace las barras del motor a partir de
+    `ProcessingResult.resultados`, que escribe `legacy_patterns` (`report.py:14`). Usa estos
+    campos:
+    - `bar_id`, `diametro` y `origen`.
+    - `cuts` = `trazabilidad_cortes`: enteros escalados con `row_id`, `pedido`, `grupo`,
+      `longitud` y `cantidad`.
+    - `discard_events` = `descartes_fin_etapa`.
+    - `longitud`, `kerf`, `discarded` y `remaining` = `round(valor_m × escala)` de
+      `barra_origen_longitud`, `perdida_corte_m`, `descartado_m` y `desperdicio_resultante`.
+    - La escala es `metricas.escala_longitudes` (1000 en las versiones actuales).
+  - Si falta la escala o algún registro no trae `trazabilidad_cortes` (motor histórico o
+    `secuencial-1`), devuelve `None` y la vista responde `disponible: false`.
+  - `vista(resultados, metricas)` llama a `patterns.agrupar` y a `report.patrones_rows`, el mismo
+    código que genera la hoja «Patrones». Así, los identificadores, las repeticiones, la
+    secuencia, el aprovechamiento, la pérdida, el descarte y el saldo coinciden por construcción
+    (FR-025, SC-010). Luego añade las piezas con sus pedidos (R-19) y los rangos de barras (R-18).
+  - **Comprobaciones** antes de responder. Si alguna falla, se lanza un error de dominio y la
+    ruta responde 500 con «Patrones inconsistentes».
+    - `Σ repeticiones = número de registros de resultados`.
+    - Si la versión tiene `analisis.patrones`, coinciden `total`, `barras` y los `patron_id` con
+      las repeticiones del `top`.
+- **Evidencia** (medición exploratoria de solo lectura en el stack local, 2026-10-04, sin escribir
+  nada):
+  - Versión `secuencial-2` de la cartilla 002: 13.955 barras → **136 patrones**, como en la
+    línea base.
+  - Su segunda versión: 13.511 barras y 133 patrones.
+  - Cartilla pequeña: 35 barras y 13 patrones.
+  - Las versiones `secuencial-1` y las del motor histórico no traen `trazabilidad_cortes`:
+    quedan como «no disponible».
+  - Las versiones locales son anteriores a la spec 001 (sin `analisis`), así que la comprobación
+    contra el `top` se valida en las pruebas, no en esta medición.
+- **Rationale**:
+  - Sin migraciones, sin volver a ejecutar el AG (Principio III) y sin regenerar artefactos.
+  - Cubre también las versiones `secuencial-2` ya procesadas.
+  - El redondeo `round(x × escala)` recupera los enteros exactos, porque los valores se
+    guardaron como `entero / escala`.
+- **Alternatives considered**:
+  - Guardar un `patrones.json` por versión al generar los artefactos: solo cubre las versiones
+    nuevas y añade un archivo más.
+  - Guardar todos los patrones en `metricas.analisis`: hace crecer el JSONB, y
+    `analysis.patrones_de` documenta que la lista completa no se guarda.
+  - Volver a ejecutar `normalize` con `cartilla`: es innecesario, porque las barras ya traen la
+    demanda atendida.
+
+## R-17 — Dibujo y accesibilidad del explorador *(enmienda)*
+
+- **Decision**:
+  - **Sin librerías.** Cada patrón se dibuja como una fila con tramos HTML (`div` en flex con
+    ancho en %), el mismo recurso del diagrama de `frontend/src/app/page.tsx`. Para unos 136
+    patrones con unos 10 tramos cada uno son unos 1.500 nodos.
+  - **Escala común** (aclaración): `ancho = longitud / escala_m`, donde `escala_m` es la barra
+    más larga del plan, enviada por el endpoint. La escala no cambia al filtrar.
+  - **Contenido de cada fila**: las piezas en orden de corte, con una separación de 1 px que
+    representa la pérdida por corte (1 mm en 12 m no se vería a escala). Después, un tramo de
+    descarte y otro de saldo.
+  - **Rótulos**: la medida va dentro de la pieza solo si su ancho calculado en px supera el del
+    texto; un `ResizeObserver` sobre el contenedor da el ancho.
+  - **Colores**: no hay una paleta categórica de etapas en el sistema visual (los tokens `data/*`
+    son `primary`, `efficient`, `warning`, `grid` y `remaining-material`).
+    - Se añaden los tokens semánticos `color/data/stage-1` … `stage-6`, alias de primitivos
+      existentes (cobalto, teal, ámbar y neutral), que se repiten en ciclo a partir de la
+      etapa 7.
+    - Se registran en `docs/oica-redesign/DESIGN-SYSTEM.md` (reglas 1, 5 y 13).
+    - El descarte usa `status/error` y el saldo, `data/remaining-material`.
+    - El color nunca es el único canal: la leyenda, el `aria-label` de la fila y el detalle
+      nombran la etapa como «E1», «E2»….
+  - **Interacción** (reglas 6 a 8): cada fila es un `<button aria-expanded aria-controls>` con
+    `aria-label`, por ejemplo «P-#4-001, barra de 12 m, 230 repeticiones, aprovechamiento
+    97,5 %». Al activarlo con Enter o Espacio, el detalle se despliega debajo, en el mismo lugar
+    en escritorio y en móvil. Hay **una parada de tabulación por patrón**, no una por pieza.
+  - El dibujo lleva `aria-hidden`: su información está en el `aria-label` y en el detalle. Un
+    tooltip al pasar el ratón sobre una pieza es solo una mejora, nunca la única vía.
+  - **Móvil** (reglas 9 y 10): la fila se recompone. El identificador y las repeticiones van
+    arriba y la barra ocupa todo el ancho debajo, sin tablas ni desplazamiento horizontal.
+  - **Filtros**: los controles de `components/ui/form-controls.tsx`. Diámetro, etapa y origen
+    son `select`. El pedido es un `input` con `<datalist>` que sugiere los pedidos de la versión
+    (aclaración).
+  - El orden se elige con un `select` (aclaración): «Como el Excel», «Repeticiones»,
+    «Aprovechamiento» o «Saldo».
+- **Rationale**: el patrón ya existe en el proyecto, sin dependencias nuevas que obliguen a
+  reconstruir la imagen del frontend con más paquetes, y con un modelo de teclado simple y
+  verificable con axe.
+- **Alternatives considered**:
+  - SVG por fila: obliga a medir el texto a mano y no aporta nada para rectángulos alineados.
+  - Recharts o d3: dependencias nuevas sin necesidad (constitución, Principio VI).
+  - Un panel lateral fijo para el detalle: no se recompone bien en móvil.
+
+## R-18 — Rendimiento, tamaño de la respuesta y caché *(enmienda)*
+
+- **Decision**:
+  - **Servidor**:
+    - La ruta carga solo `resultados` y `metricas` de la versión (`load_only`), sin `cartilla`.
+    - Responde un JSON compacto: sin listas por pieza ni por barra; las barras van agrupadas en
+      **rangos** de identificadores consecutivos.
+    - Caché en memoria de proceso, `functools.lru_cache(maxsize=8)`, con clave `storage_uuid`:
+      una versión guardada no cambia, así que la caché no puede quedar obsoleta.
+  - **Navegador**:
+    - Una sola petición por versión, diferida (R-11).
+    - Filtros y orden en memoria.
+    - La lista de patrones se pinta por tramos de 50 con «Mostrar más patrones».
+    - Los rangos de barras del detalle se pintan por tramos de 100 con «Ver más» (aclaración,
+      FR-028).
+- **Evidencia** (misma medición de R-16, versión de la 002, en el contenedor del backend):
+  - Lectura de `resultados` (12,5 MB de JSON) desde PostgreSQL: **0,33 s** (3 repeticiones).
+  - `agrupar`: 0,05–0,13 s.
+  - Pedidos por pieza: 0,01–0,02 s.
+  - Total: unos 0,5 s, por debajo de los 2 s de SC-009.
+  - Las 13.955 barras se agrupan en **145 rangos**; hay 275 pares pieza-pedido y 137 pedidos.
+    La respuesta estimada es de decenas de KB.
+- **Riesgo declarado**: el backend corre con gevent y el `json.loads` de 12,5 MB ocupa la CPU
+  unos 0,3 s, tiempo en el que no atiende otras peticiones. Para una app de un solo usuario
+  activo es aceptable, y la caché lo evita en las consultas repetidas. Si la VPS mostrara
+  bloqueos, la alternativa es precalcular la vista en el worker (fuera de alcance).
+- **Alternatives considered**:
+  - Redis como caché: más piezas para unos 0,5 s.
+  - Virtualizar la lista: innecesario con tramos de 50 y unos 10 nodos por fila.
+  - Paginar en el servidor: complica los filtros combinados sin ganar nada con unos 136
+    patrones.
+
+## R-19 — Pedidos por pieza del patrón *(enmienda)*
+
+- **Decision**:
+  - Dentro de un patrón, todas sus barras comparten la misma secuencia de cortes, porque
+    `clave()` incluye `(grupo, longitud, cantidad)` en orden. Así, el corte *i* de cada barra
+    corresponde a la pieza *i* del patrón.
+  - Por cada pieza *i* se suman, en todas las barras del patrón,
+    `cuts[i].cantidad` por `cuts[i].pedido`. El resultado es una lista `pedidos` de la forma
+    `[{pedido, piezas}]`, ordenada por pedido.
+  - El índice global de pedidos de la versión, `[{pedido, piezas}]`, se obtiene igual sobre
+    todas las barras.
+  - Con un pedido filtrado, el aporte de un patrón es la suma de `piezas` de ese pedido en sus
+    piezas (FR-027).
+- **Invariantes** (se prueban):
+  - Para cada pieza *i*, `Σ pedidos.piezas = cantidad × repeticiones`.
+  - Para cada pedido, `Σ aportes de los patrones = piezas del índice = Σ Cantidad` de las filas
+    de la cartilla con ese «N° Orden».
+- **Rationale**: los pedidos ya viajan en cada corte (`optimizer.py:131`, `physical.py:117`). La
+  agrupación los pierde (`patterns.py:13`) y aquí solo se recuperan, sin cambiar la identidad
+  del patrón.
+- **Alternatives considered**: incluir el pedido en la clave del patrón. Cambiaría los
+  identificadores y la hoja «Patrones», y rompería la coherencia con la línea base de la spec 001.

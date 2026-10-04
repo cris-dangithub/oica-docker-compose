@@ -1,4 +1,38 @@
-# Estado actual — 2026-10-02
+# Estado actual — 2026-10-04
+
+## Bloque L — Spec 002: presentación de resultados y explorador de patrones
+
+Rama `feat/spec-002-presentacion-resultados`, que ya integra `production` (cierre de la spec
+001). `.specify/feature.json` → `specs/002-presentacion-resultados` (local; si falta, usar
+`SPECIFY_FEATURE_DIRECTORY`).
+
+- **Estado**: especificada, enmendada (2026-10-04) y analizada. **Ninguna tarea implementada**
+  (0/48).
+- **Alcance**:
+  - Excel con «Resumen», totales y «Trazabilidad».
+  - PDF con la compra primero y el nesting por páginas.
+  - PNG legible.
+  - En la web, un **explorador interactivo de todos los patrones**: escala común, filtros por
+    diámetro, etapa, origen y pedido, y detalle con pedidos y rangos de barras.
+  - Totales de compra en pantalla y sin la tarjeta de cota simple.
+- **Decisiones de la enmienda**:
+  - se retira `analisis-2`: el análisis sigue en `analisis-1`;
+  - una única ruta nueva de solo lectura, `GET /patrones/<storage_uuid>`, que reconstruye los
+    patrones desde `ProcessingResult.resultados` con `patterns.agrupar` y
+    `report.patrones_rows`, sin ejecutar el AG;
+  - si el plan no consta como verificado, responde «no disponible»;
+  - el chequeo de taller queda fuera de alcance.
+- **Medición exploratoria** (solo lectura, stack local): la versión de la 002 da 136 patrones y
+  13.955 barras en unos 0,5 s (lectura 0,33 s + agrupación 0,13 s), con 145 rangos de barras y
+  137 pedidos. Las versiones `secuencial-1` y del motor histórico no son reconstruibles («no
+  disponible»).
+- **Riesgos declarados**:
+  - el `json.loads` de unos 12,5 MB bloquea gevent unos 0,3 s (mitigado con una LRU por uuid);
+  - los pedidos de 001 y 002 se muestran en la web: la demostración debe usar datos
+    anonimizados (constitución, Principio V).
+- **Siguiente paso**: `/speckit-implement` empezando por la US1 (MVP). Para el E2E hay que
+  reconstruir imágenes, lo que requiere aprobación y una estimación de espacio en C:.
+
 
 ## Bloque K — Alineación con el título fijo de la tesis (spec 001)
 

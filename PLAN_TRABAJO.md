@@ -20,6 +20,7 @@
 | G | Corte secuencial, inventarios y caso 002 | Completado en localhost; cierre académico pendiente | ALTA |
 | J | Rediseño visual y Design System | Dirección B aprobada; implementación code-first autorizada | ALTA |
 | K | Alineación con el título fijo (spec 001) | ✅ Cerrada (2026-10-04): en producción; queda la redacción de fuentes pendientes | ALTA |
+| L | Presentación de resultados y explorador de patrones (spec 002) | 📝 Especificada y enmendada (2026-10-04); implementación pendiente | ALTA |
 
 ---
 
@@ -333,3 +334,35 @@ fijo, sin alterar el plan de `secuencial-2` (constitución v1.0.0).
 - [ ] Revisión del director (objetivos); verificar IDU y la fuente de «nesting lineal».
 
 **Pendiente del usuario o el director:** datos de compra reales para OE5 (RIESGO-AC-009).
+
+## Bloque L — Presentación de resultados y explorador de patrones (spec 002)
+
+**Objetivo:** reorganizar lo que ve el usuario (Excel, PDF e imagen) y mostrar en la web
+**todos** los patrones de corte del proyecto de forma interactiva, sin alterar el plan de
+`secuencial-2`. Así se respaldan «patrones de corte» y «nesting» del título ante el taller y el
+jurado.
+
+- [x] Especificación, plan, research, data-model, contratos, quickstart y tareas de la spec 002
+  (2026-10-03, autora LizethGasca; rama `feat/spec-002-presentacion-resultados`).
+- [x] Enmienda del 2026-10-04 aprobada por el usuario:
+  - el explorador interactivo de todos los patrones sustituye la sección estática de los diez
+    más repetidos;
+  - solo visualización: el chequeo de taller queda fuera;
+  - prioridad P2.
+- [x] `/speckit-clarify` (5 preguntas), con estas decisiones:
+  - se retira `analisis-2`;
+  - escala común;
+  - rangos de barras por tramos de 100;
+  - orden del Excel con selector;
+  - filtro por pedido con sugerencias.
+- [x] `/speckit-plan`: R-16 a R-19 y la ruta de solo lectura `GET /patrones/<uuid>`, que
+  reconstruye los patrones desde `resultados` sin ejecutar el AG. La medición exploratoria da
+  unos 0,5 s para la 002 (136 patrones y 13.955 barras).
+- [x] `/speckit-tasks` (48 tareas) y `/speckit-analyze`, con 5 hallazgos corregidos:
+  confidencialidad de pedidos, planes no verificados, suma por pedido, medición sin reconstruir
+  y lista por tramos.
+- [x] Integración de `production` (cierre de la spec 001) en la rama de la spec 002.
+- [ ] `/speckit-implement`, por fases: US1 compra (MVP) → US2 explorador → US3 nesting de
+  archivos → US4 totales y calidad en la web → US5 trazabilidad.
+- [ ] E2E con reconstrucción de imágenes, solo con aprobación y una estimación de espacio en C:.
+

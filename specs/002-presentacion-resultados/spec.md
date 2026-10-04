@@ -1,12 +1,24 @@
 # Feature Specification: Presentación de resultados para el usuario
 
-**Feature Branch**: `002-presentacion-resultados` (sin hook de ramas; rama de trabajo actual `production`)
+**Feature Branch**: `feat/spec-002-presentacion-resultados` (sin hook de ramas)
 
-**Created**: 2026-10-03
+**Created**: 2026-10-03 · **Amended**: 2026-10-04
 
-**Status**: Draft
+**Status**: Draft (enmendada el 2026-10-04: explorador interactivo de patrones)
 
 **Input**: User description: "Mejorar la presentación de los resultados que la aplicación muestra al usuario (Excel, PDF, imagen de nesting y pantalla de detalle), sin alterar el plan de corte ni el formato del inventario final reimportable. Decisiones aprobadas por el usuario el 2026-10-03: (1) Excel: nueva hoja «Resumen» al inicio con indicadores legibles (indicador, valor, unidad) y una tabla «Totales de compra» por diámetro y total general (la hoja «Resumen de compra» queda sin filas de total para no romper el auditor); nueva hoja «Trazabilidad» con los datos técnicos (valido, escala, motor, huella, semilla, perfil, método, tiempos, versión del análisis, cota ajustada); se elimina «Metricas»; orden de hojas: Resumen, Resumen de compra, Patrones, Cortes, Barras, Descartados, Admisibilidad, Cota, Avisos, Inventario, Inventario excluido, Parámetros, Trazabilidad; se quita stock_id de Barras; parámetros en formato legible; barras_minimas renombrada a barras mínimas teóricas de la cota simple. (2) PDF: nuevo orden (encabezado con proyecto, versión, perfil y fecha; plan verificado; indicadores clave; resumen de compra con totales; patrones con la imagen de nesting incrustada y una línea de cobertura «se muestran N de M patrones que cubren B de T barras»; desperdicio y admisibilidad por diámetro; calidad con cota y brecha; avisos; datos técnicos legibles al final), coma decimal y menos decimales. El límite de 150 es de patrones, no de barras. (3) Imagen: longitud escrita sobre cada pieza cuando cabe, leyenda de etapas y de pérdida/descarte/reutilizable, 200 dpi, se mantiene el tope de 60 patrones y se informa la cobertura de barras. (4) Pantalla: nueva sección «Patrones de corte» con los 10 más repetidos (incluida su secuencia por etapa) y vista previa de la imagen; totales en el resumen de compra (compra separada del inventario adicional); se quita la tarjeta «cota simple» de la pantalla. El resumen persistido de patrones debe incluir la secuencia, con nueva versión del análisis (analisis-2); las versiones históricas muestran «no disponible» donde falte un dato y sus artefactos no se modifican. Los 136 ensayos y 12 controles deben seguir con 0 diferencias."
+
+**Enmienda 2026-10-04** (decisiones aprobadas por el usuario el 2026-10-04): "Incluir en la
+pantalla de detalle un explorador interactivo con **todos** los patrones de corte de la versión
+(por ejemplo, los 136 de la cartilla 002), dibujados pieza por pieza, con filtros (diámetro,
+etapa, origen y pedido) y un detalle por patrón: secuencia, longitud de cada pieza, pedidos que
+atiende, repeticiones y barras que lo usan. (1) Se enmienda esta spec; no se crea otra. La
+sección estática de los diez más repetidos con la vista previa de la imagen se **sustituye** por
+el explorador. (2) Alcance: solo visualización, sin guardar estado; el chequeo de taller (marcar
+patrones cortados) queda fuera. (3) Prioridad P2: después de la compra e indicadores (P1) y antes
+del nesting de los archivos, de la compra en pantalla y de la trazabilidad." Consecuencia,
+confirmada en las aclaraciones: la versión `analisis-2` se retira, porque el explorador obtiene
+la secuencia de los datos ya guardados de cada versión (FR-019 queda retirado).
 
 ## Contexto
 
@@ -26,6 +38,9 @@ resultados existen, pero se presentan pensando en quien los programó y no en qu
 - En la pantalla, los patrones de corte (término del título de la tesis) solo están disponibles
   como descarga, la compra no tiene totales y la «cota simple» muestra un valor (0,0069 % en la
   cartilla 002) que desconcierta a quien no conoce el concepto.
+- Ninguna salida permite **explorar** los patrones: el Excel los lista, el PDF y la imagen
+  muestran una selección fija, y no hay forma de preguntar qué patrones atienden un pedido, qué
+  barras usan un patrón o cómo se reparten por diámetro y etapa (enmienda 2026-10-04).
 
 Esta funcionalidad reorganiza y completa esa presentación. **No cambia el plan de corte**: el
 algoritmo genético, sus métricas y los 136 ensayos y 12 controles de la línea base siguen igual.
@@ -39,7 +54,28 @@ Actores:
   admisible.
 - **Taller de corte**: necesita leer los patrones y las medidas de cada pieza.
 - **Autor de la tesis y jurado**: necesitan trazabilidad (versión, semilla, huella, parámetros) y
-  ver en la aplicación web los términos del título.
+  ver en la aplicación web los términos del título. En la sustentación, el autor recorre en vivo
+  los patrones del proyecto real.
+
+## Clarifications
+
+### Session 2026-10-04
+
+- Q: ¿Se retira `analisis-2`, de modo que el análisis guardado no cambie y el explorador obtenga
+  la secuencia de los datos ya guardados? → A: Sí. Se retira `analisis-2` y el análisis
+  conserva su versión vigente (FR-019 retirado; FR-025).
+- Q: ¿Con qué escala se dibujan los patrones en el explorador? → A: Escala común para todos: la
+  barra más larga del plan ocupa el 100 % del ancho, y la escala no cambia al filtrar (FR-026).
+- Q: ¿Cómo se muestran las barras de un patrón que se repite cientos o miles de veces? → A: Total
+  siempre visible, identificadores agrupados en rangos consecutivos y presentados por tramos de
+  100 con «Ver más». La pantalla nunca dibuja ni carga de una vez todos los identificadores de un
+  patrón grande, para no afectar el rendimiento del navegador (FR-028, SC-012).
+- Q: ¿En qué orden aparecen los patrones al abrir el explorador? → A: Por defecto, el orden del
+  Excel (diámetro y, dentro de cada uno, repeticiones de mayor a menor). Un selector permite
+  ordenar por repeticiones, aprovechamiento o saldo (FR-031).
+- Q: ¿Cómo funciona el filtro por pedido? → A: Es un campo de búsqueda con sugerencias de los
+  pedidos que existen en la versión. Se elige un pedido a la vez, y cada patrón mostrado indica
+  cuántas piezas de ese pedido aporta (FR-027).
 
 ## User Scenarios & Testing *(mandatory)*
 
@@ -75,7 +111,62 @@ indicadores clave y el resumen de compra con totales.
 
 ---
 
-### User Story 2 - Leer los patrones de corte y sus medidas para el taller (Priority: P2)
+### User Story 2 - Explorar todos los patrones de corte en la aplicación web (Priority: P2)
+
+<!-- Nueva en la enmienda 2026-10-04. Sustituye la sección estática de patrones de la antigua US3. -->
+
+El usuario abre el detalle de una versión y, en la sección «Patrones de corte», ve **todos** los
+patrones del plan dibujados como barras: cada pieza con el color de su etapa, y la pérdida por
+corte, el descarte y el saldo reutilizable al final. Puede filtrar por diámetro, etapa, origen
+(compra o inventario adicional) y pedido. Al seleccionar un patrón, con el ratón o con el
+teclado, ve su detalle: la secuencia por etapa, la longitud de cada pieza y los pedidos que
+atiende (con cuántas piezas de cada uno), las repeticiones, el aprovechamiento, las barras que lo
+usan y el desglose de pérdida, descarte y saldo.
+
+**Why this priority**: es la forma más directa de mostrar «nesting» y «patrones de corte» (dos
+términos del título) sobre el proyecto real, tanto al taller como al jurado en la sustentación.
+Responde preguntas que ninguna salida fija responde, como qué patrones atienden un pedido. Solo
+necesita los datos que cada versión ya guarda, sin volver a ejecutar el algoritmo.
+
+**Independent Test**: abrir el detalle de una versión de la cartilla 002 y comprobar que el
+explorador muestra 136 patrones y 13.955 barras. Filtrar por un diámetro y por un pedido, y
+comprobar la línea «N de M patrones, B de T barras». Seleccionar un patrón con el teclado y
+contrastar su identificador, sus repeticiones y su secuencia con la hoja «Patrones» del Excel de
+esa misma versión.
+
+**Acceptance Scenarios**:
+
+1. **Given** una versión con plan guardado, **When** se abre su detalle, **Then** la sección
+   «Patrones de corte», entre el resumen de compra y la calidad del plan, muestra el total de
+   patrones y de barras. Todos los patrones están disponibles en la lista, dibujados a escala con
+   su identificador (`P-<diámetro>-<nnn>`) y sus repeticiones, y se pintan por tramos con
+   «Mostrar más patrones» para no cargar la pantalla.
+2. **Given** el explorador, **When** se aplica un filtro por diámetro, etapa, origen o pedido,
+   **Then** solo quedan los patrones que cumplen todos los filtros activos, y la línea de
+   cobertura indica cuántos patrones y barras se muestran frente al total. Un filtro sin
+   resultados muestra un mensaje claro, no una lista vacía.
+3. **Given** un patrón, **When** se selecciona con el ratón o con el teclado, **Then** el detalle
+   muestra su secuencia por etapa, la longitud de cada pieza, los pedidos que atiende con su
+   cantidad de piezas, las repeticiones, el aprovechamiento, la pérdida por corte, el descarte, el
+   saldo y los identificadores de las barras que lo usan.
+4. **Given** cualquier versión, **When** se comparan el explorador y la hoja «Patrones» del Excel
+   de esa versión, **Then** coinciden los identificadores, las repeticiones y las secuencias, y la
+   suma de repeticiones es igual al número de barras del plan.
+5. **Given** un teléfono, **When** se abre el explorador, **Then** los patrones se presentan como
+   una lista legible, sin desplazamiento horizontal de la página, y el detalle se puede abrir y
+   cerrar con el teclado y con un lector de pantalla.
+6. **Given** una versión sin plan guardado que se pueda reconstruir (por ejemplo, del motor
+   histórico), **When** se abre su detalle, **Then** la sección indica «Patrones: no disponible
+   para esta versión» y el resto de la página funciona.
+7. **Given** el explorador, **When** se busca la imagen de nesting, **Then** sigue disponible su
+   descarga, aunque la pantalla ya no la muestre como vista previa.
+
+---
+
+### User Story 3 - Leer los patrones de corte y sus medidas para el taller (Priority: P3)
+
+<!-- Antes US2 (P2); renumerada en la enmienda 2026-10-04 sin cambios de fondo. -->
+
 
 El taller abre el PDF o la imagen y ve los patrones más repetidos dibujados pieza por pieza, con
 la longitud escrita sobre cada pieza cuando cabe, una leyenda de qué color corresponde a cada
@@ -108,45 +199,37 @@ cobertura con menos del 100 % de los patrones (60 de 136).
 
 ---
 
-### User Story 3 - Ver patrones y totales de compra en la aplicación web (Priority: P3)
+### User Story 4 - Ver los totales de compra y la calidad del plan en la aplicación web (Priority: P4)
 
-El usuario abre el detalle de una versión en la aplicación web y encuentra una sección «Patrones
-de corte» con el total de patrones y barras, los diez patrones más repetidos con su secuencia por
-etapa, y una vista previa de la imagen. El resumen de compra muestra totales por diámetro y total
-general, separando lo que se compra de lo que se toma del inventario. La sección de calidad
+<!-- Antes US3 (P3). En la enmienda 2026-10-04, la sección de patrones pasó a la US2 (explorador). -->
+
+El usuario abre el detalle de una versión y el resumen de compra muestra totales por diámetro y
+total general, separando lo que se compra de lo que se toma del inventario. La sección de calidad
 presenta la cota por patrones y la brecha, sin la tarjeta de «cota simple».
 
-**Why this priority**: hace visibles en la web los términos «patrones de corte» y «nesting» del
-título, y completa la compra en pantalla. Depende de que el resumen guardado incluya la secuencia
-de cada patrón.
+**Why this priority**: completa en pantalla la compra (objetivo específico 1) y evita una cifra
+que confunde. Es un cambio pequeño e independiente del explorador.
 
-**Independent Test**: procesar la cartilla 001 y abrir su detalle: comprobar la sección de
-patrones con su tabla y su imagen, los totales de compra y la ausencia de la tarjeta de cota
-simple. Abrir una versión procesada antes de esta funcionalidad y comprobar que todo se muestra
-sin errores, con «no disponible» donde falte un dato.
+**Independent Test**: procesar la cartilla 001 y abrir su detalle: comprobar los totales de
+compra y la ausencia de la tarjeta de cota simple. Abrir una versión procesada antes de esta
+funcionalidad y comprobar que todo se muestra sin errores, con «no disponible» donde falte un
+dato.
 
 **Acceptance Scenarios**:
 
-1. **Given** una versión nueva, **When** se abre su detalle, **Then** aparece la sección «Patrones
-   de corte» entre el resumen de compra y la calidad del plan, con el total de patrones y barras,
-   la tabla de los diez más repetidos (patrón, diámetro, barra, secuencia por etapa, repeticiones,
-   aprovechamiento) y la vista previa de la imagen con un texto alternativo descriptivo.
-2. **Given** el resumen de compra en pantalla, **When** se lee, **Then** incluye el total por
+1. **Given** el resumen de compra en pantalla, **When** se lee, **Then** incluye el total por
    diámetro y el total general de lo comprado, y las barras del inventario adicional aparecen
    aparte.
-3. **Given** la sección de calidad, **When** se lee, **Then** muestra la cota por patrones y la
+2. **Given** la sección de calidad, **When** se lee, **Then** muestra la cota por patrones y la
    brecha. La cota simple solo aparece como una frase explicativa, no como una cifra destacada.
-4. **Given** una versión procesada con la versión anterior del análisis, **When** se abre su
-   detalle, **Then** la secuencia de los patrones aparece como «no disponible» y el resto de la
-   página funciona.
-5. **Given** una versión sin imagen, **When** se abre su detalle, **Then** la vista previa se
-   sustituye por un aviso y la tabla de patrones sigue visible.
-6. **Given** la pantalla en un teléfono, **When** se abre el detalle, **Then** la tabla de
-   patrones se presenta como tarjetas legibles, sin desplazamiento horizontal de la página.
+3. **Given** la pantalla en un teléfono, **When** se abre el detalle, **Then** los totales de
+   compra se leen sin desplazamiento horizontal de la página.
 
 ---
 
-### User Story 4 - Conservar la trazabilidad técnica y la compatibilidad (Priority: P4)
+### User Story 5 - Conservar la trazabilidad técnica y la compatibilidad (Priority: P5)
+
+<!-- Antes US4 (P4); renumerada en la enmienda 2026-10-04 sin cambios de fondo. -->
 
 El autor y el jurado encuentran en una hoja «Trazabilidad» y en la sección final del PDF los datos
 técnicos que permiten reproducir el resultado (versión del motor y del análisis, huella de la
@@ -195,10 +278,21 @@ versión nueva y una histórica; reimportar el inventario final de una versión 
 - Cota no disponible o no ajustada: el resumen y el PDF lo indican con su motivo.
 - Versión procesada antes de la spec 001 (sin análisis): el detalle y las descargas existentes
   funcionan; las secciones nuevas muestran «no disponible».
-- Versión procesada con la versión anterior del análisis: sin secuencia en los patrones de la
-  pantalla; se muestra «no disponible» en esa columna.
 - Procesamiento sin artefactos visuales (sin PDF ni imagen): el Excel y el inventario se generan
-  igual; la pantalla indica que no hay imagen.
+  igual; el explorador funciona, porque no depende de la imagen, y la descarga de la imagen
+  indica que no está disponible.
+- Versión del motor histórico, o sin plan guardado que se pueda reconstruir: el explorador
+  muestra «Patrones: no disponible para esta versión», sin errores.
+- Plan con cientos de patrones distintos (por ejemplo, el caso de prueba de 340): el explorador
+  sigue respondiendo y se puede usar con el teclado; la carga se reparte por páginas o por tramos
+  visibles, sin bloquear la pantalla.
+- Patrón con cientos o miles de repeticiones: el detalle muestra el total, agrupa los
+  identificadores en rangos y los presenta por tramos de 100 con «Ver más» (FR-028).
+- Pieza demasiado corta para rotular en el dibujo: se dibuja sin texto, y su medida aparece en el
+  detalle del patrón.
+- Pedido presente en muchos patrones: el filtro por pedido los muestra todos, con la cobertura de
+  barras correspondiente.
+- Filtros sin resultados: el explorador lo dice explícitamente y ofrece quitar los filtros.
 - Nombre del proyecto con caracteres especiales: el encabezado del PDF los muestra de forma
   segura, sin romper el documento.
 - Inventario adicional consumido en parte: los totales de compra no cuentan las barras del
@@ -261,23 +355,68 @@ versión nueva y una histórica; reimportar el inventario final de una versión 
 
 **Pantalla**
 
-- **FR-015**: El detalle de una versión MUST incluir una sección «Patrones de corte», entre el
-  resumen de compra y la calidad del plan, con el total de patrones y barras, los diez patrones
-  más repetidos (patrón, diámetro, barra, secuencia por etapa, repeticiones, aprovechamiento) y
-  una vista previa de la imagen con texto alternativo.
+- **FR-015** *(reescrito en la enmienda 2026-10-04)*: El detalle de una versión MUST incluir una
+  sección «Patrones de corte», entre el resumen de compra y la calidad del plan, con el total de
+  patrones y barras y el explorador de **todos** los patrones del plan (FR-024 a FR-031). La
+  sección MUST NOT depender de la imagen de nesting; la descarga de la imagen se conserva.
 - **FR-016**: El resumen de compra en pantalla MUST mostrar el total por diámetro y el total
   general de lo comprado, separando las barras del inventario adicional.
 - **FR-017**: La sección de calidad MUST mostrar la cota por patrones y la brecha. La cota simple
   MUST NOT aparecer como cifra destacada; MAY mencionarse en una frase explicativa.
-- **FR-018**: En un teléfono, la tabla de patrones MUST presentarse como tarjetas, sin
-  desplazamiento horizontal de la página, y la sección MUST cumplir las reglas de accesibilidad del
-  sistema visual del proyecto.
+- **FR-018** *(ampliado en la enmienda 2026-10-04)*: En un teléfono, el explorador y los totales
+  de compra MUST presentarse sin desplazamiento horizontal de la página, y las secciones MUST
+  cumplir las reglas de accesibilidad del sistema visual del proyecto.
+
+**Explorador de patrones** *(enmienda 2026-10-04)*
+
+- **FR-024**: El sistema MUST ofrecer, para cada versión, una consulta de solo lectura que
+  devuelva todos sus patrones de corte con la información necesaria para dibujarlos y detallarlos.
+  La consulta MUST NOT modificar la versión, sus datos guardados ni sus archivos.
+- **FR-025**: Los patrones MUST obtenerse de los datos que la versión ya tiene guardados, sin
+  volver a ejecutar el algoritmo genético, y MUST ser idénticos a los de la hoja «Patrones» del
+  Excel de esa versión: mismos identificadores, repeticiones y secuencias. La suma de las
+  repeticiones MUST ser igual al número de barras del plan; si no lo es, la consulta MUST
+  informar un error en lugar de mostrar datos incoherentes.
+- **FR-026**: Cada patrón MUST dibujarse a escala, con sus piezas en orden de corte coloreadas por
+  etapa, y con la pérdida por corte, el descarte y el saldo diferenciados y explicados en una
+  leyenda. La escala MUST ser la misma para todos los patrones: la barra más larga del plan
+  ocupa el ancho completo, y la escala MUST NOT cambiar al aplicar filtros, para que las
+  longitudes y los saldos se puedan comparar.
+- **FR-027**: El explorador MUST permitir filtrar por diámetro, etapa, origen y pedido, combinando
+  los filtros, y MUST mostrar siempre la cobertura: patrones y barras mostrados frente al total.
+  El filtro por pedido MUST ser un campo de búsqueda que sugiere los pedidos («N° Orden») que
+  existen en la versión. Se elige un pedido a la vez y, con él activo, cada patrón mostrado MUST
+  indicar cuántas piezas de ese pedido aporta en total (repeticiones incluidas). Cuando el pedido
+  es el único filtro activo, la suma de esas piezas MUST ser igual a la cantidad demandada del
+  pedido. Con otros filtros activos, la suma es la parte del pedido que cubren los patrones
+  mostrados.
+- **FR-028**: El detalle de un patrón MUST mostrar su secuencia por etapa, la longitud de cada
+  pieza, los pedidos que atiende con su número de piezas, las repeticiones, el aprovechamiento, la
+  pérdida por corte, el descarte, el saldo y los identificadores de las barras que lo usan (los
+  mismos de la hoja «Barras»). El total de barras MUST verse siempre. Los identificadores MUST
+  agruparse en rangos consecutivos (por ejemplo, «#4:12 a #4:450») y presentarse por tramos de
+  como máximo 100 elementos, con una acción «Ver más». La pantalla MUST NOT dibujar de una vez
+  todos los identificadores de un patrón grande.
+- **FR-029**: Todo lo que el explorador muestra al pasar el ratón MUST estar disponible también con
+  el teclado y para un lector de pantalla: selección de patrón, detalle y filtros con nombres
+  accesibles y foco visible.
+- **FR-030**: Si una versión no tiene un plan guardado que se pueda reconstruir, o si su plan no
+  consta como verificado (no pasó, o no registró, la verificación independiente), el explorador
+  MUST mostrar «no disponible para esta versión» con el motivo, sin afectar al resto del
+  detalle. Un plan no verificado MUST NOT presentarse como patrones válidos (constitución,
+  Principio I).
+- **FR-031**: Por defecto, los patrones MUST aparecer en el orden de la hoja «Patrones» del Excel
+  (diámetro y, dentro de cada uno, repeticiones de mayor a menor). Un selector MUST permitir
+  ordenarlos por repeticiones, aprovechamiento o saldo, de mayor a menor; los empates conservan
+  el orden del Excel. Cambiar el orden MUST NOT alterar los filtros ni la cobertura.
 
 **Datos del análisis y compatibilidad**
 
-- **FR-019**: El resumen guardado de cada versión nueva MUST incluir la secuencia legible por
-  etapa de cada uno de los patrones más repetidos, y la versión del análisis MUST identificarse
-  como `analisis-2`.
+- **FR-019** *(retirado en la enmienda 2026-10-04)*: ~~El resumen guardado de cada versión nueva
+  MUST incluir la secuencia legible por etapa de cada uno de los patrones más repetidos, y la
+  versión del análisis MUST identificarse como `analisis-2`.~~ El explorador obtiene la secuencia
+  de los datos guardados (FR-025), así que el resumen del análisis no cambia y conserva su versión
+  vigente.
 - **FR-020**: Las versiones procesadas antes de esta funcionalidad MUST mostrarse sin error. Los
   datos que les falten MUST aparecer como «no disponible», y sus archivos ya generados MUST NOT
   modificarse.
@@ -299,8 +438,13 @@ versión nueva y una histórica; reimportar el inventario final de una versión 
   por corte, mínimo reutilizable, momento del descarte) con su referencia.
 - **Cobertura**: patrones mostrados frente al total, y barras representadas por ellos frente al
   total de barras del plan.
-- **Patrón resumido**: patrón de los más repetidos, con su secuencia legible por etapa, guardado
-  con la versión.
+- **Patrón explorable** *(enmienda 2026-10-04; sustituye a «Patrón resumido»)*: patrón de la
+  versión con su identificador, diámetro, origen, longitud de barra, secuencia por etapa,
+  repeticiones, aprovechamiento, pérdida por corte, descarte, saldo y barras que lo usan. Se
+  obtiene de los datos guardados; no se guarda aparte.
+- **Pieza del patrón**: posición de corte dentro del patrón (etapa, longitud y cantidad), con los
+  pedidos que atiende a lo largo de todas las barras del patrón.
+- **Filtro del explorador**: combinación de diámetro, etapa, origen y pedido, con su cobertura.
 
 ## Success Criteria *(mandatory)*
 
@@ -322,16 +466,40 @@ versión nueva y una histórica; reimportar el inventario final de una versión 
   de la medición vigente con la misma configuración.
 - **SC-008**: Las medidas escritas sobre las piezas son legibles en las páginas de nesting del PDF
   impreso en A4 y en la imagen vista al 100 %.
+- **SC-009** *(enmienda)*: Con la cartilla 002 (136 patrones, 13.955 barras), el explorador
+  muestra sus patrones en 2 segundos o menos desde que se abre la sección, en el entorno local de
+  validación.
+- **SC-010** *(enmienda)*: En el 100 % de las versiones comprobadas (001, 002 y el caso de 340
+  patrones), los identificadores, las repeticiones y las secuencias del explorador coinciden con
+  la hoja «Patrones» del Excel, y la suma de repeticiones es igual al número de barras.
+- **SC-011** *(enmienda)*: Un usuario puede llegar al detalle de cualquier patrón y leerlo usando
+  solo el teclado, y la verificación automática de accesibilidad no encuentra barreras nuevas en
+  escritorio, tableta y teléfono.
+- **SC-012** *(enmienda)*: Con la cartilla 002, abrir el detalle del patrón con más repeticiones,
+  filtrar o pedir «Ver más» no bloquea la pantalla de forma perceptible: la respuesta es
+  inmediata para el usuario (menos de 200 ms en el entorno local de validación). Al abrir el
+  detalle se muestran como máximo 100 identificadores, y cada «Ver más» añade como máximo otros
+  100.
 
 ## Assumptions
 
 - Son cambios de presentación: el algoritmo genético, la normalización, la validación y los
   parámetros del modelo no se tocan, así que no hace falta una nueva versión del motor.
-- La nueva versión del análisis (`analisis-2`) solo añade la secuencia de los patrones más
-  repetidos; no cambia ningún otro cálculo del análisis.
+- *(Enmienda 2026-10-04)* El análisis guardado no cambia: no hay `analisis-2`. El explorador
+  necesita una única consulta nueva de solo lectura; no hay migraciones, ni tablas nuevas, ni
+  librerías nuevas.
+- *(Enmienda 2026-10-04)* Cada versión del motor vigente ya guarda, barra por barra, los cortes con
+  su pedido, su etapa y su longitud. Eso basta para reconstruir los patrones sin el algoritmo.
+  Las versiones del motor histórico no tienen esos datos y quedan como «no disponible».
+- *(Enmienda 2026-10-04)* El chequeo de taller (marcar patrones ya cortados y guardar el avance)
+  queda fuera de alcance; podría ser una funcionalidad futura.
+- *(Enmienda 2026-10-04, confidencialidad)* El explorador muestra los números de pedido
+  («N° Orden») tal como vienen en la cartilla cargada. Las cartillas 001 y 002 son de una obra
+  confidencial (constitución, Principio V). Toda demostración, captura o sustentación MUST usar
+  versiones cuyos pedidos y nombre de archivo no identifiquen la obra. Si los originales la
+  identifican, se usa una copia anonimizada de la cartilla.
 - La fecha del encabezado del PDF es la de generación del documento; no forma parte de la
   identidad del problema ni afecta la reproducibilidad del plan.
-- La vista previa de la pantalla usa la misma imagen que se descarga.
 - Los contratos de artefactos y de pantalla de la spec 001 quedan sustituidos por los de esta
   funcionalidad en lo que cambie. La spec 001 llevará una nota que lo indique.
 - La prueba de extremo a extremo en la aplicación local requiere reconstruir las imágenes de los
