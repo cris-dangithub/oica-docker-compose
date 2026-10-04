@@ -28,7 +28,7 @@
 | INF-013 | Arquitectura | Media | [VALIDADA] | Proxy seleccionable container/host; VPS en otro ambiente |
 | INF-011 | Arquitectura | Alta | [VALIDADA] | Monorepo, producción VPS, CI/CD y desarrollo nativo |
 | INF-014 | Académica | Alta | [VALIDADA] | Título fijo con IA/nesting/desperdicios admisibles; se alinea la app (spec 001) y los objetivos reales |
-| INF-015 | Metodología | Alta | [PENDIENTE] | El umbral admisible se compara con el desperdicio de INF-012 (incluye saldo reutilizable) |
+| INF-015 | Metodología | Alta | [VALIDADA] | El umbral admisible se compara con el desperdicio de INF-012 (incluye saldo reutilizable) |
 | INF-016 | Técnica | Media | [VALIDADA] | Cota Gilmore–Gomory con scipy/HiGHS, certificado lagrangiano y etapas relajadas |
 
 ---
@@ -844,7 +844,12 @@ INF-012, INF-014
 ### Puede consolidarse con
 Ninguna: INF-012 define la métrica, y esta entrada su uso frente al umbral.
 ### Estado
-[PENDIENTE] — confirmar con el director qué desperdicio presupuesta un APU en Colombia.
+[VALIDADA] — 2026-10-03, por el autor, sin necesidad de revisión del director.
+### Respuesta del usuario
+El desperdicio total es todo lo que se compra y no termina convertido en piezas: pérdida por
+corte, descartes y sobrante reutilizable final, medidos en masa al cerrar el proyecto. El umbral se
+compara con ese valor, como ya hace la app; no se cambia código. La pérdida irrecuperable se sigue
+informando aparte, solo como referencia.
 
 ---
 

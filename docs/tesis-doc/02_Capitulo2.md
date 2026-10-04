@@ -82,7 +82,7 @@ La **brecha** es la diferencia, en puntos porcentuales, entre el desperdicio del
 
 El **desperdicio admisible** es el porcentaje que el usuario considera aceptable para su proyecto: por ejemplo, el que asumió en su análisis de precios unitarios o el que exige su contrato. OICA no propone un valor por defecto. Con el umbral que el usuario ingresa, informa si el plan queda dentro o lo excede, para el proyecto y para cada diámetro.
 
-El umbral se compara con el desperdicio por masa de la sección 2.2, que incluye el saldo reutilizable final. Por eso se informan aparte la pérdida irrecuperable (corte y descartes) y el saldo reutilizable. Si el director entiende el desperdicio de un análisis de precios unitarios como solo lo irrecuperable, esta comparación debe ajustarse (INF-015, pendiente).
+El umbral se compara con el desperdicio por masa de la sección 2.2, que incluye el saldo reutilizable final. Por eso se informan aparte la pérdida irrecuperable (corte y descartes) y el saldo reutilizable. Esta es la definición adoptada: el desperdicio es todo el material comprado que no termina convertido en piezas (INF-015). La pérdida irrecuperable se informa solo como referencia, sin juicio de cumplimiento.
 
 No se identificó una norma colombiana que fije un porcentaje máximo de desperdicio de acero de refuerzo. El estado de cada fuente es:
 

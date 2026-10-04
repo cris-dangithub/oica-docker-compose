@@ -171,7 +171,7 @@ planificó en `plan.md` (2026-10-02; cota con scipy, INF-016; umbral frente a IN
 Implementado y validado el 2026-10-02: la app respalda cada término del título (umbral, patrones,
 cota, nesting lineal en el PNG, aviso NSR-10, resumen de compra y detalle web). Cap. 1–4 y
 `Referencias.md` están actualizados. Sigue **en mitigación** por:
-- revisión del director (objetivos e INF-015);
+- revisión del director de la redacción de los objetivos (INF-015 la cerró el autor el 2026-10-03);
 - fuentes sin verificar: IDU (por localizar), fuente de «nesting lineal», páginas de Holland y
   Goldberg, y la cita literal de Russell-Norvig.
   - Ya verificadas: Res. 472/2017 y 1257/2021 (2026-10-02); INVIAS 2022 art. 640 y RECIAMUC

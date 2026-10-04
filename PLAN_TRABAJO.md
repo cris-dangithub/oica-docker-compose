@@ -19,7 +19,7 @@
 | F | Producción, CI/CD y desarrollo nativo | 🔄 Código implementado; cierre pendiente | ALTA |
 | G | Corte secuencial, inventarios y caso 002 | Completado en localhost; cierre académico pendiente | ALTA |
 | J | Rediseño visual y Design System | Dirección B aprobada; implementación code-first autorizada | ALTA |
-| K | Alineación con el título fijo (spec 001) | Implementada, validada y desplegada en local (56/56); pendiente la revisión académica | ALTA |
+| K | Alineación con el título fijo (spec 001) | ✅ Cerrada (2026-10-04): en producción; queda la redacción de fuentes pendientes | ALTA |
 
 ---
 
@@ -328,7 +328,8 @@ fijo, sin alterar el plan de `secuencial-2` (constitución v1.0.0).
 - [x] E2E local según `quickstart.md`.
 - [x] `Referencias.md`, capítulos 1–4 y archivos de control (US6).
 - [x] Reconstruir backend y worker solo en la capa de código para desplegar el PNG por piezas (aprobado y desplegado el 2026-10-02).
-- [ ] Revisión del director, INF-015 y verificación de INVIAS 640, IDU, Res. 472 y la fuente de «nesting lineal».
+- [x] INF-015 cerrada por el autor (2026-10-03): el umbral se compara con el desperdicio total.
+- [x] Verificación de INVIAS 640 y Res. 472/1257.
+- [ ] Revisión del director (objetivos); verificar IDU y la fuente de «nesting lineal».
 
-**Pendiente del usuario o el director:** INF-015 (qué desperdicio se compara con el umbral) y
-datos de compra reales para OE5 (RIESGO-AC-009).
+**Pendiente del usuario o el director:** datos de compra reales para OE5 (RIESGO-AC-009).
