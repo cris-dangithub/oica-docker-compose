@@ -198,3 +198,30 @@ los kg comprados por diámetro de una obra colombiana, se añade como comparaci�
 **Inferencias relacionadas:** INF-014, INF-012
 
 **Estado:** [PENDIENTE — dato de compra real a cargo del usuario]
+
+---
+
+## RIESGO-AC-010 — Borrador Word «Tesis final 1» con resultados y fuentes sin respaldo
+
+**Severidad:** ALTA (el borrador circula fuera del repositorio y podría entregarse así)
+
+**Descripción:**
+Al generar `docs/tesis-doc/Tesis_F.docx` (2026-10-03) se contrastó el borrador del autor
+«Tesis final 1» (PDF del 2026-10-03) con el documento vigente en Markdown. El borrador:
+- conserva en el Cap. 4 el caso histórico de 683 piezas, retirado por decisión del autor, con cifras
+  incoherentes entre sí (10.76 % de desperdicio frente a 3.2 % «estimado»; 89.24 % frente a 97 %);
+- afirma un ahorro de 9–14 % y una eficiencia «típica» manual de 75–80 % sin fuente;
+- muestra una captura antigua de la interfaz con «método Búfalo» (ver RIESGO-AC-007);
+- cita la NTC 2289, la ASTM A706, una tabla de diámetros en milímetros, el precio del acero en 2025
+  y libros generales de HTML/CSS/JavaScript sin ficha en `Referencias.md`;
+- describe la «Cartilla N°1» como proyecto académico de la asignatura Construcción de edificaciones.
+  Las vigas de la cartilla 001 coinciden en longitudes con esa cartilla, mientras que INF-014 registra
+  que 001 y 002 provienen de una obra colombiana. La procedencia de 001 no está confirmada.
+
+**Mitigación:** `Tesis_F.docx` se construyó desde `docs/tesis-doc/*.md` y la evidencia de
+`tests/benchmarks/`; del borrador solo se tomó contexto cualitativo. Cada punto anterior quedó como
+«Nota pendiente» resaltada en el Word. Confirmar con el autor la procedencia de 001.
+
+**Inferencias relacionadas:** INF-014, INF-005
+
+**Estado:** [PENDIENTE — procedencia de 001 y fuentes a cargo del autor]
