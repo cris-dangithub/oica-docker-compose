@@ -60,8 +60,25 @@ Rama `feat/spec-002-presentacion-resultados`, que ya integra `production` (cierr
 - **Verificación**: QA de las 6 pantallas en 3 anchos; pantalla, PDF y «Resumen» coherentes.
 - **Pendiente**: las imágenes Docker del stack aún no incluyen la enmienda 2. Reconstruirlas
   requiere aprobación.
-- **Siguiente paso**: commit y PR, solo con instrucción explícita.
+- **Commit y push** (2026-10-04, por instrucción del usuario) a la rama del PR #7, integrando el
+  registro del documento Word de la rama remota (`997d5ad`).
+- **Observación**: el documento Word (`Tesis_F.docx`) sigue la plantilla USCO, con punto decimal y
+  sin separador de miles, distinto del estándar de la app (enmienda 2). Si las cifras se citan en la
+  tesis, hay que decidir qué convención usar.
 
+## Documento Word de la tesis (`docs/tesis-doc/Tesis_F.docx`, 2026-10-03)
+
+A pedido del usuario se generó `Tesis_F.docx` (61 páginas, sin commit) sobre la plantilla USCO
+(`Downloads/Tesis.docx`): estilos, numeración de títulos, secciones, encabezados y logo de la
+plantilla. Contenido: capítulos 1–4 de `docs/tesis-doc/*.md` reorganizados según la plantilla, más
+un Cap. 5 de conclusiones **preliminares** por objetivo, dos anexos (cartillas anonimizadas y
+evidencia) y bibliografía APA limitada a fuentes con ficha o marcadas «pendiente de verificación».
+Del borrador «Tesis final 1» solo se tomó contexto cualitativo (motivación, clasificación 1D/2D,
+arquitectura, tabla NSR-10 C.3.5.3-2 con masas verificadas); sus resultados no se usaron
+(RIESGO-AC-010). Convenciones de la plantilla: decimales con punto, miles sin separador, márgenes
+simétricos de 2.54 cm, capítulos en página impar. 15 «Nota pendiente» resaltadas marcan tareas del
+autor. Generador y figuras en el scratchpad de la sesión (no versionados). Pendiente: procedencia de
+la cartilla 001, revisión del director, fichas del software y de las fuentes heredadas.
 
 ## Bloque K — Alineación con el título fijo de la tesis (spec 001)
 
