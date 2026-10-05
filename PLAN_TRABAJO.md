@@ -400,8 +400,9 @@ jurado.
     pruebas en `test_cutting_api.py`; spec y contrato de artefactos.
   - [x] Lógica del nombre comprobada en el equipo (10/10 casos, Python 3.11). No es la puerta de
     calidad: no hay imágenes de OICA en el equipo.
-  - [ ] Batería completa y E2E en la CI «Verificar OICA» del PR (opción elegida por el usuario
-    para no construir imágenes en C:).
+  - [x] Batería completa y E2E en la CI «Verificar OICA» del PR #8 (opción elegida por el usuario
+    para no construir imágenes en C:). Ejecución 37252283993 sobre `a5f7972`: 168 pruebas OK
+    (antes 167), arranque desde cero, regresión 002 y flujo completo OK.
   - [ ] Fusión y publicación, solo por instrucción del usuario.
 
 ## Bloque M — Tesis tras la spec 002

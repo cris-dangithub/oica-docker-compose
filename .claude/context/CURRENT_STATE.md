@@ -6,6 +6,9 @@ Las descargas se llamaban con el UUID de la versión (`plan_corte_<uuid>.pdf`) y
 siempre `inventario_final.xlsx`. Ahora: `OICA_<proyecto>_v<versión>_<perfil>_<tipo>.<ext>`
 (FR-036; `nombre_descarga` en `backend/server.py`). Solo cambia `Content-Disposition`: archivos,
 rutas y contenido iguales. Verificación delegada a la CI del PR (decisión del usuario).
+- **PR #8** hacia `production` (`a5f7972`), abierto y sin fusionar. CI «Verificar OICA» en verde:
+  168 pruebas OK, arranque desde cero, regresión 002 y flujo completo. Falta fusionar y publicar,
+  solo por instrucción del usuario.
 - **Entorno local**: no hay imágenes, contenedores ni volúmenes de OICA, ni en Docker Desktop ni en
   el Docker de Ubuntu (WSL). Al abrir Docker Desktop (estaba cerrado) se creó un
   `docker_data.vhdx` vacío de 1.3 GB en `%LOCALAPPDATA%\Docker\wsl\disk`; no se borró.
