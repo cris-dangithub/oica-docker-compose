@@ -149,3 +149,25 @@ y la brecha.
 ## 4. Inventario `inventario_final.xlsx`
 
 **Sin cambios** (FR-022): hoja `Inventario` con columnas `diametro, longitud_m, cantidad`.
+
+## 5. Nombres de descarga (enmienda 4; FR-036)
+
+Los nombres de las secciones anteriores son los de los archivos **en disco**, que no cambian. Lo
+que cambia es el nombre que envía `Content-Disposition` en `GET /descargar-<tipo>/<uuid>`. Lo
+calcula `nombre_descarga(result, tipo)` en `backend/server.py`:
+
+| Endpoint | Nombre de la descarga |
+|---|---|
+| `/descargar-excel/<uuid>` | `OICA_<proyecto>_v<n>_<perfil>_resultados.xlsx` |
+| `/descargar-pdf/<uuid>` | `OICA_<proyecto>_v<n>_<perfil>_plan_corte.pdf` |
+| `/descargar-imagen/<uuid>` | `OICA_<proyecto>_v<n>_<perfil>_nesting.png` |
+| `/descargar-inventario/<uuid>` | `OICA_<proyecto>_v<n>_<perfil>_inventario.xlsx` |
+
+- `<proyecto>`: el nombre del archivo subido (`UploadedFile.file_name`), sin extensión, limpiado con
+  `secure_filename` (solo ASCII seguro) y recortado a 40 caracteres. Si no queda nada, `proyecto`.
+- `<n>`: `ProcessingResult.version_number`. `<perfil>`: `perfil_usado`; se omite si es nulo
+  (versiones históricas).
+- Ejemplo: versión 2 de la cartilla 002 con perfil balanceado,
+  `OICA_002-ingeBigTest_v2_balanceado_plan_corte.pdf`.
+- El importador de inventario lee el contenido, no el nombre: el archivo descargado se reimporta
+  igual (FR-022).

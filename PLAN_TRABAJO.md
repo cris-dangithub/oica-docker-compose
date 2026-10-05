@@ -394,6 +394,16 @@ jurado.
     con un uuid inexistente) y las cifras van con punto decimal.
 - [x] Cierre documental: la spec pasa a «Implementada y cerrada» (commit directo a `production`,
   por instrucción del usuario).
+- [ ] Enmienda 4 (2026-10-04, pedida por el usuario): nombres de descarga legibles (FR-036),
+  `OICA_<proyecto>_v<versión>_<perfil>_<tipo>.<ext>` en lugar del UUID de la versión.
+  - [x] `nombre_descarga` en `backend/server.py` para los cuatro endpoints `/descargar-*`;
+    pruebas en `test_cutting_api.py`; spec y contrato de artefactos.
+  - [x] Lógica del nombre comprobada en el equipo (10/10 casos, Python 3.11). No es la puerta de
+    calidad: no hay imágenes de OICA en el equipo.
+  - [x] Batería completa y E2E en la CI «Verificar OICA» del PR #8 (opción elegida por el usuario
+    para no construir imágenes en C:). Ejecución 37252283993 sobre `a5f7972`: 168 pruebas OK
+    (antes 167), arranque desde cero, regresión 002 y flujo completo OK.
+  - [ ] Fusión y publicación, solo por instrucción del usuario.
 
 ## Bloque M — Tesis tras la spec 002
 
