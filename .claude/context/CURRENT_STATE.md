@@ -2,8 +2,8 @@
 
 ## Bloque N — Corpus ampliado con cartillas sintéticas (rama `feat/cartillas-sinteticas`)
 
-Rama creada desde `origin/production` (`f9599a0`), sin commits propios todavía. La enmienda 4
-(PR #8, rama `fix/nombres-descarga`) sigue abierta: su bitácora se subió en `85cd0c4`.
+Rama creada desde `origin/production` (`f9599a0`), con los commits `5a8d832` (corpus y ensayos) y
+`1e1477d` (Word), y con `origin/production` (`8eb27bf`, enmienda 4) integrada por merge.
 - **Decisiones del usuario (INF-017):**
   - 002 es un proyecto real; su cartilla viene de una ferretería que no se nombra.
   - 001 es un ejercicio del curso Construcción de edificaciones.
@@ -14,7 +14,7 @@ Rama creada desde `origin/production` (`f9599a0`), sin commits propios todavía.
   - Generador `scripts/generar_cartillas_sinteticas.py` y 9 pruebas en `tests/cartillas/`, en verde.
   - Cartillas `tests/data/003` (vivienda, 2958 piezas) y `tests/data/004` (edificio, 18782 piezas),
     cada una con su `MEMORIA_DESPIECE.md`.
-  - INF-018 pendiente; RIESGO-AC-011 nuevo.
+  - INF-018 validada en el CP-1; RIESGO-AC-011 nuevo.
 - **Ejecutado el 2026-10-04:**
   - CP-1: el usuario aprobó las cartillas, que quedan congeladas.
   - Imagen `oica-worker:local` construida con aprobación; contenedor `oica-experimentos` en marcha.
@@ -30,9 +30,24 @@ Rama creada desde `origin/production` (`f9599a0`), sin commits propios todavía.
   - Tiempo máximo de todas las medianas: 24.3 s (002, profundo).
 - **Siguiente:**
   - CP-3: revisión de los análisis por el usuario.
-  - Luego los capítulos 1, 3 y 4 y el Word. Ver el Bloque N de `PLAN_TRABAJO.md`.
+  - Luego los capítulos 1, 3 y 4 en Markdown. El Word ya tiene el Bloque N (sección siguiente).
 - En Windows, el arnés exige `PYTHONUTF8=1`. Sin esa variable lee las fuentes en cp1252 y
   corrompe «N° Orden».
+
+## Enmienda 4 de la spec 002: nombres de descarga (rama `fix/nombres-descarga`)
+
+Las descargas se llamaban con el UUID de la versión (`plan_corte_<uuid>.pdf`) y el inventario
+siempre `inventario_final.xlsx`. Ahora: `OICA_<proyecto>_v<versión>_<perfil>_<tipo>.<ext>`
+(FR-036; `nombre_descarga` en `backend/server.py`). Solo cambia `Content-Disposition`: archivos,
+rutas y contenido iguales. Verificación delegada a la CI del PR (decisión del usuario).
+- **PR #8** hacia `production` (`a5f7972`), fusionado en `8eb27bf`. CI «Verificar OICA» en verde:
+  168 pruebas OK, arranque desde cero, regresión 002 y flujo completo. La publicación no consta en
+  este registro.
+- **Entorno local**: no hay imágenes, contenedores ni volúmenes de OICA, ni en Docker Desktop ni en
+  el Docker de Ubuntu (WSL). Al abrir Docker Desktop (estaba cerrado) se creó un
+  `docker_data.vhdx` vacío de 1.3 GB en `%LOCALAPPDATA%\Docker\wsl\disk`; no se borró.
+- La rama local `production` está atrasada (`ae56668`); la referencia vigente es
+  `origin/production` (`8eb27bf` al 2026-10-04).
 
 ## Bloque L — Spec 002: presentación de resultados y explorador de patrones
 

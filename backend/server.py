@@ -526,12 +526,31 @@ def reprocess_file(file_id):
         }), 500
 
 
+# Nombre de cada descarga (spec 002, enmienda 4, FR-036): sufijo y extensión por tipo.
+TIPOS_DESCARGA = {'excel': ('resultados', 'xlsx'), 'pdf': ('plan_corte', 'pdf'),
+                  'imagen': ('nesting', 'png'), 'inventario': ('inventario', 'xlsx')}
+
+
+def nombre_descarga(result, tipo):
+    """OICA_<proyecto>_v<versión>_<perfil>_<tipo>.<ext>, legible y seguro para el sistema de archivos.
+
+    El proyecto es el nombre del archivo subido, sin extensión y recortado a 40 caracteres. Las
+    versiones históricas sin perfil lo omiten.
+    """
+    sufijo, extension = TIPOS_DESCARGA[tipo]
+    base = os.path.splitext(result.uploaded_file.file_name or '')[0]
+    proyecto = secure_filename(base)[:40].strip('._-') or 'proyecto'
+    partes = ['OICA', proyecto, f'v{result.version_number}', result.perfil_usado, sufijo]
+    return '_'.join(p for p in partes if p) + f'.{extension}'
+
+
 @app.route('/descargar-inventario/<uuid>', methods=['GET'])
 def download_inventory(uuid):
     result = ProcessingResult.query.filter_by(storage_uuid=uuid).first_or_404()
     if not result.inventory_path or not os.path.isfile(result.inventory_path):
         return jsonify({'error': 'Esta versión no tiene inventario final'}), 404
-    return send_file(result.inventory_path, as_attachment=True, download_name='inventario_final.xlsx')
+    return send_file(result.inventory_path, as_attachment=True,
+                     download_name=nombre_descarga(result, 'inventario'))
 
 
 @app.route('/descargar-excel/<uuid>', methods=['GET'])
@@ -545,7 +564,7 @@ def download_excel(uuid):
     return send_file(
         result.excel_path,
         as_attachment=True,
-        download_name=f'resultados_{uuid}.xlsx',
+        download_name=nombre_descarga(result, 'excel'),
         mimetype='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
     )
 
@@ -561,7 +580,7 @@ def download_pdf(uuid):
     return send_file(
         result.pdf_path,
         as_attachment=True,
-        download_name=f'plan_corte_{uuid}.pdf',
+        download_name=nombre_descarga(result, 'pdf'),
         mimetype='application/pdf'
     )
 
@@ -577,7 +596,7 @@ def download_image(uuid):
     return send_file(
         result.graph_image_path,
         as_attachment=True,
-        download_name=f'grafica_{uuid}.png',
+        download_name=nombre_descarga(result, 'imagen'),
         mimetype='image/png'
     )
 
