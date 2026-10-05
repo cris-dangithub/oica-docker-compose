@@ -32,6 +32,14 @@ no quedó registrada en las sesiones: figura como «pendiente: pedir al autor» 
 | REF-GOLDBERG-1989 | Inteligencia Artificial | verificar edición y páginas (datos bibliográficos confirmados) |
 | REF-NESTING-LINEAL | nesting | pendiente de localizar |
 | REF-HILTI-ACD | (hipótesis física) | verificar cita literal |
+| REF-NSR10-GANCHOS-RECUBRIMIENTOS | (cartillas sintéticas) | verificada |
+| REF-NSR10-EMPALMES | (cartillas sintéticas) | verificada |
+| REF-NSR10-DMO | (cartillas sintéticas) | verificada |
+| REF-CARTILLA-001 | (procedencia de datos) | pendiente de localizar (periodo y nombre completo del docente) |
+
+Actualización 2026-10-04 (Bloque N): las tres fichas de la NSR-10 respaldan los supuestos de las
+cartillas sintéticas 003 y 004 (INF-018), y REF-CARTILLA-001 documenta la procedencia de 001
+(INF-017). Las cifras nuevas usan punto decimal.
 
 ---
 
@@ -372,3 +380,129 @@ no quedó registrada en las sesiones: figura como «pendiente: pedir al autor» 
 - **Advertencias**: es una ficha comercial, no una norma; el valor debe calibrarse con el equipo
   real (el Cap. 2 ya lo dice).
 
+
+---
+
+## REF-NSR10-GANCHOS-RECUBRIMIENTOS — Ganchos, doblado, recubrimiento y estribos mínimos
+
+- **Cita completa**: AIS y Comisión Asesora Permanente para el Régimen de Construcciones Sismo
+  Resistentes. *Reglamento Colombiano de Construcción Sismo Resistente NSR-10, Título C — Concreto
+  estructural*. Decreto 926 de 2010. Secciones:
+  - C.2.2, definición de gancho sísmico, p. C-33;
+  - C.7.1, ganchos estándar, y C.7.2 con la tabla C.7.2, diámetros mínimos de doblado, pp. C-91 y C-92;
+  - C.7.7.1, recubrimiento mínimo del concreto construido en sitio, pp. C-96 y C-97;
+  - C.7.10.5.1, diámetro mínimo de estribos en elementos a compresión, p. C-103.
+- **Enlace**: la misma copia de CAMACOL de REF-NSR10-TABLA.
+- **Estado**: **verificada** (2026-10-04). Texto extraído con `pdftotext`; en ese PDF, la página
+  del archivo es la etiqueta C-xx más 12.
+- **Lo verificado**:
+  - C.7.1.2: «Doblez de 90º más una extensión de 12db en el extremo libre de la barra».
+  - C.7.1.3: estribos No. 5 y menores, 90° con 6 db; No. 6 a No. 8, 90° con 12 db; No. 8 y
+    menores, 135° con 6 db.
+  - C.7.1.4: ganchos sísmicos «con un doblez de 135º o más, con una extensión de 6db pero no menor
+    de 75 mm».
+  - Tabla C.7.2: diámetro de doblado 6 db de No. 3 a No. 8; C.7.2.2: 4 db para estribos No. 5 y menores.
+  - C.7.7.1: 75 mm contra el suelo; 50 mm (No. 6 y mayores) y 40 mm (No. 5 y menores) expuesto al
+    suelo o a la intemperie; 20 mm en losas, muros y viguetas (No. 11 y menores) y 40 mm en vigas y
+    columnas, no expuestos.
+  - C.7.10.5.1: estribos de por lo menos No. 3 para barras longitudinales No. 10 o menores.
+- **Motivo de la propuesta**: respaldar los supuestos S-03, S-04, S-05 y S-10 de las cartillas
+  sintéticas (INF-018).
+- **Pregunta textual del usuario que la originó**: «Verificarlos en la NSR-10» (respuesta del
+  2026-10-04 sobre cómo tratar ganchos, traslapos y recubrimientos).
+- **Término del título que respalda**: ninguno directamente; da verosimilitud a las cartillas
+  sintéticas.
+- **Ubicación prevista en la tesis**: Cap. 3, generación de cartillas sintéticas.
+- **Advertencias**:
+  - Copia de CAMACOL, no el *Diario Oficial* (ver REF-NSR10-TABLA).
+  - C.2.2 dice «más de 135 grados» y C.7.1.4 «135º o más»: citar C.7.1.4.
+  - La extensión de 12 db es el tramo recto después del doblez; no es la longitud de desarrollo
+    con gancho (C.12.5, no consultada).
+  - Las cartillas usan 50 mm en vigas de cimentación (valor de No. 6 y mayores) también para No. 4:
+    es mayor que el mínimo.
+
+---
+
+## REF-NSR10-EMPALMES — Longitud de desarrollo y empalmes por traslapo en tracción
+
+- **Cita completa**: NSR-10, Título C (como en REF-NSR10-GANCHOS-RECUBRIMIENTOS). Secciones:
+  - C.12.2.1 y C.12.2.2, longitud de desarrollo en tracción, p. C-218;
+  - CR12.2, comentario con ejemplo numérico, p. C-219;
+  - C.12.2.4, factores ψt, ψe y λ, p. C-220;
+  - C.12.14, empalmes, p. C-239;
+  - C.12.15.1 y C.12.15.2, empalmes por traslapo en tracción, pp. C-240 y C-241.
+- **Enlace**: la misma copia de CAMACOL.
+- **Estado**: **verificada** (2026-10-04).
+- **Lo verificado**:
+  - C.12.2.2, caso con espaciamiento y recubrimiento libres no menores que db y estribos mínimos:
+    ld = (fy ψt ψe / 2.1 λ √f'c) db para No. 6 y menores, y (fy ψt ψe / 1.7 λ √f'c) db para No. 7
+    y mayores. C.12.2.1: ld no menor de 300 mm.
+  - C.12.2.4: ψt = 1.3 con más de 300 mm de concreto fresco debajo del refuerzo horizontal; 1.0 en
+    otros casos. ψe = 1.0 sin recubrimiento epóxico. λ = 1.0 en concreto de peso normal.
+  - C.12.15.1: clase A = 1.0 ld, clase B = 1.3 ld, no menor de 300 mm; ld sin el mínimo de 300 mm.
+    C.12.15.2: clase B salvo dos condiciones simultáneas para clase A.
+  - Con f'c = 21 MPa y fy = 420 MPa: 43.64 db hasta No. 6 y 53.91 db para No. 7; traslapos clase B
+    redondeados hacia arriba a 0.05 m: No. 3 0.55, No. 4 0.75, No. 5 0.95, No. 6 1.10 y No. 7 1.60 m.
+- **Motivo de la propuesta**: respaldar los supuestos S-01 y S-06 (INF-018).
+- **Pregunta textual del usuario que la originó**: la misma de REF-NSR10-GANCHOS-RECUBRIMIENTOS.
+- **Término del título que respalda**: ninguno directamente.
+- **Ubicación prevista en la tesis**: Cap. 3, generación de cartillas sintéticas.
+- **Advertencias**:
+  - El signo de raíz no está en la capa de texto del PDF. Se confirmó con el ejemplo de CR12.2
+    (f'c = 28 MPa da 47 db).
+  - En la celda de «otros casos» para No. 7 y mayores aparece una λ de más en el numerador,
+    posiblemente una errata de la copia. No afecta las cartillas, que usan el caso favorable.
+  - Las cartillas suponen ψt = 1.0 también en barras superiores: sus traslapos son menores que los
+    que exigiría un diseño con ψt = 1.3.
+
+---
+
+## REF-NSR10-DMO — Refuerzo transversal y empalmes en pórticos con capacidad moderada (DMO)
+
+- **Cita completa**: NSR-10, Título C (como en REF-NSR10-GANCHOS-RECUBRIMIENTOS). Secciones:
+  - C.21.3.4.5, C.21.3.4.6 y C.21.3.4.8, vigas, pp. C-366 y C-367;
+  - C.21.3.5.3 y C.21.3.5.6 a C.21.3.5.11, columnas, pp. C-367 a C-369.
+- **Enlace**: la misma copia de CAMACOL.
+- **Estado**: **verificada** (2026-10-04).
+- **Lo verificado**:
+  - Vigas: estribos cerrados de confinamiento de al menos No. 3 en longitudes de 2h desde la cara
+    del apoyo; el primero a no más de 50 mm; separación no mayor que el menor de d/4, 8 db de la
+    barra longitudinal más pequeña, 24 db del estribo y 300 mm. Fuera de esa zona, no más de d/2.
+    No se permiten traslapos dentro de los nudos (C.21.3.4.5).
+  - Columnas: so no mayor que el menor de 8 db de la barra longitudinal menor, 16 db del estribo, un
+    tercio de la menor dimensión y 150 mm; lo no menor que el mayor de ln/6, la mayor dimensión de la
+    sección y 500 mm; fuera de lo, no más de 2 so; estribos mínimo No. 3. Los traslapos solo se
+    permiten en la mitad central de la longitud del elemento (C.21.3.5.3).
+- **Motivo de la propuesta**: respaldar los supuestos S-09 y S-14 (INF-018).
+- **Pregunta textual del usuario que la originó**: la misma de REF-NSR10-GANCHOS-RECUBRIMIENTOS.
+- **Término del título que respalda**: ninguno directamente.
+- **Ubicación prevista en la tesis**: Cap. 3, generación de cartillas sintéticas.
+- **Advertencias**:
+  - Las cartillas adoptan separaciones dentro de estos límites, pero no hay análisis sísmico ni
+    diseño: no se afirma que cumplan la NSR-10.
+  - El despiece de vigas no modela la posición de los empalmes (S-07), así que no comprueba
+    C.21.3.4.5.
+
+---
+
+## REF-CARTILLA-001 — Procedencia de la cartilla 001
+
+- **Cita completa**: «Cartilla N°1», ejercicio de despiece del curso Construcción de
+  edificaciones, programa de Ingeniería Civil, Universidad Surcolombiana. Docente: Carlos Uriel
+  (nombre como lo dio el autor). Periodo académico: no lo recuerda el autor.
+- **Enlace**: no aplica (material de curso no publicado). El archivo es
+  `tests/data/001/001-pruebaInicial.xlsx`.
+- **Estado**: **pendiente de localizar** (periodo académico y nombre completo del docente). El
+  autor aportó docente, programa y universidad el 2026-10-04.
+- **Descripción**: según el autor (2026-10-04), el profesor pidió a cada grupo elaborar una
+  cartilla a partir de un proyecto real, distinto para cada grupo. El autor no recuerda los datos
+  del proyecto y no conserva la cartilla original. Las vigas de 001 coinciden en longitudes con la
+  «Cartilla N°1» del borrador «Tesis final 1» (RIESGO-AC-010).
+- **Motivo de la propuesta**: documentar la procedencia de 001 (INF-017).
+- **Pregunta textual del usuario que la originó**: «¿De dónde proviene realmente la cartilla 001?»;
+  respuesta: «Ejercicio académico».
+- **Término del título que respalda**: ninguno.
+- **Ubicación prevista en la tesis**: Cap. 1 §1.3.3, Cap. 3 §3.1 y Anexo A.
+- **Advertencias**:
+  - No presentar 001 como cartilla de obra.
+  - No identificar el proyecto del que se sacó (Principio V).

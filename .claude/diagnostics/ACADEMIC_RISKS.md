@@ -197,7 +197,10 @@ los kg comprados por diámetro de una obra colombiana, se añade como comparaci�
 
 **Inferencias relacionadas:** INF-014, INF-012
 
-**Estado:** [PENDIENTE — dato de compra real a cargo del usuario]
+**Estado:** [ACEPTADO COMO LIMITACIÓN — 2026-10-04] El usuario confirmó que no es posible obtener
+datos de compra: ni del proyecto de 002 ni de la ferretería que suministró su cartilla (INF-017).
+La tesis lo declara como limitación del OE5, que se evalúa frente a FFD/BFD y la cota. El texto del
+OE5 no cambia, porque ya condiciona esa comparación a obtener los datos.
 
 ---
 
@@ -224,4 +227,32 @@ Al generar `docs/tesis-doc/Tesis_F.docx` (2026-10-03) se contrastó el borrador 
 
 **Inferencias relacionadas:** INF-014, INF-005
 
-**Estado:** [PENDIENTE — procedencia de 001 y fuentes a cargo del autor]
+**Estado:** [PENDIENTE — fuentes a cargo del autor] El punto de la procedencia de 001 quedó
+resuelto el 2026-10-04 (INF-017, REF-CARTILLA-001): 001 es un ejercicio del curso Construcción de
+edificaciones, sacado de un proyecto real no identificado. Falta corregir el Cap. 1, el Cap. 3 y el
+Word (Bloque N), y completar los datos del curso en la ficha.
+
+---
+
+## RIESGO-AC-011 — Cartillas sintéticas 003 y 004 sin validación de un ingeniero estructural
+
+**Severidad:** MEDIA (afecta la representatividad de los resultados nuevos del Cap. 4)
+
+**Descripción:**
+Para cubrir tamaños intermedios (OE2) se generaron dos cartillas sintéticas, una vivienda de dos
+pisos y un edificio de cinco (INF-017). Los recubrimientos, ganchos, traslapos y separaciones se
+verificaron en la NSR-10 (INF-018), pero la geometría es ficticia, no hay análisis ni diseño
+estructural, y hay supuestos propios: ψt = 1 en barras superiores, la posición de los empalmes no se
+modela y el redondeo es a 0.05 m. Un jurado podría cuestionar que representen una obra.
+
+**Mitigación:**
+- Las cartillas llevan la etiqueta «sintética» en el nombre del archivo, en su memoria y en la tesis.
+- Cada `tests/data/00X/MEMORIA_DESPIECE.md` documenta geometría, supuestos y estadísticas, y el
+  generador es determinista (`--verificar`).
+- El usuario las revisa antes de usarlas (punto CP-1); conviene que también las vea el director.
+- Sus resultados no se presentan como desperdicio en obra ni como el «proyecto real» del OE5.
+
+**Inferencias relacionadas:** INF-017, INF-018
+
+**Estado:** [EN MITIGACIÓN — 2026-10-04] El usuario aprobó las cartillas (CP-1). Queda pendiente
+la revisión del director.

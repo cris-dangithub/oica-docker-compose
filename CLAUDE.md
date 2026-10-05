@@ -139,7 +139,11 @@ Para cada bloque:
   `tests/benchmarks/` o `tests/data/`. Una regresión confirma la línea base; no es evidencia nueva.
 - **Fuentes**: toda fuente citada necesita su ficha en `docs/tesis-doc/Referencias.md`. Una fuente
   no verificada no se presenta como verificada, ni en la tesis ni en los textos de la app.
-- Las cartillas 001 y 002 son de una obra colombiana confidencial: presentarlas anonimizadas.
+- Procedencia de las cartillas (INF-017):
+  - 002 es de un proyecto real en Colombia y se obtuvo de un proveedor de acero. Es confidencial:
+    presentarla anonimizada, sin nombrar al proveedor.
+  - 001 es un ejercicio del curso Construcción de edificaciones (REF-CARTILLA-001).
+  - 003 y 004 son sintéticas: no presentarlas como datos de obra.
 - Las notas con `> Nota:` en el documento son tareas pendientes explícitas del autor.
 
 ---
@@ -274,6 +278,10 @@ usa `backend/cutting/`. No hay bugs abiertos conocidos en el motor vigente.
 | `tests/benchmarks/2026-10-04-regresion-presentacion.jsonl` | Regresión tras la spec 002: 0 diferencias en 148 registros |
 | `tests/benchmarks/2026-10-04-sc007-presentacion-comparacion.json` | Tiempo antes y después de la spec 002 (ratio 1,07; artefactos +1,9 s) |
 | `tests/benchmarks/2026-10-04-sc009-vista-patrones.json` | Vista de patrones de la 002: 136 patrones en 0,47 s (mediana) |
+| `tests/benchmarks/2026-10-04-tamano-matriz.jsonl` | Bloque N: matriz de 001 a 004 en una sola sesión (272 ensayos); los 136 de 001 y 002 coinciden con la línea base salvo los tiempos |
+| `tests/benchmarks/2026-10-04-sinteticas-control-*.jsonl` | 12 controles de 003 y 004 (cizalla y fin de etapa), reproducidos sin diferencias |
+| `tests/benchmarks/2026-10-04-cota-tamano.jsonl` | Cota de los 284 registros del Bloque N (todos con desperdicio ≥ cota) |
+| `tests/benchmarks/2026-10-04-tamano-tiempo.json` | Tiempo según el tamaño de la cartilla (OE2), por perfil y por diámetro |
 
 ---
 

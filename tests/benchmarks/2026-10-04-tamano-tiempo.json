@@ -1,0 +1,7543 @@
+{
+ "fuentes": {
+  "tests/benchmarks/2026-10-04-tamano-matriz.jsonl": "b1bb1ae583f8b9d354e078d0466285b890c9d4dc97ab20bbb60d55a671e260f2",
+  "tests/benchmarks/2026-09-13-fisico-matriz-final.jsonl": "4615a50fbe3d29ebfc4f96456146e8c7459555a55d40ecbbfed4d0152a0ea3b5"
+ },
+ "entorno": [
+  [
+   "3.12.15",
+   "Linux-6.6.87.2-microsoft-standard-WSL2-x86_64-with"
+  ]
+ ],
+ "cartillas": {
+  "001-pruebaInicial.xlsx": {
+   "archivo": "tests/data/001/001-pruebaInicial.xlsx",
+   "filas": 16,
+   "piezas": 92,
+   "etapas": 1,
+   "longitudes_distintas": 15,
+   "por_diametro": {
+    "#3": {
+     "filas": 1,
+     "piezas": 1,
+     "longitudes_distintas": 1
+    },
+    "#4": {
+     "filas": 3,
+     "piezas": 3,
+     "longitudes_distintas": 2
+    },
+    "#5": {
+     "filas": 12,
+     "piezas": 88,
+     "longitudes_distintas": 12
+    }
+   },
+   "masa_kg": 591.75784
+  },
+  "002-ingeBigTest.xlsx": {
+   "archivo": "tests/data/002/002-ingeBigTest.xlsx",
+   "filas": 137,
+   "piezas": 67443,
+   "etapas": 13,
+   "longitudes_distintas": 69,
+   "por_diametro": {
+    "#3": {
+     "filas": 17,
+     "piezas": 58500,
+     "longitudes_distintas": 17
+    },
+    "#4": {
+     "filas": 18,
+     "piezas": 864,
+     "longitudes_distintas": 14
+    },
+    "#5": {
+     "filas": 59,
+     "piezas": 2774,
+     "longitudes_distintas": 40
+    },
+    "#6": {
+     "filas": 38,
+     "piezas": 5237,
+     "longitudes_distintas": 29
+    },
+    "#7": {
+     "filas": 5,
+     "piezas": 68,
+     "longitudes_distintas": 3
+    }
+   },
+   "masa_kg": 138412.93033
+  },
+  "003-sinteticaVivienda.xlsx": {
+   "archivo": "tests/data/003/003-sinteticaVivienda.xlsx",
+   "filas": 38,
+   "piezas": 2958,
+   "etapas": 5,
+   "longitudes_distintas": 20,
+   "por_diametro": {
+    "#3": {
+     "filas": 10,
+     "piezas": 2346,
+     "longitudes_distintas": 5
+    },
+    "#4": {
+     "filas": 13,
+     "piezas": 364,
+     "longitudes_distintas": 9
+    },
+    "#5": {
+     "filas": 15,
+     "piezas": 248,
+     "longitudes_distintas": 7
+    }
+   },
+   "masa_kg": 5219.0048
+  },
+  "004-sinteticaEdificio.xlsx": {
+   "archivo": "tests/data/004/004-sinteticaEdificio.xlsx",
+   "filas": 105,
+   "piezas": 18782,
+   "etapas": 11,
+   "longitudes_distintas": 30,
+   "por_diametro": {
+    "#3": {
+     "filas": 35,
+     "piezas": 15208,
+     "longitudes_distintas": 8
+    },
+    "#4": {
+     "filas": 28,
+     "piezas": 1096,
+     "longitudes_distintas": 6
+    },
+    "#5": {
+     "filas": 21,
+     "piezas": 1070,
+     "longitudes_distintas": 9
+    },
+    "#6": {
+     "filas": 18,
+     "piezas": 928,
+     "longitudes_distintas": 10
+    },
+    "#7": {
+     "filas": 3,
+     "piezas": 480,
+     "longitudes_distintas": 2
+    }
+   },
+   "masa_kg": 47732.3087
+  }
+ },
+ "tiempos": [
+  {
+   "dataset": "001-pruebaInicial.xlsx",
+   "escenario": "ambos",
+   "metodo": "ag",
+   "perfil": "balanceado",
+   "n": 5,
+   "duracion_segundos": {
+    "mediana": 0.28486443999997846,
+    "min": 0.16152751300001,
+    "max": 0.3282784000000447
+   },
+   "desperdicio_porcentaje": {
+    "mediana": 5.154245122740882,
+    "min": 4.441132965151955,
+    "max": 5.154245122740882
+   },
+   "barras": {
+    "mediana": 38,
+    "min": 35,
+    "max": 41
+   }
+  },
+  {
+   "dataset": "001-pruebaInicial.xlsx",
+   "escenario": "ambos",
+   "metodo": "ag",
+   "perfil": "profundo",
+   "n": 5,
+   "duracion_segundos": {
+    "mediana": 0.8617474779999839,
+    "min": 0.8110567940000237,
+    "max": 1.0247855850000178
+   },
+   "desperdicio_porcentaje": {
+    "mediana": 4.441132965151955,
+    "min": 4.441132965151955,
+    "max": 5.154245122740882
+   },
+   "barras": {
+    "mediana": 38,
+    "min": 35,
+    "max": 41
+   }
+  },
+  {
+   "dataset": "001-pruebaInicial.xlsx",
+   "escenario": "ambos",
+   "metodo": "ag",
+   "perfil": "rapido",
+   "n": 5,
+   "duracion_segundos": {
+    "mediana": 0.03480569100008779,
+    "min": 0.033465904999957274,
+    "max": 0.05451503699998739
+   },
+   "desperdicio_porcentaje": {
+    "mediana": 5.154245122740882,
+    "min": 5.154245122740882,
+    "max": 5.154245122740882
+   },
+   "barras": {
+    "mediana": 35,
+    "min": 35,
+    "max": 38
+   }
+  },
+  {
+   "dataset": "001-pruebaInicial.xlsx",
+   "escenario": "ambos",
+   "metodo": "bfd",
+   "perfil": "rapido",
+   "n": 1,
+   "duracion_segundos": {
+    "mediana": 0.004045662000066841,
+    "min": 0.004045662000066841,
+    "max": 0.004045662000066841
+   },
+   "desperdicio_porcentaje": {
+    "mediana": 5.154245122740882,
+    "min": 5.154245122740882,
+    "max": 5.154245122740882
+   },
+   "barras": {
+    "mediana": 35,
+    "min": 35,
+    "max": 35
+   }
+  },
+  {
+   "dataset": "001-pruebaInicial.xlsx",
+   "escenario": "ambos",
+   "metodo": "ffd",
+   "perfil": "rapido",
+   "n": 1,
+   "duracion_segundos": {
+    "mediana": 0.003607607000049029,
+    "min": 0.003607607000049029,
+    "max": 0.003607607000049029
+   },
+   "desperdicio_porcentaje": {
+    "mediana": 5.154245122740882,
+    "min": 5.154245122740882,
+    "max": 5.154245122740882
+   },
+   "barras": {
+    "mediana": 35,
+    "min": 35,
+    "max": 35
+   }
+  },
+  {
+   "dataset": "001-pruebaInicial.xlsx",
+   "escenario": "ideal",
+   "metodo": "ag",
+   "perfil": "balanceado",
+   "n": 5,
+   "duracion_segundos": {
+    "mediana": 0.11386736399998654,
+    "min": 0.11280037600005244,
+    "max": 0.2051801470000214
+   },
+   "desperdicio_porcentaje": {
+    "mediana": 5.154245122740882,
+    "min": 4.441132965151955,
+    "max": 5.154245122740882
+   },
+   "barras": {
+    "mediana": 35,
+    "min": 35,
+    "max": 36
+   }
+  },
+  {
+   "dataset": "001-pruebaInicial.xlsx",
+   "escenario": "ideal",
+   "metodo": "ag",
+   "perfil": "profundo",
+   "n": 5,
+   "duracion_segundos": {
+    "mediana": 0.5636316430000079,
+    "min": 0.3975584190000063,
+    "max": 0.5925523199999816
+   },
+   "desperdicio_porcentaje": {
+    "mediana": 4.441132965151955,
+    "min": 4.441132965151955,
+    "max": 5.154245122740882
+   },
+   "barras": {
+    "mediana": 36,
+    "min": 35,
+    "max": 38
+   }
+  },
+  {
+   "dataset": "001-pruebaInicial.xlsx",
+   "escenario": "ideal",
+   "metodo": "ag",
+   "perfil": "rapido",
+   "n": 5,
+   "duracion_segundos": {
+    "mediana": 0.025690026999996007,
+    "min": 0.022706599000002825,
+    "max": 0.02637202700003627
+   },
+   "desperdicio_porcentaje": {
+    "mediana": 5.154245122740882,
+    "min": 5.154245122740882,
+    "max": 5.154245122740882
+   },
+   "barras": {
+    "mediana": 35,
+    "min": 35,
+    "max": 35
+   }
+  },
+  {
+   "dataset": "001-pruebaInicial.xlsx",
+   "escenario": "ideal",
+   "metodo": "bfd",
+   "perfil": "rapido",
+   "n": 1,
+   "duracion_segundos": {
+    "mediana": 0.002083888000015577,
+    "min": 0.002083888000015577,
+    "max": 0.002083888000015577
+   },
+   "desperdicio_porcentaje": {
+    "mediana": 5.154245122740882,
+    "min": 5.154245122740882,
+    "max": 5.154245122740882
+   },
+   "barras": {
+    "mediana": 35,
+    "min": 35,
+    "max": 35
+   }
+  },
+  {
+   "dataset": "001-pruebaInicial.xlsx",
+   "escenario": "ideal",
+   "metodo": "ffd",
+   "perfil": "rapido",
+   "n": 1,
+   "duracion_segundos": {
+    "mediana": 0.0022066749999680724,
+    "min": 0.0022066749999680724,
+    "max": 0.0022066749999680724
+   },
+   "desperdicio_porcentaje": {
+    "mediana": 5.154245122740882,
+    "min": 5.154245122740882,
+    "max": 5.154245122740882
+   },
+   "barras": {
+    "mediana": 35,
+    "min": 35,
+    "max": 35
+   }
+  },
+  {
+   "dataset": "001-pruebaInicial.xlsx",
+   "escenario": "solo_minimo",
+   "metodo": "ag",
+   "perfil": "balanceado",
+   "n": 5,
+   "duracion_segundos": {
+    "mediana": 0.3383917890000703,
+    "min": 0.20488708000004863,
+    "max": 0.4299674410000307
+   },
+   "desperdicio_porcentaje": {
+    "mediana": 4.441132965151955,
+    "min": 4.441132965151955,
+    "max": 5.154245122740882
+   },
+   "barras": {
+    "mediana": 36,
+    "min": 35,
+    "max": 38
+   }
+  },
+  {
+   "dataset": "001-pruebaInicial.xlsx",
+   "escenario": "solo_minimo",
+   "metodo": "ag",
+   "perfil": "profundo",
+   "n": 5,
+   "duracion_segundos": {
+    "mediana": 0.7251739979999456,
+    "min": 0.7133907329999829,
+    "max": 1.1106805059999942
+   },
+   "desperdicio_porcentaje": {
+    "mediana": 4.441132965151955,
+    "min": 4.441132965151955,
+    "max": 4.441132965151955
+   },
+   "barras": {
+    "mediana": 36,
+    "min": 36,
+    "max": 38
+   }
+  },
+  {
+   "dataset": "001-pruebaInicial.xlsx",
+   "escenario": "solo_minimo",
+   "metodo": "ag",
+   "perfil": "rapido",
+   "n": 5,
+   "duracion_segundos": {
+    "mediana": 0.04889283299996805,
+    "min": 0.03224257900001248,
+    "max": 0.05730140399998618
+   },
+   "desperdicio_porcentaje": {
+    "mediana": 5.154245122740882,
+    "min": 5.154245122740882,
+    "max": 5.154245122740882
+   },
+   "barras": {
+    "mediana": 38,
+    "min": 35,
+    "max": 40
+   }
+  },
+  {
+   "dataset": "001-pruebaInicial.xlsx",
+   "escenario": "solo_minimo",
+   "metodo": "bfd",
+   "perfil": "rapido",
+   "n": 1,
+   "duracion_segundos": {
+    "mediana": 0.00364694999996118,
+    "min": 0.00364694999996118,
+    "max": 0.00364694999996118
+   },
+   "desperdicio_porcentaje": {
+    "mediana": 5.154245122740882,
+    "min": 5.154245122740882,
+    "max": 5.154245122740882
+   },
+   "barras": {
+    "mediana": 35,
+    "min": 35,
+    "max": 35
+   }
+  },
+  {
+   "dataset": "001-pruebaInicial.xlsx",
+   "escenario": "solo_minimo",
+   "metodo": "ffd",
+   "perfil": "rapido",
+   "n": 1,
+   "duracion_segundos": {
+    "mediana": 0.003588540999999168,
+    "min": 0.003588540999999168,
+    "max": 0.003588540999999168
+   },
+   "desperdicio_porcentaje": {
+    "mediana": 5.154245122740882,
+    "min": 5.154245122740882,
+    "max": 5.154245122740882
+   },
+   "barras": {
+    "mediana": 35,
+    "min": 35,
+    "max": 35
+   }
+  },
+  {
+   "dataset": "001-pruebaInicial.xlsx",
+   "escenario": "solo_perdida",
+   "metodo": "ag",
+   "perfil": "balanceado",
+   "n": 5,
+   "duracion_segundos": {
+    "mediana": 0.140462140000011,
+    "min": 0.13792468200000485,
+    "max": 0.18460657800000035
+   },
+   "desperdicio_porcentaje": {
+    "mediana": 5.154245122740882,
+    "min": 4.441132965151955,
+    "max": 5.154245122740882
+   },
+   "barras": {
+    "mediana": 35,
+    "min": 35,
+    "max": 38
+   }
+  },
+  {
+   "dataset": "001-pruebaInicial.xlsx",
+   "escenario": "solo_perdida",
+   "metodo": "ag",
+   "perfil": "profundo",
+   "n": 5,
+   "duracion_segundos": {
+    "mediana": 0.5173219280000012,
+    "min": 0.47626877900000864,
+    "max": 0.588593354000011
+   },
+   "desperdicio_porcentaje": {
+    "mediana": 5.154245122740882,
+    "min": 4.441132965151955,
+    "max": 5.154245122740882
+   },
+   "barras": {
+    "mediana": 35,
+    "min": 35,
+    "max": 41
+   }
+  },
+  {
+   "dataset": "001-pruebaInicial.xlsx",
+   "escenario": "solo_perdida",
+   "metodo": "ag",
+   "perfil": "rapido",
+   "n": 5,
+   "duracion_segundos": {
+    "mediana": 0.03078414200001589,
+    "min": 0.02935676500004547,
+    "max": 0.03205830600001036
+   },
+   "desperdicio_porcentaje": {
+    "mediana": 5.154245122740882,
+    "min": 5.154245122740882,
+    "max": 5.154245122740882
+   },
+   "barras": {
+    "mediana": 35,
+    "min": 35,
+    "max": 35
+   }
+  },
+  {
+   "dataset": "001-pruebaInicial.xlsx",
+   "escenario": "solo_perdida",
+   "metodo": "bfd",
+   "perfil": "rapido",
+   "n": 1,
+   "duracion_segundos": {
+    "mediana": 0.003145915999994031,
+    "min": 0.003145915999994031,
+    "max": 0.003145915999994031
+   },
+   "desperdicio_porcentaje": {
+    "mediana": 5.154245122740882,
+    "min": 5.154245122740882,
+    "max": 5.154245122740882
+   },
+   "barras": {
+    "mediana": 35,
+    "min": 35,
+    "max": 35
+   }
+  },
+  {
+   "dataset": "001-pruebaInicial.xlsx",
+   "escenario": "solo_perdida",
+   "metodo": "ffd",
+   "perfil": "rapido",
+   "n": 1,
+   "duracion_segundos": {
+    "mediana": 0.012418579999973645,
+    "min": 0.012418579999973645,
+    "max": 0.012418579999973645
+   },
+   "desperdicio_porcentaje": {
+    "mediana": 5.154245122740882,
+    "min": 5.154245122740882,
+    "max": 5.154245122740882
+   },
+   "barras": {
+    "mediana": 35,
+    "min": 35,
+    "max": 35
+   }
+  },
+  {
+   "dataset": "002-ingeBigTest.xlsx",
+   "escenario": "ambos",
+   "metodo": "ag",
+   "perfil": "balanceado",
+   "n": 5,
+   "duracion_segundos": {
+    "mediana": 7.376426039999956,
+    "min": 6.106217988000026,
+    "max": 7.7111195949999
+   },
+   "desperdicio_porcentaje": {
+    "mediana": 8.893467795329022,
+    "min": 8.86018217924591,
+    "max": 8.90577704224748
+   },
+   "barras": {
+    "mediana": 13634,
+    "min": 13522,
+    "max": 14849
+   }
+  },
+  {
+   "dataset": "002-ingeBigTest.xlsx",
+   "escenario": "ambos",
+   "metodo": "ag",
+   "perfil": "profundo",
+   "n": 5,
+   "duracion_segundos": {
+    "mediana": 17.81841912199991,
+    "min": 14.406838660999938,
+    "max": 20.04137892199992
+   },
+   "desperdicio_porcentaje": {
+    "mediana": 8.881068843447302,
+    "min": 8.828753150482502,
+    "max": 8.89067558164479
+   },
+   "barras": {
+    "mediana": 13482,
+    "min": 13359,
+    "max": 13947
+   }
+  },
+  {
+   "dataset": "002-ingeBigTest.xlsx",
+   "escenario": "ambos",
+   "metodo": "ag",
+   "perfil": "rapido",
+   "n": 5,
+   "duracion_segundos": {
+    "mediana": 2.858979094999995,
+    "min": 2.777263574000017,
+    "max": 3.155722826999977
+   },
+   "desperdicio_porcentaje": {
+    "mediana": 8.965588609491531,
+    "min": 8.962561904361069,
+    "max": 9.00279255122531
+   },
+   "barras": {
+    "mediana": 14301,
+    "min": 14140,
+    "max": 14859
+   }
+  },
+  {
+   "dataset": "002-ingeBigTest.xlsx",
+   "escenario": "ambos",
+   "metodo": "bfd",
+   "perfil": "rapido",
+   "n": 1,
+   "duracion_segundos": {
+    "mediana": 2.403899698000032,
+    "min": 2.403899698000032,
+    "max": 2.403899698000032
+   },
+   "desperdicio_porcentaje": {
+    "mediana": 10.130000957311763,
+    "min": 10.130000957311763,
+    "max": 10.130000957311763
+   },
+   "barras": {
+    "mediana": 17041,
+    "min": 17041,
+    "max": 17041
+   }
+  },
+  {
+   "dataset": "002-ingeBigTest.xlsx",
+   "escenario": "ambos",
+   "metodo": "ffd",
+   "perfil": "rapido",
+   "n": 1,
+   "duracion_segundos": {
+    "mediana": 2.410955028999979,
+    "min": 2.410955028999979,
+    "max": 2.410955028999979
+   },
+   "desperdicio_porcentaje": {
+    "mediana": 10.130000957311763,
+    "min": 10.130000957311763,
+    "max": 10.130000957311763
+   },
+   "barras": {
+    "mediana": 17041,
+    "min": 17041,
+    "max": 17041
+   }
+  },
+  {
+   "dataset": "002-ingeBigTest.xlsx",
+   "escenario": "ideal",
+   "metodo": "ag",
+   "perfil": "balanceado",
+   "n": 5,
+   "duracion_segundos": {
+    "mediana": 4.607467288999999,
+    "min": 4.452196863999973,
+    "max": 4.849948758000039
+   },
+   "desperdicio_porcentaje": {
+    "mediana": 7.946736379858751,
+    "min": 7.933736674936025,
+    "max": 7.995056758356847
+   },
+   "barras": {
+    "mediana": 12822,
+    "min": 12600,
+    "max": 12886
+   }
+  },
+  {
+   "dataset": "002-ingeBigTest.xlsx",
+   "escenario": "ideal",
+   "metodo": "ag",
+   "perfil": "profundo",
+   "n": 5,
+   "duracion_segundos": {
+    "mediana": 10.20193163700003,
+    "min": 7.685908345999962,
+    "max": 11.97474809900001
+   },
+   "desperdicio_porcentaje": {
+    "mediana": 7.940351792102547,
+    "min": 7.934420091249485,
+    "max": 7.94833238842877
+   },
+   "barras": {
+    "mediana": 12704,
+    "min": 12633,
+    "max": 13330
+   }
+  },
+  {
+   "dataset": "002-ingeBigTest.xlsx",
+   "escenario": "ideal",
+   "metodo": "ag",
+   "perfil": "rapido",
+   "n": 5,
+   "duracion_segundos": {
+    "mediana": 2.027140777999989,
+    "min": 1.880453650999982,
+    "max": 2.106561482000018
+   },
+   "desperdicio_porcentaje": {
+    "mediana": 8.061559012193278,
+    "min": 7.971594036874371,
+    "max": 8.167521975767938
+   },
+   "barras": {
+    "mediana": 13587,
+    "min": 12945,
+    "max": 14116
+   }
+  },
+  {
+   "dataset": "002-ingeBigTest.xlsx",
+   "escenario": "ideal",
+   "metodo": "bfd",
+   "perfil": "rapido",
+   "n": 1,
+   "duracion_segundos": {
+    "mediana": 1.410844644000008,
+    "min": 1.410844644000008,
+    "max": 1.410844644000008
+   },
+   "desperdicio_porcentaje": {
+    "mediana": 9.489785392079646,
+    "min": 9.489785392079646,
+    "max": 9.489785392079646
+   },
+   "barras": {
+    "mediana": 16978,
+    "min": 16978,
+    "max": 16978
+   }
+  },
+  {
+   "dataset": "002-ingeBigTest.xlsx",
+   "escenario": "ideal",
+   "metodo": "ffd",
+   "perfil": "rapido",
+   "n": 1,
+   "duracion_segundos": {
+    "mediana": 1.5294804189999809,
+    "min": 1.5294804189999809,
+    "max": 1.5294804189999809
+   },
+   "desperdicio_porcentaje": {
+    "mediana": 9.489785392079646,
+    "min": 9.489785392079646,
+    "max": 9.489785392079646
+   },
+   "barras": {
+    "mediana": 16978,
+    "min": 16978,
+    "max": 16978
+   }
+  },
+  {
+   "dataset": "002-ingeBigTest.xlsx",
+   "escenario": "solo_minimo",
+   "metodo": "ag",
+   "perfil": "balanceado",
+   "n": 5,
+   "duracion_segundos": {
+    "mediana": 7.666947548999929,
+    "min": 7.4767909519999876,
+    "max": 8.260661057999982
+   },
+   "desperdicio_porcentaje": {
+    "mediana": 7.952690366993784,
+    "min": 7.931910507374695,
+    "max": 7.989361472716587
+   },
+   "barras": {
+    "mediana": 13205,
+    "min": 12854,
+    "max": 14200
+   }
+  },
+  {
+   "dataset": "002-ingeBigTest.xlsx",
+   "escenario": "solo_minimo",
+   "metodo": "ag",
+   "perfil": "profundo",
+   "n": 5,
+   "duracion_segundos": {
+    "mediana": 24.332430295999984,
+    "min": 17.045311578999986,
+    "max": 24.93606575700005
+   },
+   "desperdicio_porcentaje": {
+    "mediana": 7.933165316413827,
+    "min": 7.9262074010568595,
+    "max": 7.937271224040419
+   },
+   "barras": {
+    "mediana": 12913,
+    "min": 12818,
+    "max": 13181
+   }
+  },
+  {
+   "dataset": "002-ingeBigTest.xlsx",
+   "escenario": "solo_minimo",
+   "metodo": "ag",
+   "perfil": "rapido",
+   "n": 5,
+   "duracion_segundos": {
+    "mediana": 2.6651728399999683,
+    "min": 2.5776564630000394,
+    "max": 2.717746772000055
+   },
+   "desperdicio_porcentaje": {
+    "mediana": 8.084638960705444,
+    "min": 7.981841294567098,
+    "max": 8.315161638683444
+   },
+   "barras": {
+    "mediana": 14020,
+    "min": 12753,
+    "max": 14633
+   }
+  },
+  {
+   "dataset": "002-ingeBigTest.xlsx",
+   "escenario": "solo_minimo",
+   "metodo": "bfd",
+   "perfil": "rapido",
+   "n": 1,
+   "duracion_segundos": {
+    "mediana": 1.9073821020000423,
+    "min": 1.9073821020000423,
+    "max": 1.9073821020000423
+   },
+   "desperdicio_porcentaje": {
+    "mediana": 9.489785392079646,
+    "min": 9.489785392079646,
+    "max": 9.489785392079646
+   },
+   "barras": {
+    "mediana": 16978,
+    "min": 16978,
+    "max": 16978
+   }
+  },
+  {
+   "dataset": "002-ingeBigTest.xlsx",
+   "escenario": "solo_minimo",
+   "metodo": "ffd",
+   "perfil": "rapido",
+   "n": 1,
+   "duracion_segundos": {
+    "mediana": 1.9737226219999684,
+    "min": 1.9737226219999684,
+    "max": 1.9737226219999684
+   },
+   "desperdicio_porcentaje": {
+    "mediana": 9.489785392079646,
+    "min": 9.489785392079646,
+    "max": 9.489785392079646
+   },
+   "barras": {
+    "mediana": 16978,
+    "min": 16978,
+    "max": 16978
+   }
+  },
+  {
+   "dataset": "002-ingeBigTest.xlsx",
+   "escenario": "solo_perdida",
+   "metodo": "ag",
+   "perfil": "balanceado",
+   "n": 5,
+   "duracion_segundos": {
+    "mediana": 5.890931773000034,
+    "min": 5.272511635000001,
+    "max": 6.088052679000043
+   },
+   "desperdicio_porcentaje": {
+    "mediana": 8.895166068399462,
+    "min": 8.838370922631192,
+    "max": 8.923624307672
+   },
+   "barras": {
+    "mediana": 13889,
+    "min": 13655,
+    "max": 15507
+   }
+  },
+  {
+   "dataset": "002-ingeBigTest.xlsx",
+   "escenario": "solo_perdida",
+   "metodo": "ag",
+   "perfil": "profundo",
+   "n": 5,
+   "duracion_segundos": {
+    "mediana": 11.559302883999976,
+    "min": 10.222555102000001,
+    "max": 13.71364858000004
+   },
+   "desperdicio_porcentaje": {
+    "mediana": 8.885090640793818,
+    "min": 8.879505015194567,
+    "max": 8.909548477988501
+   },
+   "barras": {
+    "mediana": 13868,
+    "min": 13622,
+    "max": 13921
+   }
+  },
+  {
+   "dataset": "002-ingeBigTest.xlsx",
+   "escenario": "solo_perdida",
+   "metodo": "ag",
+   "perfil": "rapido",
+   "n": 5,
+   "duracion_segundos": {
+    "mediana": 2.3461554759999217,
+    "min": 2.297214591999989,
+    "max": 2.3754012739999553
+   },
+   "desperdicio_porcentaje": {
+    "mediana": 8.963230131944877,
+    "min": 8.928201431314907,
+    "max": 9.125865050466214
+   },
+   "barras": {
+    "mediana": 14445,
+    "min": 14299,
+    "max": 15911
+   }
+  },
+  {
+   "dataset": "002-ingeBigTest.xlsx",
+   "escenario": "solo_perdida",
+   "metodo": "bfd",
+   "perfil": "rapido",
+   "n": 1,
+   "duracion_segundos": {
+    "mediana": 2.012961167999947,
+    "min": 2.012961167999947,
+    "max": 2.012961167999947
+   },
+   "desperdicio_porcentaje": {
+    "mediana": 10.130000957311763,
+    "min": 10.130000957311763,
+    "max": 10.130000957311763
+   },
+   "barras": {
+    "mediana": 17041,
+    "min": 17041,
+    "max": 17041
+   }
+  },
+  {
+   "dataset": "002-ingeBigTest.xlsx",
+   "escenario": "solo_perdida",
+   "metodo": "ffd",
+   "perfil": "rapido",
+   "n": 1,
+   "duracion_segundos": {
+    "mediana": 1.9745973700000263,
+    "min": 1.9745973700000263,
+    "max": 1.9745973700000263
+   },
+   "desperdicio_porcentaje": {
+    "mediana": 10.130000957311763,
+    "min": 10.130000957311763,
+    "max": 10.130000957311763
+   },
+   "barras": {
+    "mediana": 17041,
+    "min": 17041,
+    "max": 17041
+   }
+  },
+  {
+   "dataset": "003-sinteticaVivienda.xlsx",
+   "escenario": "ambos",
+   "metodo": "ag",
+   "perfil": "balanceado",
+   "n": 5,
+   "duracion_segundos": {
+    "mediana": 0.6079155989998526,
+    "min": 0.5923188780000146,
+    "max": 0.7206131289999576
+   },
+   "desperdicio_porcentaje": {
+    "mediana": 5.105207844677423,
+    "min": 5.002191555013855,
+    "max": 5.105207844677423
+   },
+   "barras": {
+    "mediana": 610,
+    "min": 606,
+    "max": 610
+   }
+  },
+  {
+   "dataset": "003-sinteticaVivienda.xlsx",
+   "escenario": "ambos",
+   "metodo": "ag",
+   "perfil": "profundo",
+   "n": 5,
+   "duracion_segundos": {
+    "mediana": 1.7261085079999248,
+    "min": 1.583887601000015,
+    "max": 2.2251144379999914
+   },
+   "desperdicio_porcentaje": {
+    "mediana": 5.105207844677423,
+    "min": 5.002191555013855,
+    "max": 5.105207844677423
+   },
+   "barras": {
+    "mediana": 610,
+    "min": 606,
+    "max": 610
+   }
+  },
+  {
+   "dataset": "003-sinteticaVivienda.xlsx",
+   "escenario": "ambos",
+   "metodo": "ag",
+   "perfil": "rapido",
+   "n": 5,
+   "duracion_segundos": {
+    "mediana": 0.1757914779998373,
+    "min": 0.13150426500010326,
+    "max": 0.1804905360002067
+   },
+   "desperdicio_porcentaje": {
+    "mediana": 5.105207844677423,
+    "min": 5.105207844677423,
+    "max": 5.134186197845663
+   },
+   "barras": {
+    "mediana": 610,
+    "min": 610,
+    "max": 623
+   }
+  },
+  {
+   "dataset": "003-sinteticaVivienda.xlsx",
+   "escenario": "ambos",
+   "metodo": "bfd",
+   "perfil": "rapido",
+   "n": 1,
+   "duracion_segundos": {
+    "mediana": 0.03285313700007464,
+    "min": 0.03285313700007464,
+    "max": 0.03285313700007464
+   },
+   "desperdicio_porcentaje": {
+    "mediana": 5.134186197845663,
+    "min": 5.134186197845663,
+    "max": 5.134186197845663
+   },
+   "barras": {
+    "mediana": 624,
+    "min": 624,
+    "max": 624
+   }
+  },
+  {
+   "dataset": "003-sinteticaVivienda.xlsx",
+   "escenario": "ambos",
+   "metodo": "ffd",
+   "perfil": "rapido",
+   "n": 1,
+   "duracion_segundos": {
+    "mediana": 0.03468488500016065,
+    "min": 0.03468488500016065,
+    "max": 0.03468488500016065
+   },
+   "desperdicio_porcentaje": {
+    "mediana": 5.134186197845663,
+    "min": 5.134186197845663,
+    "max": 5.134186197845663
+   },
+   "barras": {
+    "mediana": 624,
+    "min": 624,
+    "max": 624
+   }
+  },
+  {
+   "dataset": "003-sinteticaVivienda.xlsx",
+   "escenario": "ideal",
+   "metodo": "ag",
+   "perfil": "balanceado",
+   "n": 5,
+   "duracion_segundos": {
+    "mediana": 0.3751588179999885,
+    "min": 0.32798600299997815,
+    "max": 0.38883993999996846
+   },
+   "desperdicio_porcentaje": {
+    "mediana": 4.914961004056278,
+    "min": 4.914961004056278,
+    "max": 5.018166464655288
+   },
+   "barras": {
+    "mediana": 616,
+    "min": 616,
+    "max": 618
+   }
+  },
+  {
+   "dataset": "003-sinteticaVivienda.xlsx",
+   "escenario": "ideal",
+   "metodo": "ag",
+   "perfil": "profundo",
+   "n": 5,
+   "duracion_segundos": {
+    "mediana": 1.0109619919999773,
+    "min": 0.988604740000028,
+    "max": 1.1627367469999967
+   },
+   "desperdicio_porcentaje": {
+    "mediana": 4.914961004056278,
+    "min": 4.914961004056278,
+    "max": 4.914961004056278
+   },
+   "barras": {
+    "mediana": 616,
+    "min": 616,
+    "max": 616
+   }
+  },
+  {
+   "dataset": "003-sinteticaVivienda.xlsx",
+   "escenario": "ideal",
+   "metodo": "ag",
+   "perfil": "rapido",
+   "n": 5,
+   "duracion_segundos": {
+    "mediana": 0.08652857399999903,
+    "min": 0.08084933399999272,
+    "max": 0.09875907200000711
+   },
+   "desperdicio_porcentaje": {
+    "mediana": 5.018166464655288,
+    "min": 4.914961004056278,
+    "max": 5.018166464655288
+   },
+   "barras": {
+    "mediana": 618,
+    "min": 616,
+    "max": 626
+   }
+  },
+  {
+   "dataset": "003-sinteticaVivienda.xlsx",
+   "escenario": "ideal",
+   "metodo": "bfd",
+   "perfil": "rapido",
+   "n": 1,
+   "duracion_segundos": {
+    "mediana": 0.019934401000000435,
+    "min": 0.019934401000000435,
+    "max": 0.019934401000000435
+   },
+   "desperdicio_porcentaje": {
+    "mediana": 5.018166464655288,
+    "min": 5.018166464655288,
+    "max": 5.018166464655288
+   },
+   "barras": {
+    "mediana": 634,
+    "min": 634,
+    "max": 634
+   }
+  },
+  {
+   "dataset": "003-sinteticaVivienda.xlsx",
+   "escenario": "ideal",
+   "metodo": "ffd",
+   "perfil": "rapido",
+   "n": 1,
+   "duracion_segundos": {
+    "mediana": 0.01958054700003231,
+    "min": 0.01958054700003231,
+    "max": 0.01958054700003231
+   },
+   "desperdicio_porcentaje": {
+    "mediana": 5.018166464655288,
+    "min": 5.018166464655288,
+    "max": 5.018166464655288
+   },
+   "barras": {
+    "mediana": 634,
+    "min": 634,
+    "max": 634
+   }
+  },
+  {
+   "dataset": "003-sinteticaVivienda.xlsx",
+   "escenario": "solo_minimo",
+   "metodo": "ag",
+   "perfil": "balanceado",
+   "n": 5,
+   "duracion_segundos": {
+    "mediana": 0.6327041160000135,
+    "min": 0.5897411999999349,
+    "max": 0.7901393060000146
+   },
+   "desperdicio_porcentaje": {
+    "mediana": 4.914961004056278,
+    "min": 4.914961004056278,
+    "max": 5.018166464655288
+   },
+   "barras": {
+    "mediana": 617,
+    "min": 617,
+    "max": 621
+   }
+  },
+  {
+   "dataset": "003-sinteticaVivienda.xlsx",
+   "escenario": "solo_minimo",
+   "metodo": "ag",
+   "perfil": "profundo",
+   "n": 5,
+   "duracion_segundos": {
+    "mediana": 1.754396325000016,
+    "min": 1.5043951960000186,
+    "max": 2.114978239999914
+   },
+   "desperdicio_porcentaje": {
+    "mediana": 4.914961004056278,
+    "min": 4.914961004056278,
+    "max": 5.018166464655288
+   },
+   "barras": {
+    "mediana": 617,
+    "min": 617,
+    "max": 621
+   }
+  },
+  {
+   "dataset": "003-sinteticaVivienda.xlsx",
+   "escenario": "solo_minimo",
+   "metodo": "ag",
+   "perfil": "rapido",
+   "n": 5,
+   "duracion_segundos": {
+    "mediana": 0.14801027099997555,
+    "min": 0.12831378600003518,
+    "max": 0.17798934300003566
+   },
+   "desperdicio_porcentaje": {
+    "mediana": 5.018166464655288,
+    "min": 4.914961004056278,
+    "max": 5.018166464655288
+   },
+   "barras": {
+    "mediana": 621,
+    "min": 617,
+    "max": 633
+   }
+  },
+  {
+   "dataset": "003-sinteticaVivienda.xlsx",
+   "escenario": "solo_minimo",
+   "metodo": "bfd",
+   "perfil": "rapido",
+   "n": 1,
+   "duracion_segundos": {
+    "mediana": 0.03306792800003677,
+    "min": 0.03306792800003677,
+    "max": 0.03306792800003677
+   },
+   "desperdicio_porcentaje": {
+    "mediana": 5.018166464655288,
+    "min": 5.018166464655288,
+    "max": 5.018166464655288
+   },
+   "barras": {
+    "mediana": 634,
+    "min": 634,
+    "max": 634
+   }
+  },
+  {
+   "dataset": "003-sinteticaVivienda.xlsx",
+   "escenario": "solo_minimo",
+   "metodo": "ffd",
+   "perfil": "rapido",
+   "n": 1,
+   "duracion_segundos": {
+    "mediana": 0.0330772549999665,
+    "min": 0.0330772549999665,
+    "max": 0.0330772549999665
+   },
+   "desperdicio_porcentaje": {
+    "mediana": 5.018166464655288,
+    "min": 5.018166464655288,
+    "max": 5.018166464655288
+   },
+   "barras": {
+    "mediana": 634,
+    "min": 634,
+    "max": 634
+   }
+  },
+  {
+   "dataset": "003-sinteticaVivienda.xlsx",
+   "escenario": "solo_perdida",
+   "metodo": "ag",
+   "perfil": "balanceado",
+   "n": 5,
+   "duracion_segundos": {
+    "mediana": 0.5001800960000082,
+    "min": 0.4629064709999966,
+    "max": 0.6521622030001026
+   },
+   "desperdicio_porcentaje": {
+    "mediana": 5.105207844677423,
+    "min": 5.002191555013855,
+    "max": 5.105207844677423
+   },
+   "barras": {
+    "mediana": 608,
+    "min": 606,
+    "max": 608
+   }
+  },
+  {
+   "dataset": "003-sinteticaVivienda.xlsx",
+   "escenario": "solo_perdida",
+   "metodo": "ag",
+   "perfil": "profundo",
+   "n": 5,
+   "duracion_segundos": {
+    "mediana": 1.6448472160000165,
+    "min": 1.3209965160000365,
+    "max": 1.9521533140000429
+   },
+   "desperdicio_porcentaje": {
+    "mediana": 5.002191555013855,
+    "min": 5.002191555013855,
+    "max": 5.105207844677423
+   },
+   "barras": {
+    "mediana": 606,
+    "min": 606,
+    "max": 608
+   }
+  },
+  {
+   "dataset": "003-sinteticaVivienda.xlsx",
+   "escenario": "solo_perdida",
+   "metodo": "ag",
+   "perfil": "rapido",
+   "n": 5,
+   "duracion_segundos": {
+    "mediana": 0.13075163399992107,
+    "min": 0.12268180299997766,
+    "max": 0.13581601999999293
+   },
+   "desperdicio_porcentaje": {
+    "mediana": 5.105207844677423,
+    "min": 5.105207844677423,
+    "max": 5.134186197845663
+   },
+   "barras": {
+    "mediana": 608,
+    "min": 608,
+    "max": 610
+   }
+  },
+  {
+   "dataset": "003-sinteticaVivienda.xlsx",
+   "escenario": "solo_perdida",
+   "metodo": "bfd",
+   "perfil": "rapido",
+   "n": 1,
+   "duracion_segundos": {
+    "mediana": 0.028540168999938942,
+    "min": 0.028540168999938942,
+    "max": 0.028540168999938942
+   },
+   "desperdicio_porcentaje": {
+    "mediana": 5.134186197845663,
+    "min": 5.134186197845663,
+    "max": 5.134186197845663
+   },
+   "barras": {
+    "mediana": 624,
+    "min": 624,
+    "max": 624
+   }
+  },
+  {
+   "dataset": "003-sinteticaVivienda.xlsx",
+   "escenario": "solo_perdida",
+   "metodo": "ffd",
+   "perfil": "rapido",
+   "n": 1,
+   "duracion_segundos": {
+    "mediana": 0.030147208999892428,
+    "min": 0.030147208999892428,
+    "max": 0.030147208999892428
+   },
+   "desperdicio_porcentaje": {
+    "mediana": 5.134186197845663,
+    "min": 5.134186197845663,
+    "max": 5.134186197845663
+   },
+   "barras": {
+    "mediana": 624,
+    "min": 624,
+    "max": 624
+   }
+  },
+  {
+   "dataset": "004-sinteticaEdificio.xlsx",
+   "escenario": "ambos",
+   "metodo": "ag",
+   "perfil": "balanceado",
+   "n": 5,
+   "duracion_segundos": {
+    "mediana": 3.49644859,
+    "min": 3.296748557000001,
+    "max": 4.459184011000161
+   },
+   "desperdicio_porcentaje": {
+    "mediana": 5.878669058214826,
+    "min": 5.870717544188977,
+    "max": 5.881786932311298
+   },
+   "barras": {
+    "mediana": 4468,
+    "min": 4395,
+    "max": 4592
+   }
+  },
+  {
+   "dataset": "004-sinteticaEdificio.xlsx",
+   "escenario": "ambos",
+   "metodo": "ag",
+   "perfil": "profundo",
+   "n": 5,
+   "duracion_segundos": {
+    "mediana": 9.215407512999946,
+    "min": 8.108715952000011,
+    "max": 11.295235793000074
+   },
+   "desperdicio_porcentaje": {
+    "mediana": 5.8675989366412695,
+    "min": 5.8675989366412695,
+    "max": 5.881786932311298
+   },
+   "barras": {
+    "mediana": 4507,
+    "min": 4483,
+    "max": 4547
+   }
+  },
+  {
+   "dataset": "004-sinteticaEdificio.xlsx",
+   "escenario": "ambos",
+   "metodo": "ag",
+   "perfil": "rapido",
+   "n": 5,
+   "duracion_segundos": {
+    "mediana": 1.0510778050002045,
+    "min": 1.027904079999871,
+    "max": 1.214554532000193
+   },
+   "desperdicio_porcentaje": {
+    "mediana": 5.920898695978507,
+    "min": 5.918428738332148,
+    "max": 5.934703593264383
+   },
+   "barras": {
+    "mediana": 4563,
+    "min": 4540,
+    "max": 4768
+   }
+  },
+  {
+   "dataset": "004-sinteticaEdificio.xlsx",
+   "escenario": "ambos",
+   "metodo": "bfd",
+   "perfil": "rapido",
+   "n": 1,
+   "duracion_segundos": {
+    "mediana": 0.3091580939999403,
+    "min": 0.3091580939999403,
+    "max": 0.3091580939999403
+   },
+   "desperdicio_porcentaje": {
+    "mediana": 6.4719042688563055,
+    "min": 6.4719042688563055,
+    "max": 6.4719042688563055
+   },
+   "barras": {
+    "mediana": 4315,
+    "min": 4315,
+    "max": 4315
+   }
+  },
+  {
+   "dataset": "004-sinteticaEdificio.xlsx",
+   "escenario": "ambos",
+   "metodo": "ffd",
+   "perfil": "rapido",
+   "n": 1,
+   "duracion_segundos": {
+    "mediana": 0.3247645599999487,
+    "min": 0.3247645599999487,
+    "max": 0.3247645599999487
+   },
+   "desperdicio_porcentaje": {
+    "mediana": 6.4719042688563055,
+    "min": 6.4719042688563055,
+    "max": 6.4719042688563055
+   },
+   "barras": {
+    "mediana": 4315,
+    "min": 4315,
+    "max": 4315
+   }
+  },
+  {
+   "dataset": "004-sinteticaEdificio.xlsx",
+   "escenario": "ideal",
+   "metodo": "ag",
+   "perfil": "balanceado",
+   "n": 5,
+   "duracion_segundos": {
+    "mediana": 2.607650360999969,
+    "min": 2.0871328919999996,
+    "max": 2.7386127539999734
+   },
+   "desperdicio_porcentaje": {
+    "mediana": 5.695667274211664,
+    "min": 5.686991589200073,
+    "max": 5.715449914560364
+   },
+   "barras": {
+    "mediana": 4319,
+    "min": 4287,
+    "max": 4389
+   }
+  },
+  {
+   "dataset": "004-sinteticaEdificio.xlsx",
+   "escenario": "ideal",
+   "metodo": "ag",
+   "perfil": "profundo",
+   "n": 5,
+   "duracion_segundos": {
+    "mediana": 6.408178636000002,
+    "min": 5.525308086999985,
+    "max": 6.914242563000016
+   },
+   "desperdicio_porcentaje": {
+    "mediana": 5.681434287374907,
+    "min": 5.681434287374907,
+    "max": 5.690110994782108
+   },
+   "barras": {
+    "mediana": 4314,
+    "min": 4305,
+    "max": 4357
+   }
+  },
+  {
+   "dataset": "004-sinteticaEdificio.xlsx",
+   "escenario": "ideal",
+   "metodo": "ag",
+   "perfil": "rapido",
+   "n": 5,
+   "duracion_segundos": {
+    "mediana": 0.6313009849999958,
+    "min": 0.5156219749999877,
+    "max": 0.6527463230000308
+   },
+   "desperdicio_porcentaje": {
+    "mediana": 5.727935528215807,
+    "min": 5.714768278040475,
+    "max": 5.777186516931295
+   },
+   "barras": {
+    "mediana": 4508,
+    "min": 4427,
+    "max": 4576
+   }
+  },
+  {
+   "dataset": "004-sinteticaEdificio.xlsx",
+   "escenario": "ideal",
+   "metodo": "bfd",
+   "perfil": "rapido",
+   "n": 1,
+   "duracion_segundos": {
+    "mediana": 0.14929982600000358,
+    "min": 0.14929982600000358,
+    "max": 0.14929982600000358
+   },
+   "desperdicio_porcentaje": {
+    "mediana": 6.265787402550492,
+    "min": 6.265787402550492,
+    "max": 6.265787402550492
+   },
+   "barras": {
+    "mediana": 4322,
+    "min": 4322,
+    "max": 4322
+   }
+  },
+  {
+   "dataset": "004-sinteticaEdificio.xlsx",
+   "escenario": "ideal",
+   "metodo": "ffd",
+   "perfil": "rapido",
+   "n": 1,
+   "duracion_segundos": {
+    "mediana": 0.15919611099997155,
+    "min": 0.15919611099997155,
+    "max": 0.15919611099997155
+   },
+   "desperdicio_porcentaje": {
+    "mediana": 6.265787402550492,
+    "min": 6.265787402550492,
+    "max": 6.265787402550492
+   },
+   "barras": {
+    "mediana": 4322,
+    "min": 4322,
+    "max": 4322
+   }
+  },
+  {
+   "dataset": "004-sinteticaEdificio.xlsx",
+   "escenario": "solo_minimo",
+   "metodo": "ag",
+   "perfil": "balanceado",
+   "n": 5,
+   "duracion_segundos": {
+    "mediana": 4.721694704000015,
+    "min": 3.778627107000034,
+    "max": 7.825948831000005
+   },
+   "desperdicio_porcentaje": {
+    "mediana": 5.695667274211664,
+    "min": 5.681434287374907,
+    "max": 5.706777869208608
+   },
+   "barras": {
+    "mediana": 4493,
+    "min": 4317,
+    "max": 4667
+   }
+  },
+  {
+   "dataset": "004-sinteticaEdificio.xlsx",
+   "escenario": "solo_minimo",
+   "metodo": "ag",
+   "perfil": "profundo",
+   "n": 5,
+   "duracion_segundos": {
+    "mediana": 10.323883681999973,
+    "min": 9.392987229999903,
+    "max": 15.420329485000025
+   },
+   "desperdicio_porcentaje": {
+    "mediana": 5.686991589200073,
+    "min": 5.681434287374907,
+    "max": 5.686991589200073
+   },
+   "barras": {
+    "mediana": 4336,
+    "min": 4314,
+    "max": 4364
+   }
+  },
+  {
+   "dataset": "004-sinteticaEdificio.xlsx",
+   "escenario": "solo_minimo",
+   "metodo": "ag",
+   "perfil": "rapido",
+   "n": 5,
+   "duracion_segundos": {
+    "mediana": 1.0363992610000423,
+    "min": 0.9414900460000126,
+    "max": 1.1204811169999402
+   },
+   "desperdicio_porcentaje": {
+    "mediana": 5.704341363248562,
+    "min": 5.69012217507615,
+    "max": 5.738351641583084
+   },
+   "barras": {
+    "mediana": 4588,
+    "min": 4509,
+    "max": 4727
+   }
+  },
+  {
+   "dataset": "004-sinteticaEdificio.xlsx",
+   "escenario": "solo_minimo",
+   "metodo": "bfd",
+   "perfil": "rapido",
+   "n": 1,
+   "duracion_segundos": {
+    "mediana": 0.2492621890000919,
+    "min": 0.2492621890000919,
+    "max": 0.2492621890000919
+   },
+   "desperdicio_porcentaje": {
+    "mediana": 6.265787402550492,
+    "min": 6.265787402550492,
+    "max": 6.265787402550492
+   },
+   "barras": {
+    "mediana": 4322,
+    "min": 4322,
+    "max": 4322
+   }
+  },
+  {
+   "dataset": "004-sinteticaEdificio.xlsx",
+   "escenario": "solo_minimo",
+   "metodo": "ffd",
+   "perfil": "rapido",
+   "n": 1,
+   "duracion_segundos": {
+    "mediana": 0.32513378199996623,
+    "min": 0.32513378199996623,
+    "max": 0.32513378199996623
+   },
+   "desperdicio_porcentaje": {
+    "mediana": 6.265787402550492,
+    "min": 6.265787402550492,
+    "max": 6.265787402550492
+   },
+   "barras": {
+    "mediana": 4322,
+    "min": 4322,
+    "max": 4322
+   }
+  },
+  {
+   "dataset": "004-sinteticaEdificio.xlsx",
+   "escenario": "solo_perdida",
+   "metodo": "ag",
+   "perfil": "balanceado",
+   "n": 5,
+   "duracion_segundos": {
+    "mediana": 3.323594620999984,
+    "min": 2.882280207000008,
+    "max": 4.187907329000041
+   },
+   "desperdicio_porcentaje": {
+    "mediana": 5.876252563702949,
+    "min": 5.870717544188977,
+    "max": 5.881786932311298
+   },
+   "barras": {
+    "mediana": 4380,
+    "min": 4362,
+    "max": 4462
+   }
+  },
+  {
+   "dataset": "004-sinteticaEdificio.xlsx",
+   "escenario": "solo_perdida",
+   "metodo": "ag",
+   "perfil": "profundo",
+   "n": 5,
+   "duracion_segundos": {
+    "mediana": 8.129489592000027,
+    "min": 6.755747773000053,
+    "max": 9.414836449000063
+   },
+   "desperdicio_porcentaje": {
+    "mediana": 5.870717544188977,
+    "min": 5.8675989366412695,
+    "max": 5.870717544188977
+   },
+   "barras": {
+    "mediana": 4466,
+    "min": 4433,
+    "max": 4505
+   }
+  },
+  {
+   "dataset": "004-sinteticaEdificio.xlsx",
+   "escenario": "solo_perdida",
+   "metodo": "ag",
+   "perfil": "rapido",
+   "n": 5,
+   "duracion_segundos": {
+    "mediana": 0.8460362260000238,
+    "min": 0.8001879220000774,
+    "max": 0.8889694609999879
+   },
+   "desperdicio_porcentaje": {
+    "mediana": 5.93503726343279,
+    "min": 5.913243630592301,
+    "max": 5.962340142725439
+   },
+   "barras": {
+    "mediana": 4518,
+    "min": 4430,
+    "max": 4607
+   }
+  },
+  {
+   "dataset": "004-sinteticaEdificio.xlsx",
+   "escenario": "solo_perdida",
+   "metodo": "bfd",
+   "perfil": "rapido",
+   "n": 1,
+   "duracion_segundos": {
+    "mediana": 0.2521142409999584,
+    "min": 0.2521142409999584,
+    "max": 0.2521142409999584
+   },
+   "desperdicio_porcentaje": {
+    "mediana": 6.4719042688563055,
+    "min": 6.4719042688563055,
+    "max": 6.4719042688563055
+   },
+   "barras": {
+    "mediana": 4315,
+    "min": 4315,
+    "max": 4315
+   }
+  },
+  {
+   "dataset": "004-sinteticaEdificio.xlsx",
+   "escenario": "solo_perdida",
+   "metodo": "ffd",
+   "perfil": "rapido",
+   "n": 1,
+   "duracion_segundos": {
+    "mediana": 0.26429104800001824,
+    "min": 0.26429104800001824,
+    "max": 0.26429104800001824
+   },
+   "desperdicio_porcentaje": {
+    "mediana": 6.4719042688563055,
+    "min": 6.4719042688563055,
+    "max": 6.4719042688563055
+   },
+   "barras": {
+    "mediana": 4315,
+    "min": 4315,
+    "max": 4315
+   }
+  }
+ ],
+ "por_diametro": [
+  {
+   "dataset": "001-pruebaInicial.xlsx",
+   "escenario": "ambos",
+   "perfil": "balanceado",
+   "diametro": "#3",
+   "filas": 1,
+   "piezas": 1,
+   "n": 5,
+   "segundos": {
+    "mediana": 0.021627748000014435,
+    "min": 0.019738562000043203,
+    "max": 0.0220419759999686
+   },
+   "evaluaciones": {
+    "mediana": 775,
+    "min": 775,
+    "max": 775
+   },
+   "generaciones": {
+    "mediana": 15,
+    "min": 15,
+    "max": 15
+   },
+   "ms_por_evaluacion": {
+    "mediana": 0.027906771612921853,
+    "min": 0.02546911225812026,
+    "max": 0.028441259354798194
+   }
+  },
+  {
+   "dataset": "001-pruebaInicial.xlsx",
+   "escenario": "ambos",
+   "perfil": "balanceado",
+   "diametro": "#4",
+   "filas": 3,
+   "piezas": 3,
+   "n": 5,
+   "segundos": {
+    "mediana": 0.03161061800005882,
+    "min": 0.029642912999975124,
+    "max": 0.03592958700005511
+   },
+   "evaluaciones": {
+    "mediana": 705,
+    "min": 694,
+    "max": 724
+   },
+   "generaciones": {
+    "mediana": 15,
+    "min": 15,
+    "max": 15
+   },
+   "ms_por_evaluacion": {
+    "mediana": 0.04396489361708699,
+    "min": 0.04271313112388347,
+    "max": 0.051622969827665385
+   }
+  },
+  {
+   "dataset": "001-pruebaInicial.xlsx",
+   "escenario": "ambos",
+   "perfil": "balanceado",
+   "diametro": "#5",
+   "filas": 12,
+   "piezas": 88,
+   "n": 5,
+   "segundos": {
+    "mediana": 0.2266886139999542,
+    "min": 0.10967823599992244,
+    "max": 0.27371688599998834
+   },
+   "evaluaciones": {
+    "mediana": 1509,
+    "min": 720,
+    "max": 1789
+   },
+   "generaciones": {
+    "mediana": 32,
+    "min": 15,
+    "max": 39
+   },
+   "ms_por_evaluacion": {
+    "mediana": 0.15233088333322561,
+    "min": 0.14903440048544836,
+    "max": 0.15299993627724334
+   }
+  },
+  {
+   "dataset": "001-pruebaInicial.xlsx",
+   "escenario": "ambos",
+   "perfil": "profundo",
+   "diametro": "#3",
+   "filas": 1,
+   "piezas": 1,
+   "n": 5,
+   "segundos": {
+    "mediana": 0.0680147369999986,
+    "min": 0.06772273800004314,
+    "max": 0.07976406000000225
+   },
+   "evaluaciones": {
+    "mediana": 2569,
+    "min": 2569,
+    "max": 2569
+   },
+   "generaciones": {
+    "mediana": 25,
+    "min": 25,
+    "max": 25
+   },
+   "ms_por_evaluacion": {
+    "mediana": 0.02647517983651172,
+    "min": 0.026361517321931933,
+    "max": 0.031048680420397917
+   }
+  },
+  {
+   "dataset": "001-pruebaInicial.xlsx",
+   "escenario": "ambos",
+   "perfil": "profundo",
+   "diametro": "#4",
+   "filas": 3,
+   "piezas": 3,
+   "n": 5,
+   "segundos": {
+    "mediana": 0.10691863400006696,
+    "min": 0.10305365900001107,
+    "max": 0.1458532379999724
+   },
+   "evaluaciones": {
+    "mediana": 2424,
+    "min": 2412,
+    "max": 2444
+   },
+   "generaciones": {
+    "mediana": 25,
+    "min": 25,
+    "max": 25
+   },
+   "ms_por_evaluacion": {
+    "mediana": 0.04380116099961776,
+    "min": 0.04251388572607717,
+    "max": 0.05967808428804108
+   }
+  },
+  {
+   "dataset": "001-pruebaInicial.xlsx",
+   "escenario": "ambos",
+   "perfil": "profundo",
+   "diametro": "#5",
+   "filas": 12,
+   "piezas": 88,
+   "n": 5,
+   "segundos": {
+    "mediana": 0.6386254390000659,
+    "min": 0.6354185379999535,
+    "max": 0.8385856039999453
+   },
+   "evaluaciones": {
+    "mediana": 4113,
+    "min": 4064,
+    "max": 5526
+   },
+   "generaciones": {
+    "mediana": 42,
+    "min": 41,
+    "max": 56
+   },
+   "ms_por_evaluacion": {
+    "mediana": 0.1549280889592921,
+    "min": 0.15175273326093836,
+    "max": 0.156352986712587
+   }
+  },
+  {
+   "dataset": "001-pruebaInicial.xlsx",
+   "escenario": "ambos",
+   "perfil": "rapido",
+   "diametro": "#3",
+   "filas": 1,
+   "piezas": 1,
+   "n": 5,
+   "segundos": {
+    "mediana": 0.004351805999931457,
+    "min": 0.0041545069999529005,
+    "max": 0.006348889000037161
+   },
+   "evaluaciones": {
+    "mediana": 164,
+    "min": 164,
+    "max": 164
+   },
+   "generaciones": {
+    "mediana": 8,
+    "min": 8,
+    "max": 8
+   },
+   "ms_por_evaluacion": {
+    "mediana": 0.026535402438606446,
+    "min": 0.025332359755810368,
+    "max": 0.03871273780510464
+   }
+  },
+  {
+   "dataset": "001-pruebaInicial.xlsx",
+   "escenario": "ambos",
+   "perfil": "rapido",
+   "diametro": "#4",
+   "filas": 3,
+   "piezas": 3,
+   "n": 5,
+   "segundos": {
+    "mediana": 0.006523343000026216,
+    "min": 0.0060341640000842744,
+    "max": 0.007156796999993276
+   },
+   "evaluaciones": {
+    "mediana": 146,
+    "min": 136,
+    "max": 152
+   },
+   "generaciones": {
+    "mediana": 8,
+    "min": 8,
+    "max": 8
+   },
+   "ms_por_evaluacion": {
+    "mediana": 0.04458910273940577,
+    "min": 0.044368852941796134,
+    "max": 0.04708419078942944
+   }
+  },
+  {
+   "dataset": "001-pruebaInicial.xlsx",
+   "escenario": "ambos",
+   "perfil": "rapido",
+   "diametro": "#5",
+   "filas": 12,
+   "piezas": 88,
+   "n": 5,
+   "segundos": {
+    "mediana": 0.023440826000069137,
+    "min": 0.021634184000049572,
+    "max": 0.040859861999933855
+   },
+   "evaluaciones": {
+    "mediana": 145,
+    "min": 130,
+    "max": 248
+   },
+   "generaciones": {
+    "mediana": 8,
+    "min": 8,
+    "max": 15
+   },
+   "ms_por_evaluacion": {
+    "mediana": 0.16641680000038134,
+    "min": 0.16166086896599405,
+    "max": 0.16988809803921803
+   }
+  },
+  {
+   "dataset": "001-pruebaInicial.xlsx",
+   "escenario": "ideal",
+   "perfil": "balanceado",
+   "diametro": "#3",
+   "filas": 1,
+   "piezas": 1,
+   "n": 5,
+   "segundos": {
+    "mediana": 0.015139954999995098,
+    "min": 0.013957610999966619,
+    "max": 0.01563046699999404
+   },
+   "evaluaciones": {
+    "mediana": 775,
+    "min": 775,
+    "max": 775
+   },
+   "generaciones": {
+    "mediana": 15,
+    "min": 15,
+    "max": 15
+   },
+   "ms_por_evaluacion": {
+    "mediana": 0.019535425806445288,
+    "min": 0.01800982064511822,
+    "max": 0.020168344516121345
+   }
+  },
+  {
+   "dataset": "001-pruebaInicial.xlsx",
+   "escenario": "ideal",
+   "perfil": "balanceado",
+   "diametro": "#4",
+   "filas": 3,
+   "piezas": 3,
+   "n": 5,
+   "segundos": {
+    "mediana": 0.02260704700000815,
+    "min": 0.0218307179999897,
+    "max": 0.02272654699999066
+   },
+   "evaluaciones": {
+    "mediana": 710,
+    "min": 700,
+    "max": 724
+   },
+   "generaciones": {
+    "mediana": 15,
+    "min": 15,
+    "max": 15
+   },
+   "ms_por_evaluacion": {
+    "mediana": 0.03139025828727992,
+    "min": 0.031030426760586302,
+    "max": 0.03232685327636637
+   }
+  },
+  {
+   "dataset": "001-pruebaInicial.xlsx",
+   "escenario": "ideal",
+   "perfil": "balanceado",
+   "diametro": "#5",
+   "filas": 12,
+   "piezas": 88,
+   "n": 5,
+   "segundos": {
+    "mediana": 0.07747061199995642,
+    "min": 0.07382939899997609,
+    "max": 0.16733646800003044
+   },
+   "evaluaciones": {
+    "mediana": 727,
+    "min": 699,
+    "max": 1592
+   },
+   "generaciones": {
+    "mediana": 15,
+    "min": 15,
+    "max": 34
+   },
+   "ms_por_evaluacion": {
+    "mediana": 0.10562145779681845,
+    "min": 0.10397476708506904,
+    "max": 0.1095928453187909
+   }
+  },
+  {
+   "dataset": "001-pruebaInicial.xlsx",
+   "escenario": "ideal",
+   "perfil": "profundo",
+   "diametro": "#3",
+   "filas": 1,
+   "piezas": 1,
+   "n": 5,
+   "segundos": {
+    "mediana": 0.0499571519999904,
+    "min": 0.04730382200000349,
+    "max": 0.05121889999998075
+   },
+   "evaluaciones": {
+    "mediana": 2569,
+    "min": 2569,
+    "max": 2569
+   },
+   "generaciones": {
+    "mediana": 25,
+    "min": 25,
+    "max": 25
+   },
+   "ms_por_evaluacion": {
+    "mediana": 0.01944614713896084,
+    "min": 0.018413321136630398,
+    "max": 0.01993729077461298
+   }
+  },
+  {
+   "dataset": "001-pruebaInicial.xlsx",
+   "escenario": "ideal",
+   "perfil": "profundo",
+   "diametro": "#4",
+   "filas": 3,
+   "piezas": 3,
+   "n": 5,
+   "segundos": {
+    "mediana": 0.07317024200000333,
+    "min": 0.07311979899998278,
+    "max": 0.07806003800004646
+   },
+   "evaluaciones": {
+    "mediana": 2436,
+    "min": 2430,
+    "max": 2455
+   },
+   "generaciones": {
+    "mediana": 25,
+    "min": 25,
+    "max": 25
+   },
+   "ms_por_evaluacion": {
+    "mediana": 0.030065706825650813,
+    "min": 0.02979555804479226,
+    "max": 0.03191334341784401
+   }
+  },
+  {
+   "dataset": "001-pruebaInicial.xlsx",
+   "escenario": "ideal",
+   "perfil": "profundo",
+   "diametro": "#5",
+   "filas": 12,
+   "piezas": 88,
+   "n": 5,
+   "segundos": {
+    "mediana": 0.44252729400000135,
+    "min": 0.2677437149999946,
+    "max": 0.4679268909999905
+   },
+   "evaluaciones": {
+    "mediana": 4084,
+    "min": 2529,
+    "max": 4231
+   },
+   "generaciones": {
+    "mediana": 42,
+    "min": 25,
+    "max": 43
+   },
+   "ms_por_evaluacion": {
+    "mediana": 0.1075827515953664,
+    "min": 0.1039507504388555,
+    "max": 0.11170372189066377
+   }
+  },
+  {
+   "dataset": "001-pruebaInicial.xlsx",
+   "escenario": "ideal",
+   "perfil": "rapido",
+   "diametro": "#3",
+   "filas": 1,
+   "piezas": 1,
+   "n": 5,
+   "segundos": {
+    "mediana": 0.003093036999985088,
+    "min": 0.002881699999988996,
+    "max": 0.0035145499999771346
+   },
+   "evaluaciones": {
+    "mediana": 164,
+    "min": 164,
+    "max": 164
+   },
+   "generaciones": {
+    "mediana": 8,
+    "min": 8,
+    "max": 8
+   },
+   "ms_por_evaluacion": {
+    "mediana": 0.018859981707226147,
+    "min": 0.017571341463347535,
+    "max": 0.021430182926689845
+   }
+  },
+  {
+   "dataset": "001-pruebaInicial.xlsx",
+   "escenario": "ideal",
+   "perfil": "rapido",
+   "diametro": "#4",
+   "filas": 3,
+   "piezas": 3,
+   "n": 5,
+   "segundos": {
+    "mediana": 0.004521405999980743,
+    "min": 0.004457256999955916,
+    "max": 0.004858909000006406
+   },
+   "evaluaciones": {
+    "mediana": 145,
+    "min": 140,
+    "max": 150
+   },
+   "generaciones": {
+    "mediana": 8,
+    "min": 8,
+    "max": 8
+   },
+   "ms_por_evaluacion": {
+    "mediana": 0.03183754999968512,
+    "min": 0.030142706666538288,
+    "max": 0.033978384615429416
+   }
+  },
+  {
+   "dataset": "001-pruebaInicial.xlsx",
+   "escenario": "ideal",
+   "perfil": "rapido",
+   "diametro": "#5",
+   "filas": 12,
+   "piezas": 88,
+   "n": 5,
+   "segundos": {
+    "mediana": 0.01708756799996536,
+    "min": 0.014561996999987059,
+    "max": 0.017834972000002836
+   },
+   "evaluaciones": {
+    "mediana": 146,
+    "min": 131,
+    "max": 156
+   },
+   "generaciones": {
+    "mediana": 8,
+    "min": 8,
+    "max": 8
+   },
+   "ms_por_evaluacion": {
+    "mediana": 0.11397210389591178,
+    "min": 0.1078233150688242,
+    "max": 0.12293214388464287
+   }
+  },
+  {
+   "dataset": "001-pruebaInicial.xlsx",
+   "escenario": "solo_minimo",
+   "perfil": "balanceado",
+   "diametro": "#3",
+   "filas": 1,
+   "piezas": 1,
+   "n": 5,
+   "segundos": {
+    "mediana": 0.019230788999948345,
+    "min": 0.01897641100003966,
+    "max": 0.01995476399997642
+   },
+   "evaluaciones": {
+    "mediana": 775,
+    "min": 775,
+    "max": 775
+   },
+   "generaciones": {
+    "mediana": 15,
+    "min": 15,
+    "max": 15
+   },
+   "ms_por_evaluacion": {
+    "mediana": 0.02481392129025593,
+    "min": 0.024485691612954403,
+    "max": 0.02574808258061474
+   }
+  },
+  {
+   "dataset": "001-pruebaInicial.xlsx",
+   "escenario": "solo_minimo",
+   "perfil": "balanceado",
+   "diametro": "#4",
+   "filas": 3,
+   "piezas": 3,
+   "n": 5,
+   "segundos": {
+    "mediana": 0.030490046000068105,
+    "min": 0.029494328000055248,
+    "max": 0.030899912999984736
+   },
+   "evaluaciones": {
+    "mediana": 710,
+    "min": 700,
+    "max": 724
+   },
+   "generaciones": {
+    "mediana": 15,
+    "min": 15,
+    "max": 15
+   },
+   "ms_por_evaluacion": {
+    "mediana": 0.04292300845069714,
+    "min": 0.04148288045014803,
+    "max": 0.04401697008544834
+   }
+  },
+  {
+   "dataset": "001-pruebaInicial.xlsx",
+   "escenario": "solo_minimo",
+   "perfil": "balanceado",
+   "diametro": "#5",
+   "filas": 12,
+   "piezas": 88,
+   "n": 5,
+   "segundos": {
+    "mediana": 0.287352339999984,
+    "min": 0.15477327700000387,
+    "max": 0.3800063070000306
+   },
+   "evaluaciones": {
+    "mediana": 1916,
+    "min": 1034,
+    "max": 2632
+   },
+   "generaciones": {
+    "mediana": 42,
+    "min": 23,
+    "max": 57
+   },
+   "ms_por_evaluacion": {
+    "mediana": 0.1496840203094815,
+    "min": 0.144379295972656,
+    "max": 0.16021881110627173
+   }
+  },
+  {
+   "dataset": "001-pruebaInicial.xlsx",
+   "escenario": "solo_minimo",
+   "perfil": "profundo",
+   "diametro": "#3",
+   "filas": 1,
+   "piezas": 1,
+   "n": 5,
+   "segundos": {
+    "mediana": 0.06459587400001965,
+    "min": 0.06356004799999937,
+    "max": 0.06641450900008294
+   },
+   "evaluaciones": {
+    "mediana": 2569,
+    "min": 2569,
+    "max": 2569
+   },
+   "generaciones": {
+    "mediana": 25,
+    "min": 25,
+    "max": 25
+   },
+   "ms_por_evaluacion": {
+    "mediana": 0.02514436512262345,
+    "min": 0.024741163098481653,
+    "max": 0.02585228065398324
+   }
+  },
+  {
+   "dataset": "001-pruebaInicial.xlsx",
+   "escenario": "solo_minimo",
+   "perfil": "profundo",
+   "diametro": "#4",
+   "filas": 3,
+   "piezas": 3,
+   "n": 5,
+   "segundos": {
+    "mediana": 0.10297383399995397,
+    "min": 0.10145152699999471,
+    "max": 0.10427921899997727
+   },
+   "evaluaciones": {
+    "mediana": 2436,
+    "min": 2430,
+    "max": 2455
+   },
+   "generaciones": {
+    "mediana": 25,
+    "min": 25,
+    "max": 25
+   },
+   "ms_por_evaluacion": {
+    "mediana": 0.04194453523419714,
+    "min": 0.04174959958847519,
+    "max": 0.04280756116583632
+   }
+  },
+  {
+   "dataset": "001-pruebaInicial.xlsx",
+   "escenario": "solo_minimo",
+   "perfil": "profundo",
+   "diametro": "#5",
+   "filas": 12,
+   "piezas": 88,
+   "n": 5,
+   "segundos": {
+    "mediana": 0.5585739160000003,
+    "min": 0.5449916449999819,
+    "max": 0.9415295079999169
+   },
+   "evaluaciones": {
+    "mediana": 3913,
+    "min": 3690,
+    "max": 6439
+   },
+   "generaciones": {
+    "mediana": 39,
+    "min": 37,
+    "max": 66
+   },
+   "ms_por_evaluacion": {
+    "mediana": 0.14622293958687946,
+    "min": 0.142748253513928,
+    "max": 0.14779020752964522
+   }
+  },
+  {
+   "dataset": "001-pruebaInicial.xlsx",
+   "escenario": "solo_minimo",
+   "perfil": "rapido",
+   "diametro": "#3",
+   "filas": 1,
+   "piezas": 1,
+   "n": 5,
+   "segundos": {
+    "mediana": 0.004169437999962611,
+    "min": 0.004010255000025609,
+    "max": 0.004841482999950131
+   },
+   "evaluaciones": {
+    "mediana": 164,
+    "min": 164,
+    "max": 164
+   },
+   "generaciones": {
+    "mediana": 8,
+    "min": 8,
+    "max": 8
+   },
+   "ms_por_evaluacion": {
+    "mediana": 0.025423402438796407,
+    "min": 0.024452774390400053,
+    "max": 0.02952123780457397
+   }
+  },
+  {
+   "dataset": "001-pruebaInicial.xlsx",
+   "escenario": "solo_minimo",
+   "perfil": "rapido",
+   "diametro": "#4",
+   "filas": 3,
+   "piezas": 3,
+   "n": 5,
+   "segundos": {
+    "mediana": 0.00692266600003677,
+    "min": 0.00644969300003595,
+    "max": 0.007165346000078898
+   },
+   "evaluaciones": {
+    "mediana": 145,
+    "min": 140,
+    "max": 150
+   },
+   "generaciones": {
+    "mediana": 8,
+    "min": 8,
+    "max": 8
+   },
+   "ms_por_evaluacion": {
+    "mediana": 0.04831681379324311,
+    "min": 0.04357900675699966,
+    "max": 0.049081092857607346
+   }
+  },
+  {
+   "dataset": "001-pruebaInicial.xlsx",
+   "escenario": "solo_minimo",
+   "perfil": "rapido",
+   "diametro": "#5",
+   "filas": 12,
+   "piezas": 88,
+   "n": 5,
+   "segundos": {
+    "mediana": 0.036620031999973435,
+    "min": 0.02117140500001824,
+    "max": 0.04530976899991401
+   },
+   "evaluaciones": {
+    "mediana": 230,
+    "min": 130,
+    "max": 296
+   },
+   "generaciones": {
+    "mediana": 13,
+    "min": 8,
+    "max": 18
+   },
+   "ms_por_evaluacion": {
+    "mediana": 0.15817599305576222,
+    "min": 0.15014345769241816,
+    "max": 0.16285696153860185
+   }
+  },
+  {
+   "dataset": "001-pruebaInicial.xlsx",
+   "escenario": "solo_perdida",
+   "perfil": "balanceado",
+   "diametro": "#3",
+   "filas": 1,
+   "piezas": 1,
+   "n": 5,
+   "segundos": {
+    "mediana": 0.01858529600002612,
+    "min": 0.018064148999997087,
+    "max": 0.019987662999994882
+   },
+   "evaluaciones": {
+    "mediana": 775,
+    "min": 775,
+    "max": 775
+   },
+   "generaciones": {
+    "mediana": 15,
+    "min": 15,
+    "max": 15
+   },
+   "ms_por_evaluacion": {
+    "mediana": 0.023981027096807897,
+    "min": 0.023308579354834952,
+    "max": 0.025790532903219202
+   }
+  },
+  {
+   "dataset": "001-pruebaInicial.xlsx",
+   "escenario": "solo_perdida",
+   "perfil": "balanceado",
+   "diametro": "#4",
+   "filas": 3,
+   "piezas": 3,
+   "n": 5,
+   "segundos": {
+    "mediana": 0.026272874999961005,
+    "min": 0.025592431000006854,
+    "max": 0.02731726899997966
+   },
+   "evaluaciones": {
+    "mediana": 705,
+    "min": 694,
+    "max": 724
+   },
+   "generaciones": {
+    "mediana": 15,
+    "min": 15,
+    "max": 15
+   },
+   "ms_por_evaluacion": {
+    "mediana": 0.037266489361646817,
+    "min": 0.03687670172911651,
+    "max": 0.03816972413794989
+   }
+  },
+  {
+   "dataset": "001-pruebaInicial.xlsx",
+   "escenario": "solo_perdida",
+   "perfil": "balanceado",
+   "diametro": "#5",
+   "filas": 12,
+   "piezas": 88,
+   "n": 5,
+   "segundos": {
+    "mediana": 0.09494066299998849,
+    "min": 0.09141804500001172,
+    "max": 0.13666047299994943
+   },
+   "evaluaciones": {
+    "mediana": 741,
+    "min": 699,
+    "max": 1071
+   },
+   "generaciones": {
+    "mediana": 15,
+    "min": 15,
+    "max": 22
+   },
+   "ms_por_evaluacion": {
+    "mediana": 0.12859262809919486,
+    "min": 0.12692602005346054,
+    "max": 0.13078404148785652
+   }
+  },
+  {
+   "dataset": "001-pruebaInicial.xlsx",
+   "escenario": "solo_perdida",
+   "perfil": "profundo",
+   "diametro": "#3",
+   "filas": 1,
+   "piezas": 1,
+   "n": 5,
+   "segundos": {
+    "mediana": 0.06269760100002486,
+    "min": 0.05898072600001569,
+    "max": 0.07218020100003741
+   },
+   "evaluaciones": {
+    "mediana": 2569,
+    "min": 2569,
+    "max": 2569
+   },
+   "generaciones": {
+    "mediana": 25,
+    "min": 25,
+    "max": 25
+   },
+   "ms_por_evaluacion": {
+    "mediana": 0.02440544998054685,
+    "min": 0.022958632152594666,
+    "max": 0.02809661385754668
+   }
+  },
+  {
+   "dataset": "001-pruebaInicial.xlsx",
+   "escenario": "solo_perdida",
+   "perfil": "profundo",
+   "diametro": "#4",
+   "filas": 3,
+   "piezas": 3,
+   "n": 5,
+   "segundos": {
+    "mediana": 0.0929171730000462,
+    "min": 0.08857691299999715,
+    "max": 0.10044550500003879
+   },
+   "evaluaciones": {
+    "mediana": 2424,
+    "min": 2412,
+    "max": 2444
+   },
+   "generaciones": {
+    "mediana": 25,
+    "min": 25,
+    "max": 25
+   },
+   "ms_por_evaluacion": {
+    "mediana": 0.03821494387547598,
+    "min": 0.03670821094073649,
+    "max": 0.041098815466464315
+   }
+  },
+  {
+   "dataset": "001-pruebaInicial.xlsx",
+   "escenario": "solo_perdida",
+   "perfil": "profundo",
+   "diametro": "#5",
+   "filas": 12,
+   "piezas": 88,
+   "n": 5,
+   "segundos": {
+    "mediana": 0.3439640390000136,
+    "min": 0.32438047800002323,
+    "max": 0.4328591670000037
+   },
+   "evaluaciones": {
+    "mediana": 2504,
+    "min": 2458,
+    "max": 3229
+   },
+   "generaciones": {
+    "mediana": 25,
+    "min": 25,
+    "max": 32
+   },
+   "ms_por_evaluacion": {
+    "mediana": 0.1340536286776103,
+    "min": 0.12846751603961315,
+    "max": 0.14406313099040977
+   }
+  },
+  {
+   "dataset": "001-pruebaInicial.xlsx",
+   "escenario": "solo_perdida",
+   "perfil": "rapido",
+   "diametro": "#3",
+   "filas": 1,
+   "piezas": 1,
+   "n": 5,
+   "segundos": {
+    "mediana": 0.0038125840000020617,
+    "min": 0.003698035000013533,
+    "max": 0.005782216999989487
+   },
+   "evaluaciones": {
+    "mediana": 164,
+    "min": 164,
+    "max": 164
+   },
+   "generaciones": {
+    "mediana": 8,
+    "min": 8,
+    "max": 8
+   },
+   "ms_por_evaluacion": {
+    "mediana": 0.023247463414646716,
+    "min": 0.022548993902521543,
+    "max": 0.03525742073164321
+   }
+  },
+  {
+   "dataset": "001-pruebaInicial.xlsx",
+   "escenario": "solo_perdida",
+   "perfil": "rapido",
+   "diametro": "#4",
+   "filas": 3,
+   "piezas": 3,
+   "n": 5,
+   "segundos": {
+    "mediana": 0.005678155999987666,
+    "min": 0.00549271699998144,
+    "max": 0.006431701999986217
+   },
+   "evaluaciones": {
+    "mediana": 146,
+    "min": 136,
+    "max": 152
+   },
+   "generaciones": {
+    "mediana": 8,
+    "min": 8,
+    "max": 8
+   },
+   "ms_por_evaluacion": {
+    "mediana": 0.038891479451970315,
+    "min": 0.03762134931494137,
+    "max": 0.04231382894727774
+   }
+  },
+  {
+   "dataset": "001-pruebaInicial.xlsx",
+   "escenario": "solo_perdida",
+   "perfil": "rapido",
+   "diametro": "#5",
+   "filas": 12,
+   "piezas": 88,
+   "n": 5,
+   "segundos": {
+    "mediana": 0.020203536999986227,
+    "min": 0.01797434300004852,
+    "max": 0.020884366000018417
+   },
+   "evaluaciones": {
+    "mediana": 147,
+    "min": 129,
+    "max": 152
+   },
+   "generaciones": {
+    "mediana": 8,
+    "min": 8,
+    "max": 8
+   },
+   "ms_por_evaluacion": {
+    "mediana": 0.13739714473696327,
+    "min": 0.1365683866663403,
+    "max": 0.13933599224843815
+   }
+  },
+  {
+   "dataset": "002-ingeBigTest.xlsx",
+   "escenario": "ambos",
+   "perfil": "balanceado",
+   "diametro": "#3",
+   "filas": 17,
+   "piezas": 58500,
+   "n": 5,
+   "segundos": {
+    "mediana": 1.9965740819999382,
+    "min": 1.8719773110000233,
+    "max": 2.071735548999982
+   },
+   "evaluaciones": {
+    "mediana": 1830,
+    "min": 1625,
+    "max": 2272
+   },
+   "generaciones": {
+    "mediana": 38,
+    "min": 34,
+    "max": 49
+   },
+   "ms_por_evaluacion": {
+    "mediana": 1.0910240885245563,
+    "min": 0.9118554352992878,
+    "max": 1.1793568043077147
+   }
+  },
+  {
+   "dataset": "002-ingeBigTest.xlsx",
+   "escenario": "ambos",
+   "perfil": "balanceado",
+   "diametro": "#4",
+   "filas": 18,
+   "piezas": 864,
+   "n": 5,
+   "segundos": {
+    "mediana": 0.4105565070000239,
+    "min": 0.26306426600001487,
+    "max": 0.503565166000044
+   },
+   "evaluaciones": {
+    "mediana": 1640,
+    "min": 1035,
+    "max": 1924
+   },
+   "generaciones": {
+    "mediana": 34,
+    "min": 21,
+    "max": 41
+   },
+   "ms_por_evaluacion": {
+    "mediana": 0.2541683729468743,
+    "min": 0.24320970114344193,
+    "max": 0.29938475980977647
+   }
+  },
+  {
+   "dataset": "002-ingeBigTest.xlsx",
+   "escenario": "ambos",
+   "perfil": "balanceado",
+   "diametro": "#5",
+   "filas": 59,
+   "piezas": 2774,
+   "n": 5,
+   "segundos": {
+    "mediana": 3.2979087790000676,
+    "min": 2.2075176920000104,
+    "max": 3.386904266999977
+   },
+   "evaluaciones": {
+    "mediana": 4872,
+    "min": 3188,
+    "max": 4877
+   },
+   "generaciones": {
+    "mediana": 100,
+    "min": 65,
+    "max": 100
+   },
+   "ms_por_evaluacion": {
+    "mediana": 0.6924459510665026,
+    "min": 0.669848019909706,
+    "max": 0.7988932630071591
+   }
+  },
+  {
+   "dataset": "002-ingeBigTest.xlsx",
+   "escenario": "ambos",
+   "perfil": "balanceado",
+   "diametro": "#6",
+   "filas": 38,
+   "piezas": 5237,
+   "n": 5,
+   "segundos": {
+    "mediana": 1.3070670070000006,
+    "min": 1.1831557390000853,
+    "max": 2.0752971310000703
+   },
+   "evaluaciones": {
+    "mediana": 2692,
+    "min": 2302,
+    "max": 4362
+   },
+   "generaciones": {
+    "mediana": 55,
+    "min": 47,
+    "max": 90
+   },
+   "ms_por_evaluacion": {
+    "mediana": 0.48553752117384863,
+    "min": 0.4757673386061601,
+    "max": 0.5139686094700632
+   }
+  },
+  {
+   "dataset": "002-ingeBigTest.xlsx",
+   "escenario": "ambos",
+   "perfil": "balanceado",
+   "diametro": "#7",
+   "filas": 5,
+   "piezas": 68,
+   "n": 5,
+   "segundos": {
+    "mediana": 0.059353851000082614,
+    "min": 0.05678307100004076,
+    "max": 0.05990816299993185
+   },
+   "evaluaciones": {
+    "mediana": 738,
+    "min": 734,
+    "max": 752
+   },
+   "generaciones": {
+    "mediana": 15,
+    "min": 15,
+    "max": 15
+   },
+   "ms_por_evaluacion": {
+    "mediana": 0.07892799335117369,
+    "min": 0.07642405248996065,
+    "max": 0.08161875068110606
+   }
+  },
+  {
+   "dataset": "002-ingeBigTest.xlsx",
+   "escenario": "ambos",
+   "perfil": "profundo",
+   "diametro": "#3",
+   "filas": 17,
+   "piezas": 58500,
+   "n": 5,
+   "segundos": {
+    "mediana": 3.1473140049999984,
+    "min": 2.8470848189999742,
+    "max": 3.2245462840000982
+   },
+   "evaluaciones": {
+    "mediana": 5484,
+    "min": 4992,
+    "max": 5756
+   },
+   "generaciones": {
+    "mediana": 55,
+    "min": 50,
+    "max": 58
+   },
+   "ms_por_evaluacion": {
+    "mediana": 0.5703294909855717,
+    "min": 0.547549409359777,
+    "max": 0.5879916637491062
+   }
+  },
+  {
+   "dataset": "002-ingeBigTest.xlsx",
+   "escenario": "ambos",
+   "perfil": "profundo",
+   "diametro": "#4",
+   "filas": 18,
+   "piezas": 864,
+   "n": 5,
+   "segundos": {
+    "mediana": 1.529562554999984,
+    "min": 0.7222061500001473,
+    "max": 1.9659228059999805
+   },
+   "evaluaciones": {
+    "mediana": 6546,
+    "min": 3040,
+    "max": 8413
+   },
+   "generaciones": {
+    "mediana": 66,
+    "min": 30,
+    "max": 85
+   },
+   "ms_por_evaluacion": {
+    "mediana": 0.2336767866397219,
+    "min": 0.22959682715871996,
+    "max": 0.24787617547375115
+   }
+  },
+  {
+   "dataset": "002-ingeBigTest.xlsx",
+   "escenario": "ambos",
+   "perfil": "profundo",
+   "diametro": "#5",
+   "filas": 59,
+   "piezas": 2774,
+   "n": 5,
+   "segundos": {
+    "mediana": 8.238833054999986,
+    "min": 5.735343486000147,
+    "max": 9.761107092999964
+   },
+   "evaluaciones": {
+    "mediana": 12731,
+    "min": 8871,
+    "max": 14896
+   },
+   "generaciones": {
+    "mediana": 128,
+    "min": 89,
+    "max": 150
+   },
+   "ms_por_evaluacion": {
+    "mediana": 0.6471473611656575,
+    "min": 0.6285184774620961,
+    "max": 0.6554857473203862
+   }
+  },
+  {
+   "dataset": "002-ingeBigTest.xlsx",
+   "escenario": "ambos",
+   "perfil": "profundo",
+   "diametro": "#6",
+   "filas": 38,
+   "piezas": 5237,
+   "n": 5,
+   "segundos": {
+    "mediana": 4.541689647000112,
+    "min": 3.807992740000145,
+    "max": 5.163752798999894
+   },
+   "evaluaciones": {
+    "mediana": 10047,
+    "min": 8773,
+    "max": 10643
+   },
+   "generaciones": {
+    "mediana": 101,
+    "min": 88,
+    "max": 107
+   },
+   "ms_por_evaluacion": {
+    "mediana": 0.4520443562257502,
+    "min": 0.43405821725751115,
+    "max": 0.4854063544839156
+   }
+  },
+  {
+   "dataset": "002-ingeBigTest.xlsx",
+   "escenario": "ambos",
+   "perfil": "profundo",
+   "diametro": "#7",
+   "filas": 5,
+   "piezas": 68,
+   "n": 5,
+   "segundos": {
+    "mediana": 0.19229311499998403,
+    "min": 0.19030983900006504,
+    "max": 0.20652355499987607
+   },
+   "evaluaciones": {
+    "mediana": 2510,
+    "min": 2502,
+    "max": 2524
+   },
+   "generaciones": {
+    "mediana": 25,
+    "min": 25,
+    "max": 25
+   },
+   "ms_por_evaluacion": {
+    "mediana": 0.07661080278883826,
+    "min": 0.07540009469099249,
+    "max": 0.08254338729011833
+   }
+  },
+  {
+   "dataset": "002-ingeBigTest.xlsx",
+   "escenario": "ambos",
+   "perfil": "rapido",
+   "diametro": "#3",
+   "filas": 17,
+   "piezas": 58500,
+   "n": 5,
+   "segundos": {
+    "mediana": 1.5760466269999824,
+    "min": 1.520802021999998,
+    "max": 1.8383711930000572
+   },
+   "evaluaciones": {
+    "mediana": 465,
+    "min": 411,
+    "max": 485
+   },
+   "generaciones": {
+    "mediana": 28,
+    "min": 25,
+    "max": 30
+   },
+   "ms_por_evaluacion": {
+    "mediana": 3.4959850279570888,
+    "min": 3.135674272164944,
+    "max": 4.472922610705735
+   }
+  },
+  {
+   "dataset": "002-ingeBigTest.xlsx",
+   "escenario": "ambos",
+   "perfil": "rapido",
+   "diametro": "#4",
+   "filas": 18,
+   "piezas": 864,
+   "n": 5,
+   "segundos": {
+    "mediana": 0.12242163700000219,
+    "min": 0.10579747300005238,
+    "max": 0.1451030420000734
+   },
+   "evaluaciones": {
+    "mediana": 391,
+    "min": 239,
+    "max": 497
+   },
+   "generaciones": {
+    "mediana": 25,
+    "min": 14,
+    "max": 30
+   },
+   "ms_por_evaluacion": {
+    "mediana": 0.2985659300413033,
+    "min": 0.28696799396377753,
+    "max": 0.5122244225941515
+   }
+  },
+  {
+   "dataset": "002-ingeBigTest.xlsx",
+   "escenario": "ambos",
+   "perfil": "rapido",
+   "diametro": "#5",
+   "filas": 59,
+   "piezas": 2774,
+   "n": 5,
+   "segundos": {
+    "mediana": 0.4908793470000319,
+    "min": 0.45871869500001594,
+    "max": 0.5101036319999821
+   },
+   "evaluaciones": {
+    "mediana": 559,
+    "min": 557,
+    "max": 561
+   },
+   "generaciones": {
+    "mediana": 30,
+    "min": 30,
+    "max": 30
+   },
+   "ms_por_evaluacion": {
+    "mediana": 0.878138366726354,
+    "min": 0.8176803832442352,
+    "max": 0.9158054434470055
+   }
+  },
+  {
+   "dataset": "002-ingeBigTest.xlsx",
+   "escenario": "ambos",
+   "perfil": "rapido",
+   "diametro": "#6",
+   "filas": 38,
+   "piezas": 5237,
+   "n": 5,
+   "segundos": {
+    "mediana": 0.482181518999937,
+    "min": 0.4318353070000285,
+    "max": 0.5038924199999428
+   },
+   "evaluaciones": {
+    "mediana": 550,
+    "min": 546,
+    "max": 561
+   },
+   "generaciones": {
+    "mediana": 30,
+    "min": 30,
+    "max": 30
+   },
+   "ms_por_evaluacion": {
+    "mediana": 0.8766936709089763,
+    "min": 0.7909071556777079,
+    "max": 0.8982039572191495
+   }
+  },
+  {
+   "dataset": "002-ingeBigTest.xlsx",
+   "escenario": "ambos",
+   "perfil": "rapido",
+   "diametro": "#7",
+   "filas": 5,
+   "piezas": 68,
+   "n": 5,
+   "segundos": {
+    "mediana": 0.014027166000005309,
+    "min": 0.01334418999999798,
+    "max": 0.01468103600006998
+   },
+   "evaluaciones": {
+    "mediana": 154,
+    "min": 147,
+    "max": 156
+   },
+   "generaciones": {
+    "mediana": 8,
+    "min": 8,
+    "max": 8
+   },
+   "ms_por_evaluacion": {
+    "mediana": 0.09228398684214019,
+    "min": 0.08806865384678111,
+    "max": 0.09471636129077407
+   }
+  },
+  {
+   "dataset": "002-ingeBigTest.xlsx",
+   "escenario": "ideal",
+   "perfil": "balanceado",
+   "diametro": "#3",
+   "filas": 17,
+   "piezas": 58500,
+   "n": 5,
+   "segundos": {
+    "mediana": 1.5100812899999596,
+    "min": 1.321397864000005,
+    "max": 1.585388819000002
+   },
+   "evaluaciones": {
+    "mediana": 2139,
+    "min": 1493,
+    "max": 2405
+   },
+   "generaciones": {
+    "mediana": 46,
+    "min": 31,
+    "max": 51
+   },
+   "ms_por_evaluacion": {
+    "mediana": 0.7411822435717634,
+    "min": 0.6278924282744115,
+    "max": 0.8850621995981279
+   }
+  },
+  {
+   "dataset": "002-ingeBigTest.xlsx",
+   "escenario": "ideal",
+   "perfil": "balanceado",
+   "diametro": "#4",
+   "filas": 18,
+   "piezas": 864,
+   "n": 5,
+   "segundos": {
+    "mediana": 0.22220373900000823,
+    "min": 0.17435176800000818,
+    "max": 0.311914306999995
+   },
+   "evaluaciones": {
+    "mediana": 1476,
+    "min": 1139,
+    "max": 2067
+   },
+   "generaciones": {
+    "mediana": 30,
+    "min": 23,
+    "max": 43
+   },
+   "ms_por_evaluacion": {
+    "mediana": 0.15090193855829465,
+    "min": 0.1502140824823537,
+    "max": 0.16747125236165925
+   }
+  },
+  {
+   "dataset": "002-ingeBigTest.xlsx",
+   "escenario": "ideal",
+   "perfil": "balanceado",
+   "diametro": "#5",
+   "filas": 59,
+   "piezas": 2774,
+   "n": 5,
+   "segundos": {
+    "mediana": 1.4776406660000134,
+    "min": 1.2658050759999924,
+    "max": 2.0731361360000164
+   },
+   "evaluaciones": {
+    "mediana": 3421,
+    "min": 2751,
+    "max": 4881
+   },
+   "generaciones": {
+    "mediana": 70,
+    "min": 56,
+    "max": 100
+   },
+   "ms_por_evaluacion": {
+    "mediana": 0.43193237825197706,
+    "min": 0.42312043713450653,
+    "max": 0.4601254365685178
+   }
+  },
+  {
+   "dataset": "002-ingeBigTest.xlsx",
+   "escenario": "ideal",
+   "perfil": "balanceado",
+   "diametro": "#6",
+   "filas": 38,
+   "piezas": 5237,
+   "n": 5,
+   "segundos": {
+    "mediana": 1.0930385970000316,
+    "min": 0.6945129069999894,
+    "max": 1.5371294679999892
+   },
+   "evaluaciones": {
+    "mediana": 3364,
+    "min": 2211,
+    "max": 4469
+   },
+   "generaciones": {
+    "mediana": 69,
+    "min": 45,
+    "max": 92
+   },
+   "ms_por_evaluacion": {
+    "mediana": 0.32492229399525313,
+    "min": 0.30029793438484664,
+    "max": 0.3439537856343677
+   }
+  },
+  {
+   "dataset": "002-ingeBigTest.xlsx",
+   "escenario": "ideal",
+   "perfil": "balanceado",
+   "diametro": "#7",
+   "filas": 5,
+   "piezas": 68,
+   "n": 5,
+   "segundos": {
+    "mediana": 0.038581979000014144,
+    "min": 0.036463400000002366,
+    "max": 0.042256594999969366
+   },
+   "evaluaciones": {
+    "mediana": 735,
+    "min": 723,
+    "max": 779
+   },
+   "generaciones": {
+    "mediana": 15,
+    "min": 15,
+    "max": 16
+   },
+   "ms_por_evaluacion": {
+    "mediana": 0.051593209242648784,
+    "min": 0.050162291156430866,
+    "max": 0.05509334419813477
+   }
+  },
+  {
+   "dataset": "002-ingeBigTest.xlsx",
+   "escenario": "ideal",
+   "perfil": "profundo",
+   "diametro": "#3",
+   "filas": 17,
+   "piezas": 58500,
+   "n": 5,
+   "segundos": {
+    "mediana": 2.1487358640000025,
+    "min": 1.8605728489999933,
+    "max": 2.4848705779999705
+   },
+   "evaluaciones": {
+    "mediana": 5395,
+    "min": 3974,
+    "max": 6567
+   },
+   "generaciones": {
+    "mediana": 54,
+    "min": 40,
+    "max": 66
+   },
+   "ms_por_evaluacion": {
+    "mediana": 0.4153218415510564,
+    "min": 0.3617193980508634,
+    "max": 0.46818642400603755
+   }
+  },
+  {
+   "dataset": "002-ingeBigTest.xlsx",
+   "escenario": "ideal",
+   "perfil": "profundo",
+   "diametro": "#4",
+   "filas": 18,
+   "piezas": 864,
+   "n": 5,
+   "segundos": {
+    "mediana": 0.5717587629999912,
+    "min": 0.4500764709999885,
+    "max": 0.8869839310000316
+   },
+   "evaluaciones": {
+    "mediana": 3629,
+    "min": 2750,
+    "max": 6057
+   },
+   "generaciones": {
+    "mediana": 36,
+    "min": 27,
+    "max": 61
+   },
+   "ms_por_evaluacion": {
+    "mediana": 0.15277237399878013,
+    "min": 0.1464394801056681,
+    "max": 0.1636641712727231
+   }
+  },
+  {
+   "dataset": "002-ingeBigTest.xlsx",
+   "escenario": "ideal",
+   "perfil": "profundo",
+   "diametro": "#5",
+   "filas": 59,
+   "piezas": 2774,
+   "n": 5,
+   "segundos": {
+    "mediana": 4.166871732000004,
+    "min": 2.2015817679999827,
+    "max": 5.309204881000028
+   },
+   "evaluaciones": {
+    "mediana": 9762,
+    "min": 5025,
+    "max": 12029
+   },
+   "generaciones": {
+    "mediana": 98,
+    "min": 50,
+    "max": 121
+   },
+   "ms_por_evaluacion": {
+    "mediana": 0.42684611063306743,
+    "min": 0.4126571042050574,
+    "max": 0.4413671029179506
+   }
+  },
+  {
+   "dataset": "002-ingeBigTest.xlsx",
+   "escenario": "ideal",
+   "perfil": "profundo",
+   "diametro": "#6",
+   "filas": 38,
+   "piezas": 5237,
+   "n": 5,
+   "segundos": {
+    "mediana": 2.6104122680000046,
+    "min": 1.8485747109999693,
+    "max": 3.7579942329999767
+   },
+   "evaluaciones": {
+    "mediana": 8764,
+    "min": 5909,
+    "max": 12614
+   },
+   "generaciones": {
+    "mediana": 88,
+    "min": 59,
+    "max": 127
+   },
+   "ms_por_evaluacion": {
+    "mediana": 0.30103374860965953,
+    "min": 0.2978562606115934,
+    "max": 0.31284053325435257
+   }
+  },
+  {
+   "dataset": "002-ingeBigTest.xlsx",
+   "escenario": "ideal",
+   "perfil": "profundo",
+   "diametro": "#7",
+   "filas": 5,
+   "piezas": 68,
+   "n": 5,
+   "segundos": {
+    "mediana": 0.12408201499999905,
+    "min": 0.12111698799998294,
+    "max": 0.12971641499996167
+   },
+   "evaluaciones": {
+    "mediana": 2504,
+    "min": 2489,
+    "max": 2513
+   },
+   "generaciones": {
+    "mediana": 25,
+    "min": 25,
+    "max": 25
+   },
+   "ms_por_evaluacion": {
+    "mediana": 0.04955352036741176,
+    "min": 0.048660903173958596,
+    "max": 0.05188656599998467
+   }
+  },
+  {
+   "dataset": "002-ingeBigTest.xlsx",
+   "escenario": "ideal",
+   "perfil": "rapido",
+   "diametro": "#3",
+   "filas": 17,
+   "piezas": 58500,
+   "n": 5,
+   "segundos": {
+    "mediana": 1.238275370999986,
+    "min": 1.142863345999956,
+    "max": 1.2386934620000147
+   },
+   "evaluaciones": {
+    "mediana": 474,
+    "min": 455,
+    "max": 521
+   },
+   "generaciones": {
+    "mediana": 30,
+    "min": 27,
+    "max": 30
+   },
+   "ms_por_evaluacion": {
+    "mediana": 2.6132313734177637,
+    "min": 2.1935956737043303,
+    "max": 2.7224032131868454
+   }
+  },
+  {
+   "dataset": "002-ingeBigTest.xlsx",
+   "escenario": "ideal",
+   "perfil": "rapido",
+   "diametro": "#4",
+   "filas": 18,
+   "piezas": 864,
+   "n": 5,
+   "segundos": {
+    "mediana": 0.056664198000021315,
+    "min": 0.046260093999990204,
+    "max": 0.06431711999999834
+   },
+   "evaluaciones": {
+    "mediana": 320,
+    "min": 207,
+    "max": 368
+   },
+   "generaciones": {
+    "mediana": 19,
+    "min": 11,
+    "max": 21
+   },
+   "ms_por_evaluacion": {
+    "mediana": 0.17477478260869114,
+    "min": 0.1681430207715766,
+    "max": 0.22347871497579808
+   }
+  },
+  {
+   "dataset": "002-ingeBigTest.xlsx",
+   "escenario": "ideal",
+   "perfil": "rapido",
+   "diametro": "#5",
+   "filas": 59,
+   "piezas": 2774,
+   "n": 5,
+   "segundos": {
+    "mediana": 0.26846946199998456,
+    "min": 0.2670383329999595,
+    "max": 0.34042701300001
+   },
+   "evaluaciones": {
+    "mediana": 558,
+    "min": 556,
+    "max": 562
+   },
+   "generaciones": {
+    "mediana": 30,
+    "min": 30,
+    "max": 30
+   },
+   "ms_por_evaluacion": {
+    "mediana": 0.4828587446042888,
+    "min": 0.47856332078845787,
+    "max": 0.6057420160142527
+   }
+  },
+  {
+   "dataset": "002-ingeBigTest.xlsx",
+   "escenario": "ideal",
+   "perfil": "rapido",
+   "diametro": "#6",
+   "filas": 38,
+   "piezas": 5237,
+   "n": 5,
+   "segundos": {
+    "mediana": 0.2403430900000103,
+    "min": 0.23365251500001705,
+    "max": 0.3390895439999895
+   },
+   "evaluaciones": {
+    "mediana": 552,
+    "min": 547,
+    "max": 555
+   },
+   "generaciones": {
+    "mediana": 30,
+    "min": 30,
+    "max": 30
+   },
+   "ms_por_evaluacion": {
+    "mediana": 0.43540414855074333,
+    "min": 0.42099552252255323,
+    "max": 0.6199077586837102
+   }
+  },
+  {
+   "dataset": "002-ingeBigTest.xlsx",
+   "escenario": "ideal",
+   "perfil": "rapido",
+   "diametro": "#7",
+   "filas": 5,
+   "piezas": 68,
+   "n": 5,
+   "segundos": {
+    "mediana": 0.010210581999956503,
+    "min": 0.00816891200003056,
+    "max": 0.01247313999999733
+   },
+   "evaluaciones": {
+    "mediana": 157,
+    "min": 149,
+    "max": 181
+   },
+   "generaciones": {
+    "mediana": 9,
+    "min": 8,
+    "max": 10
+   },
+   "ms_por_evaluacion": {
+    "mediana": 0.056412055248378466,
+    "min": 0.05482491275188295,
+    "max": 0.07944675159233967
+   }
+  },
+  {
+   "dataset": "002-ingeBigTest.xlsx",
+   "escenario": "solo_minimo",
+   "perfil": "balanceado",
+   "diametro": "#3",
+   "filas": 17,
+   "piezas": 58500,
+   "n": 5,
+   "segundos": {
+    "mediana": 2.0334226480000552,
+    "min": 1.7220519120000972,
+    "max": 2.3096776579999414
+   },
+   "evaluaciones": {
+    "mediana": 1977,
+    "min": 1382,
+    "max": 2506
+   },
+   "generaciones": {
+    "mediana": 41,
+    "min": 29,
+    "max": 53
+   },
+   "ms_por_evaluacion": {
+    "mediana": 1.0285395285786825,
+    "min": 0.8411478169477351,
+    "max": 1.3386222191092327
+   }
+  },
+  {
+   "dataset": "002-ingeBigTest.xlsx",
+   "escenario": "solo_minimo",
+   "perfil": "balanceado",
+   "diametro": "#4",
+   "filas": 18,
+   "piezas": 864,
+   "n": 5,
+   "segundos": {
+    "mediana": 0.49774058399998466,
+    "min": 0.330610944,
+    "max": 0.6816676240000561
+   },
+   "evaluaciones": {
+    "mediana": 2173,
+    "min": 1334,
+    "max": 3009
+   },
+   "generaciones": {
+    "mediana": 45,
+    "min": 28,
+    "max": 64
+   },
+   "ms_por_evaluacion": {
+    "mediana": 0.23935857564102997,
+    "min": 0.22654291259556533,
+    "max": 0.27013216133827445
+   }
+  },
+  {
+   "dataset": "002-ingeBigTest.xlsx",
+   "escenario": "solo_minimo",
+   "perfil": "balanceado",
+   "diametro": "#5",
+   "filas": 59,
+   "piezas": 2774,
+   "n": 5,
+   "segundos": {
+    "mediana": 3.083028030000037,
+    "min": 2.6353219869999975,
+    "max": 3.1200091540000585
+   },
+   "evaluaciones": {
+    "mediana": 4874,
+    "min": 4046,
+    "max": 4877
+   },
+   "generaciones": {
+    "mediana": 100,
+    "min": 83,
+    "max": 100
+   },
+   "ms_por_evaluacion": {
+    "mediana": 0.6382536272055955,
+    "min": 0.6167350557334987,
+    "max": 0.6513400857637166
+   }
+  },
+  {
+   "dataset": "002-ingeBigTest.xlsx",
+   "escenario": "solo_minimo",
+   "perfil": "balanceado",
+   "diametro": "#6",
+   "filas": 38,
+   "piezas": 5237,
+   "n": 5,
+   "segundos": {
+    "mediana": 2.144145324999954,
+    "min": 1.7478474160000133,
+    "max": 2.531125377999956
+   },
+   "evaluaciones": {
+    "mediana": 4572,
+    "min": 3456,
+    "max": 4857
+   },
+   "generaciones": {
+    "mediana": 94,
+    "min": 71,
+    "max": 100
+   },
+   "ms_por_evaluacion": {
+    "mediana": 0.49909977612793066,
+    "min": 0.45301175479874783,
+    "max": 0.5290098272569606
+   }
+  },
+  {
+   "dataset": "002-ingeBigTest.xlsx",
+   "escenario": "solo_minimo",
+   "perfil": "balanceado",
+   "diametro": "#7",
+   "filas": 5,
+   "piezas": 68,
+   "n": 5,
+   "segundos": {
+    "mediana": 0.0605638590000126,
+    "min": 0.05722478999996383,
+    "max": 0.07378332399991905
+   },
+   "evaluaciones": {
+    "mediana": 739,
+    "min": 727,
+    "max": 748
+   },
+   "generaciones": {
+    "mediana": 15,
+    "min": 15,
+    "max": 15
+   },
+   "ms_por_evaluacion": {
+    "mediana": 0.08330654607979725,
+    "min": 0.07785685714280793,
+    "max": 0.09864080748652279
+   }
+  },
+  {
+   "dataset": "002-ingeBigTest.xlsx",
+   "escenario": "solo_minimo",
+   "perfil": "profundo",
+   "diametro": "#3",
+   "filas": 17,
+   "piezas": 58500,
+   "n": 5,
+   "segundos": {
+    "mediana": 3.01152330900004,
+    "min": 2.8762505559999454,
+    "max": 3.6738270370000237
+   },
+   "evaluaciones": {
+    "mediana": 5463,
+    "min": 4989,
+    "max": 7854
+   },
+   "generaciones": {
+    "mediana": 55,
+    "min": 50,
+    "max": 79
+   },
+   "ms_por_evaluacion": {
+    "mediana": 0.5390163354406959,
+    "min": 0.46776509256430143,
+    "max": 0.5765184517939357
+   }
+  },
+  {
+   "dataset": "002-ingeBigTest.xlsx",
+   "escenario": "solo_minimo",
+   "perfil": "profundo",
+   "diametro": "#4",
+   "filas": 18,
+   "piezas": 864,
+   "n": 5,
+   "segundos": {
+    "mediana": 1.4932377600000564,
+    "min": 0.8813123289999112,
+    "max": 2.168558318999999
+   },
+   "evaluaciones": {
+    "mediana": 6314,
+    "min": 3935,
+    "max": 9937
+   },
+   "generaciones": {
+    "mediana": 64,
+    "min": 39,
+    "max": 101
+   },
+   "ms_por_evaluacion": {
+    "mediana": 0.22396755501903715,
+    "min": 0.21823068521686614,
+    "max": 0.23649631929047457
+   }
+  },
+  {
+   "dataset": "002-ingeBigTest.xlsx",
+   "escenario": "solo_minimo",
+   "perfil": "profundo",
+   "diametro": "#5",
+   "filas": 59,
+   "piezas": 2774,
+   "n": 5,
+   "segundos": {
+    "mediana": 10.218590302000052,
+    "min": 5.776396075999969,
+    "max": 12.297070405999989
+   },
+   "evaluaciones": {
+    "mediana": 15683,
+    "min": 8877,
+    "max": 19829
+   },
+   "generaciones": {
+    "mediana": 158,
+    "min": 89,
+    "max": 200
+   },
+   "ms_por_evaluacion": {
+    "mediana": 0.6397070543406828,
+    "min": 0.6105110824045609,
+    "max": 0.6515711472294874
+   }
+  },
+  {
+   "dataset": "002-ingeBigTest.xlsx",
+   "escenario": "solo_minimo",
+   "perfil": "profundo",
+   "diametro": "#6",
+   "filas": 38,
+   "piezas": 5237,
+   "n": 5,
+   "segundos": {
+    "mediana": 7.365461127999993,
+    "min": 7.093914743000028,
+    "max": 8.95957504599994
+   },
+   "evaluaciones": {
+    "mediana": 16453,
+    "min": 15259,
+    "max": 19807
+   },
+   "generaciones": {
+    "mediana": 166,
+    "min": 154,
+    "max": 200
+   },
+   "ms_por_evaluacion": {
+    "mediana": 0.44783006797592223,
+    "min": 0.43116238637330745,
+    "max": 0.4689856757978841
+   }
+  },
+  {
+   "dataset": "002-ingeBigTest.xlsx",
+   "escenario": "solo_minimo",
+   "perfil": "profundo",
+   "diametro": "#7",
+   "filas": 5,
+   "piezas": 68,
+   "n": 5,
+   "segundos": {
+    "mediana": 0.20106275199998436,
+    "min": 0.19360419999998157,
+    "max": 0.2092249790000551
+   },
+   "evaluaciones": {
+    "mediana": 2501,
+    "min": 2483,
+    "max": 2609
+   },
+   "generaciones": {
+    "mediana": 25,
+    "min": 25,
+    "max": 26
+   },
+   "ms_por_evaluacion": {
+    "mediana": 0.08016949879223487,
+    "min": 0.07797188884413274,
+    "max": 0.08335656533866737
+   }
+  },
+  {
+   "dataset": "002-ingeBigTest.xlsx",
+   "escenario": "solo_minimo",
+   "perfil": "rapido",
+   "diametro": "#3",
+   "filas": 17,
+   "piezas": 58500,
+   "n": 5,
+   "segundos": {
+    "mediana": 1.4771507049999855,
+    "min": 1.447077428000057,
+    "max": 1.567221643000039
+   },
+   "evaluaciones": {
+    "mediana": 468,
+    "min": 387,
+    "max": 518
+   },
+   "generaciones": {
+    "mediana": 30,
+    "min": 22,
+    "max": 30
+   },
+   "ms_por_evaluacion": {
+    "mediana": 3.092045786324908,
+    "min": 2.9147108236472006,
+    "max": 4.049668328165476
+   }
+  },
+  {
+   "dataset": "002-ingeBigTest.xlsx",
+   "escenario": "solo_minimo",
+   "perfil": "rapido",
+   "diametro": "#4",
+   "filas": 18,
+   "piezas": 864,
+   "n": 5,
+   "segundos": {
+    "mediana": 0.1145407779999914,
+    "min": 0.07827075200009403,
+    "max": 0.13260424999998577
+   },
+   "evaluaciones": {
+    "mediana": 428,
+    "min": 247,
+    "max": 502
+   },
+   "generaciones": {
+    "mediana": 25,
+    "min": 14,
+    "max": 30
+   },
+   "ms_por_evaluacion": {
+    "mediana": 0.2676186401868958,
+    "min": 0.2515902808765651,
+    "max": 0.31688563562791106
+   }
+  },
+  {
+   "dataset": "002-ingeBigTest.xlsx",
+   "escenario": "solo_minimo",
+   "perfil": "rapido",
+   "diametro": "#5",
+   "filas": 59,
+   "piezas": 2774,
+   "n": 5,
+   "segundos": {
+    "mediana": 0.4603419180000401,
+    "min": 0.4123959390000209,
+    "max": 0.5389434270000493
+   },
+   "evaluaciones": {
+    "mediana": 561,
+    "min": 559,
+    "max": 562
+   },
+   "generaciones": {
+    "mediana": 30,
+    "min": 30,
+    "max": 30
+   },
+   "ms_por_evaluacion": {
+    "mediana": 0.8191137330961568,
+    "min": 0.7377387101968174,
+    "max": 0.9589740693951054
+   }
+  },
+  {
+   "dataset": "002-ingeBigTest.xlsx",
+   "escenario": "solo_minimo",
+   "perfil": "rapido",
+   "diametro": "#6",
+   "filas": 38,
+   "piezas": 5237,
+   "n": 5,
+   "segundos": {
+    "mediana": 0.4309816879999744,
+    "min": 0.36001135899994097,
+    "max": 0.47556626799996593
+   },
+   "evaluaciones": {
+    "mediana": 553,
+    "min": 511,
+    "max": 556
+   },
+   "generaciones": {
+    "mediana": 30,
+    "min": 28,
+    "max": 30
+   },
+   "ms_por_evaluacion": {
+    "mediana": 0.7763456492806009,
+    "min": 0.6948111320072949,
+    "max": 0.8630966751360544
+   }
+  },
+  {
+   "dataset": "002-ingeBigTest.xlsx",
+   "escenario": "solo_minimo",
+   "perfil": "rapido",
+   "diametro": "#7",
+   "filas": 5,
+   "piezas": 68,
+   "n": 5,
+   "segundos": {
+    "mediana": 0.013821340999925269,
+    "min": 0.013268040999946606,
+    "max": 0.014483343000051718
+   },
+   "evaluaciones": {
+    "mediana": 148,
+    "min": 140,
+    "max": 158
+   },
+   "generaciones": {
+    "mediana": 8,
+    "min": 8,
+    "max": 9
+   },
+   "ms_por_evaluacion": {
+    "mediana": 0.09087699315031922,
+    "min": 0.08988657999983236,
+    "max": 0.0987238642851805
+   }
+  },
+  {
+   "dataset": "002-ingeBigTest.xlsx",
+   "escenario": "solo_perdida",
+   "perfil": "balanceado",
+   "diametro": "#3",
+   "filas": 17,
+   "piezas": 58500,
+   "n": 5,
+   "segundos": {
+    "mediana": 1.7918559209999785,
+    "min": 1.595485573000019,
+    "max": 1.9414135709999982
+   },
+   "evaluaciones": {
+    "mediana": 2061,
+    "min": 1334,
+    "max": 2271
+   },
+   "generaciones": {
+    "mediana": 43,
+    "min": 28,
+    "max": 48
+   },
+   "ms_por_evaluacion": {
+    "mediana": 0.8712144924794063,
+    "min": 0.8038833203230051,
+    "max": 1.1960161716641822
+   }
+  },
+  {
+   "dataset": "002-ingeBigTest.xlsx",
+   "escenario": "solo_perdida",
+   "perfil": "balanceado",
+   "diametro": "#4",
+   "filas": 18,
+   "piezas": 864,
+   "n": 5,
+   "segundos": {
+    "mediana": 0.2919623190000493,
+    "min": 0.21132303499996397,
+    "max": 0.407577978000063
+   },
+   "evaluaciones": {
+    "mediana": 1471,
+    "min": 959,
+    "max": 2076
+   },
+   "generaciones": {
+    "mediana": 30,
+    "min": 19,
+    "max": 44
+   },
+   "ms_por_evaluacion": {
+    "mediana": 0.20292085846675514,
+    "min": 0.19632850578037717,
+    "max": 0.22035770072988944
+   }
+  },
+  {
+   "dataset": "002-ingeBigTest.xlsx",
+   "escenario": "solo_perdida",
+   "perfil": "balanceado",
+   "diametro": "#5",
+   "filas": 59,
+   "piezas": 2774,
+   "n": 5,
+   "segundos": {
+    "mediana": 2.570777061000058,
+    "min": 1.896971643000029,
+    "max": 2.7510419970000157
+   },
+   "evaluaciones": {
+    "mediana": 4681,
+    "min": 3276,
+    "max": 4874
+   },
+   "generaciones": {
+    "mediana": 96,
+    "min": 67,
+    "max": 100
+   },
+   "ms_por_evaluacion": {
+    "mediana": 0.5636748557056632,
+    "min": 0.5491939886776454,
+    "max": 0.5790511730769319
+   }
+  },
+  {
+   "dataset": "002-ingeBigTest.xlsx",
+   "escenario": "solo_perdida",
+   "perfil": "balanceado",
+   "diametro": "#6",
+   "filas": 38,
+   "piezas": 5237,
+   "n": 5,
+   "segundos": {
+    "mediana": 0.997446732999947,
+    "min": 0.8878520560000425,
+    "max": 1.2547140970000328
+   },
+   "evaluaciones": {
+    "mediana": 2111,
+    "min": 1924,
+    "max": 3076
+   },
+   "generaciones": {
+    "mediana": 43,
+    "min": 39,
+    "max": 63
+   },
+   "ms_por_evaluacion": {
+    "mediana": 0.4399663310208337,
+    "min": 0.4079044528608689,
+    "max": 0.4905068497920928
+   }
+  },
+  {
+   "dataset": "002-ingeBigTest.xlsx",
+   "escenario": "solo_perdida",
+   "perfil": "balanceado",
+   "diametro": "#7",
+   "filas": 5,
+   "piezas": 68,
+   "n": 5,
+   "segundos": {
+    "mediana": 0.04782360299998345,
+    "min": 0.04626620700003059,
+    "max": 0.05149013499999455
+   },
+   "evaluaciones": {
+    "mediana": 743,
+    "min": 735,
+    "max": 745
+   },
+   "generaciones": {
+    "mediana": 15,
+    "min": 15,
+    "max": 15
+   },
+   "ms_por_evaluacion": {
+    "mediana": 0.06436554912514596,
+    "min": 0.06286035752680774,
+    "max": 0.06911427516777792
+   }
+  },
+  {
+   "dataset": "002-ingeBigTest.xlsx",
+   "escenario": "solo_perdida",
+   "perfil": "profundo",
+   "diametro": "#3",
+   "filas": 17,
+   "piezas": 58500,
+   "n": 5,
+   "segundos": {
+    "mediana": 2.6109711999999945,
+    "min": 2.382035754999947,
+    "max": 2.912254235999967
+   },
+   "evaluaciones": {
+    "mediana": 5384,
+    "min": 4388,
+    "max": 6338
+   },
+   "generaciones": {
+    "mediana": 54,
+    "min": 44,
+    "max": 64
+   },
+   "ms_por_evaluacion": {
+    "mediana": 0.48639037444279704,
+    "min": 0.45949104386241196,
+    "max": 0.5718563621239656
+   }
+  },
+  {
+   "dataset": "002-ingeBigTest.xlsx",
+   "escenario": "solo_perdida",
+   "perfil": "profundo",
+   "diametro": "#4",
+   "filas": 18,
+   "piezas": 864,
+   "n": 5,
+   "segundos": {
+    "mediana": 0.9581512229999589,
+    "min": 0.7395434710000472,
+    "max": 1.386802108999973
+   },
+   "evaluaciones": {
+    "mediana": 5015,
+    "min": 3837,
+    "max": 7046
+   },
+   "generaciones": {
+    "mediana": 50,
+    "min": 38,
+    "max": 71
+   },
+   "ms_por_evaluacion": {
+    "mediana": 0.19237908511473836,
+    "min": 0.18832275808506424,
+    "max": 0.19742521370860575
+   }
+  },
+  {
+   "dataset": "002-ingeBigTest.xlsx",
+   "escenario": "solo_perdida",
+   "perfil": "profundo",
+   "diametro": "#5",
+   "filas": 59,
+   "piezas": 2774,
+   "n": 5,
+   "segundos": {
+    "mediana": 5.598645289000046,
+    "min": 4.825559700999975,
+    "max": 7.6622434050000265
+   },
+   "evaluaciones": {
+    "mediana": 10454,
+    "min": 8381,
+    "max": 13904
+   },
+   "generaciones": {
+    "mediana": 105,
+    "min": 84,
+    "max": 140
+   },
+   "ms_por_evaluacion": {
+    "mediana": 0.5510819480005773,
+    "min": 0.535550534627898,
+    "max": 0.5918612140556023
+   }
+  },
+  {
+   "dataset": "002-ingeBigTest.xlsx",
+   "escenario": "solo_perdida",
+   "perfil": "profundo",
+   "diametro": "#6",
+   "filas": 38,
+   "piezas": 5237,
+   "n": 5,
+   "segundos": {
+    "mediana": 2.168734011999959,
+    "min": 1.9342007829999375,
+    "max": 2.3435150010000143
+   },
+   "evaluaciones": {
+    "mediana": 5419,
+    "min": 4920,
+    "max": 5913
+   },
+   "generaciones": {
+    "mediana": 54,
+    "min": 49,
+    "max": 59
+   },
+   "ms_por_evaluacion": {
+    "mediana": 0.3931302404471418,
+    "min": 0.37781094334747267,
+    "max": 0.40020926591621314
+   }
+  },
+  {
+   "dataset": "002-ingeBigTest.xlsx",
+   "escenario": "solo_perdida",
+   "perfil": "profundo",
+   "diametro": "#7",
+   "filas": 5,
+   "piezas": 68,
+   "n": 5,
+   "segundos": {
+    "mediana": 0.15493777799997588,
+    "min": 0.15252640599999268,
+    "max": 0.17098665299999993
+   },
+   "evaluaciones": {
+    "mediana": 2523,
+    "min": 2511,
+    "max": 2526
+   },
+   "generaciones": {
+    "mediana": 25,
+    "min": 25,
+    "max": 25
+   },
+   "ms_por_evaluacion": {
+    "mediana": 0.06139145843228002,
+    "min": 0.0606708058870297,
+    "max": 0.06774431576862121
+   }
+  },
+  {
+   "dataset": "002-ingeBigTest.xlsx",
+   "escenario": "solo_perdida",
+   "perfil": "rapido",
+   "diametro": "#3",
+   "filas": 17,
+   "piezas": 58500,
+   "n": 5,
+   "segundos": {
+    "mediana": 1.3364446389999785,
+    "min": 1.3046953709999798,
+    "max": 1.3712459010000089
+   },
+   "evaluaciones": {
+    "mediana": 467,
+    "min": 284,
+    "max": 501
+   },
+   "generaciones": {
+    "mediana": 27,
+    "min": 17,
+    "max": 30
+   },
+   "ms_por_evaluacion": {
+    "mediana": 2.936286725910083,
+    "min": 2.6675541696606357,
+    "max": 4.593997785211196
+   }
+  },
+  {
+   "dataset": "002-ingeBigTest.xlsx",
+   "escenario": "solo_perdida",
+   "perfil": "rapido",
+   "diametro": "#4",
+   "filas": 18,
+   "piezas": 864,
+   "n": 5,
+   "segundos": {
+    "mediana": 0.05758419000005688,
+    "min": 0.04866243599997233,
+    "max": 0.11324925999997504
+   },
+   "evaluaciones": {
+    "mediana": 226,
+    "min": 180,
+    "max": 529
+   },
+   "generaciones": {
+    "mediana": 12,
+    "min": 11,
+    "max": 30
+   },
+   "ms_por_evaluacion": {
+    "mediana": 0.2547973008852074,
+    "min": 0.21408177693757097,
+    "max": 0.270346866666513
+   }
+  },
+  {
+   "dataset": "002-ingeBigTest.xlsx",
+   "escenario": "solo_perdida",
+   "perfil": "rapido",
+   "diametro": "#5",
+   "filas": 59,
+   "piezas": 2774,
+   "n": 5,
+   "segundos": {
+    "mediana": 0.3699060850000251,
+    "min": 0.3607201569999461,
+    "max": 0.40772140700005366
+   },
+   "evaluaciones": {
+    "mediana": 561,
+    "min": 558,
+    "max": 562
+   },
+   "generaciones": {
+    "mediana": 30,
+    "min": 30,
+    "max": 30
+   },
+   "ms_por_evaluacion": {
+    "mediana": 0.6629141308244177,
+    "min": 0.6418508131671639,
+    "max": 0.7293763989267508
+   }
+  },
+  {
+   "dataset": "002-ingeBigTest.xlsx",
+   "escenario": "solo_perdida",
+   "perfil": "rapido",
+   "diametro": "#6",
+   "filas": 38,
+   "piezas": 5237,
+   "n": 5,
+   "segundos": {
+    "mediana": 0.38436446200000773,
+    "min": 0.34384186500005853,
+    "max": 0.3940933500000483
+   },
+   "evaluaciones": {
+    "mediana": 552,
+    "min": 550,
+    "max": 554
+   },
+   "generaciones": {
+    "mediana": 30,
+    "min": 30,
+    "max": 30
+   },
+   "ms_por_evaluacion": {
+    "mediana": 0.6963124311594343,
+    "min": 0.6251670272728337,
+    "max": 0.7113598375452136
+   }
+  },
+  {
+   "dataset": "002-ingeBigTest.xlsx",
+   "escenario": "solo_perdida",
+   "perfil": "rapido",
+   "diametro": "#7",
+   "filas": 5,
+   "piezas": 68,
+   "n": 5,
+   "segundos": {
+    "mediana": 0.010943666999992274,
+    "min": 0.010800299000038649,
+    "max": 0.011578341000017645
+   },
+   "evaluaciones": {
+    "mediana": 150,
+    "min": 148,
+    "max": 156
+   },
+   "generaciones": {
+    "mediana": 8,
+    "min": 8,
+    "max": 8
+   },
+   "ms_por_evaluacion": {
+    "mediana": 0.07324787820514245,
+    "min": 0.07152515894065331,
+    "max": 0.07770698657729963
+   }
+  },
+  {
+   "dataset": "003-sinteticaVivienda.xlsx",
+   "escenario": "ambos",
+   "perfil": "balanceado",
+   "diametro": "#3",
+   "filas": 10,
+   "piezas": 2346,
+   "n": 5,
+   "segundos": {
+    "mediana": 0.17523480699992433,
+    "min": 0.165988956000092,
+    "max": 0.20015252200005307
+   },
+   "evaluaciones": {
+    "mediana": 904,
+    "min": 857,
+    "max": 1045
+   },
+   "generaciones": {
+    "mediana": 18,
+    "min": 17,
+    "max": 21
+   },
+   "ms_por_evaluacion": {
+    "mediana": 0.19292004480660277,
+    "min": 0.19153351387564888,
+    "max": 0.19384381305301365
+   }
+  },
+  {
+   "dataset": "003-sinteticaVivienda.xlsx",
+   "escenario": "ambos",
+   "perfil": "balanceado",
+   "diametro": "#4",
+   "filas": 13,
+   "piezas": 364,
+   "n": 5,
+   "segundos": {
+    "mediana": 0.2570272620000651,
+    "min": 0.18326279200005047,
+    "max": 0.3630555219999678
+   },
+   "evaluaciones": {
+    "mediana": 1227,
+    "min": 945,
+    "max": 1900
+   },
+   "generaciones": {
+    "mediana": 26,
+    "min": 19,
+    "max": 41
+   },
+   "ms_por_evaluacion": {
+    "mediana": 0.193099281833578,
+    "min": 0.18805051217939833,
+    "max": 0.2094761711491973
+   }
+  },
+  {
+   "dataset": "003-sinteticaVivienda.xlsx",
+   "escenario": "ambos",
+   "perfil": "balanceado",
+   "diametro": "#5",
+   "filas": 15,
+   "piezas": 248,
+   "n": 5,
+   "segundos": {
+    "mediana": 0.1768657750001239,
+    "min": 0.16482892399994853,
+    "max": 0.20812548900016736
+   },
+   "evaluaciones": {
+    "mediana": 891,
+    "min": 811,
+    "max": 1041
+   },
+   "generaciones": {
+    "mediana": 18,
+    "min": 16,
+    "max": 21
+   },
+   "ms_por_evaluacion": {
+    "mediana": 0.20071934905653063,
+    "min": 0.1985025533110257,
+    "max": 0.20379108969708878
+   }
+  },
+  {
+   "dataset": "003-sinteticaVivienda.xlsx",
+   "escenario": "ambos",
+   "perfil": "profundo",
+   "diametro": "#3",
+   "filas": 10,
+   "piezas": 2346,
+   "n": 5,
+   "segundos": {
+    "mediana": 0.5192728389999957,
+    "min": 0.48904742400009127,
+    "max": 0.5317194550000295
+   },
+   "evaluaciones": {
+    "mediana": 2843,
+    "min": 2648,
+    "max": 2945
+   },
+   "generaciones": {
+    "mediana": 28,
+    "min": 26,
+    "max": 29
+   },
+   "ms_por_evaluacion": {
+    "mediana": 0.18264960921561577,
+    "min": 0.18038574057724002,
+    "max": 0.18468558308160546
+   }
+  },
+  {
+   "dataset": "003-sinteticaVivienda.xlsx",
+   "escenario": "ambos",
+   "perfil": "profundo",
+   "diametro": "#4",
+   "filas": 13,
+   "piezas": 364,
+   "n": 5,
+   "segundos": {
+    "mediana": 0.5654821000000538,
+    "min": 0.5228446749999875,
+    "max": 0.9155449610000232
+   },
+   "evaluaciones": {
+    "mediana": 3112,
+    "min": 2846,
+    "max": 4638
+   },
+   "generaciones": {
+    "mediana": 31,
+    "min": 28,
+    "max": 47
+   },
+   "ms_por_evaluacion": {
+    "mediana": 0.18371211349261685,
+    "min": 0.18171018637533864,
+    "max": 0.19740081090987996
+   }
+  },
+  {
+   "dataset": "003-sinteticaVivienda.xlsx",
+   "escenario": "ambos",
+   "perfil": "profundo",
+   "diametro": "#5",
+   "filas": 15,
+   "piezas": 248,
+   "n": 5,
+   "segundos": {
+    "mediana": 0.5726524700000937,
+    "min": 0.5389080439999816,
+    "max": 0.8533776190001845
+   },
+   "evaluaciones": {
+    "mediana": 2844,
+    "min": 2657,
+    "max": 4306
+   },
+   "generaciones": {
+    "mediana": 28,
+    "min": 26,
+    "max": 43
+   },
+   "ms_por_evaluacion": {
+    "mediana": 0.20135459563997668,
+    "min": 0.1958953267902514,
+    "max": 0.2376223394014431
+   }
+  },
+  {
+   "dataset": "003-sinteticaVivienda.xlsx",
+   "escenario": "ambos",
+   "perfil": "rapido",
+   "diametro": "#3",
+   "filas": 10,
+   "piezas": 2346,
+   "n": 5,
+   "segundos": {
+    "mediana": 0.06400941800006876,
+    "min": 0.04805210400013493,
+    "max": 0.07116704800000662
+   },
+   "evaluaciones": {
+    "mediana": 223,
+    "min": 140,
+    "max": 295
+   },
+   "generaciones": {
+    "mediana": 12,
+    "min": 8,
+    "max": 17
+   },
+   "ms_por_evaluacion": {
+    "mediana": 0.2494872197304286,
+    "min": 0.238459935251236,
+    "max": 0.4572101285719197
+   }
+  },
+  {
+   "dataset": "003-sinteticaVivienda.xlsx",
+   "escenario": "ambos",
+   "perfil": "rapido",
+   "diametro": "#4",
+   "filas": 13,
+   "piezas": 364,
+   "n": 5,
+   "segundos": {
+    "mediana": 0.05041256499998781,
+    "min": 0.03667023299999528,
+    "max": 0.06418966900014311
+   },
+   "evaluaciones": {
+    "mediana": 219,
+    "min": 173,
+    "max": 299
+   },
+   "generaciones": {
+    "mediana": 12,
+    "min": 10,
+    "max": 18
+   },
+   "ms_por_evaluacion": {
+    "mediana": 0.21823621212115935,
+    "min": 0.2119666647398571,
+    "max": 0.2307290456628087
+   }
+  },
+  {
+   "dataset": "003-sinteticaVivienda.xlsx",
+   "escenario": "ambos",
+   "perfil": "rapido",
+   "diametro": "#5",
+   "filas": 15,
+   "piezas": 248,
+   "n": 5,
+   "segundos": {
+    "mediana": 0.04918667599986293,
+    "min": 0.03962135100005071,
+    "max": 0.06198629300001812
+   },
+   "evaluaciones": {
+    "mediana": 212,
+    "min": 173,
+    "max": 291
+   },
+   "generaciones": {
+    "mediana": 11,
+    "min": 9,
+    "max": 16
+   },
+   "ms_por_evaluacion": {
+    "mediana": 0.22902515028931045,
+    "min": 0.21301131615126503,
+    "max": 0.23201262264086286
+   }
+  },
+  {
+   "dataset": "003-sinteticaVivienda.xlsx",
+   "escenario": "ideal",
+   "perfil": "balanceado",
+   "diametro": "#3",
+   "filas": 10,
+   "piezas": 2346,
+   "n": 5,
+   "segundos": {
+    "mediana": 0.09249933400002419,
+    "min": 0.0876710800000069,
+    "max": 0.09963930399999299
+   },
+   "evaluaciones": {
+    "mediana": 810,
+    "min": 799,
+    "max": 899
+   },
+   "generaciones": {
+    "mediana": 16,
+    "min": 16,
+    "max": 18
+   },
+   "ms_por_evaluacion": {
+    "mediana": 0.1135655419752878,
+    "min": 0.10972600750939536,
+    "max": 0.11954962762025909
+   }
+  },
+  {
+   "dataset": "003-sinteticaVivienda.xlsx",
+   "escenario": "ideal",
+   "perfil": "balanceado",
+   "diametro": "#4",
+   "filas": 13,
+   "piezas": 364,
+   "n": 5,
+   "segundos": {
+    "mediana": 0.1634249819999809,
+    "min": 0.111666563999961,
+    "max": 0.16838424999997414
+   },
+   "evaluaciones": {
+    "mediana": 1257,
+    "min": 900,
+    "max": 1312
+   },
+   "generaciones": {
+    "mediana": 26,
+    "min": 18,
+    "max": 27
+   },
+   "ms_por_evaluacion": {
+    "mediana": 0.1245617240853513,
+    "min": 0.1230855332239763,
+    "max": 0.13270025775654332
+   }
+  },
+  {
+   "dataset": "003-sinteticaVivienda.xlsx",
+   "escenario": "ideal",
+   "perfil": "balanceado",
+   "diametro": "#5",
+   "filas": 15,
+   "piezas": 248,
+   "n": 5,
+   "segundos": {
+    "mediana": 0.11162352799999553,
+    "min": 0.10504948099998046,
+    "max": 0.12297123400003329
+   },
+   "evaluaciones": {
+    "mediana": 858,
+    "min": 808,
+    "max": 913
+   },
+   "generaciones": {
+    "mediana": 17,
+    "min": 16,
+    "max": 18
+   },
+   "ms_por_evaluacion": {
+    "mediana": 0.13040131775700411,
+    "min": 0.12243529254076976,
+    "max": 0.13468919386641107
+   }
+  },
+  {
+   "dataset": "003-sinteticaVivienda.xlsx",
+   "escenario": "ideal",
+   "perfil": "profundo",
+   "diametro": "#3",
+   "filas": 10,
+   "piezas": 2346,
+   "n": 5,
+   "segundos": {
+    "mediana": 0.29064282799998864,
+    "min": 0.2837691230000132,
+    "max": 0.2981573830000457
+   },
+   "evaluaciones": {
+    "mediana": 2748,
+    "min": 2646,
+    "max": 2846
+   },
+   "generaciones": {
+    "mediana": 27,
+    "min": 26,
+    "max": 28
+   },
+   "ms_por_evaluacion": {
+    "mediana": 0.10476366233311514,
+    "min": 0.10230300175993969,
+    "max": 0.10724456651550009
+   }
+  },
+  {
+   "dataset": "003-sinteticaVivienda.xlsx",
+   "escenario": "ideal",
+   "perfil": "profundo",
+   "diametro": "#4",
+   "filas": 13,
+   "piezas": 364,
+   "n": 5,
+   "segundos": {
+    "mediana": 0.39900693900000306,
+    "min": 0.3697917730000313,
+    "max": 0.46531559199996764
+   },
+   "evaluaciones": {
+    "mediana": 3240,
+    "min": 2948,
+    "max": 3415
+   },
+   "generaciones": {
+    "mediana": 32,
+    "min": 29,
+    "max": 34
+   },
+   "ms_por_evaluacion": {
+    "mediana": 0.12523407420844693,
+    "min": 0.12171477265929237,
+    "max": 0.13625639590042976
+   }
+  },
+  {
+   "dataset": "003-sinteticaVivienda.xlsx",
+   "escenario": "ideal",
+   "perfil": "profundo",
+   "diametro": "#5",
+   "filas": 15,
+   "piezas": 248,
+   "n": 5,
+   "segundos": {
+    "mediana": 0.3402988339999524,
+    "min": 0.3121391459999927,
+    "max": 0.4509173449999935
+   },
+   "evaluaciones": {
+    "mediana": 2655,
+    "min": 2555,
+    "max": 2752
+   },
+   "generaciones": {
+    "mediana": 26,
+    "min": 25,
+    "max": 27
+   },
+   "ms_por_evaluacion": {
+    "mediana": 0.1236550995639362,
+    "min": 0.12092337194435995,
+    "max": 0.1698370414312593
+   }
+  },
+  {
+   "dataset": "003-sinteticaVivienda.xlsx",
+   "escenario": "ideal",
+   "perfil": "rapido",
+   "diametro": "#3",
+   "filas": 10,
+   "piezas": 2346,
+   "n": 5,
+   "segundos": {
+    "mediana": 0.025494128999980603,
+    "min": 0.023261328999979014,
+    "max": 0.02744090999999571
+   },
+   "evaluaciones": {
+    "mediana": 172,
+    "min": 158,
+    "max": 203
+   },
+   "generaciones": {
+    "mediana": 9,
+    "min": 9,
+    "max": 11
+   },
+   "ms_por_evaluacion": {
+    "mediana": 0.14319400581409492,
+    "min": 0.135176896551703,
+    "max": 0.15635658787893839
+   }
+  },
+  {
+   "dataset": "003-sinteticaVivienda.xlsx",
+   "escenario": "ideal",
+   "perfil": "rapido",
+   "diametro": "#4",
+   "filas": 13,
+   "piezas": 364,
+   "n": 5,
+   "segundos": {
+    "mediana": 0.02866704899997785,
+    "min": 0.026504984999974113,
+    "max": 0.03896063999997068
+   },
+   "evaluaciones": {
+    "mediana": 218,
+    "min": 201,
+    "max": 308
+   },
+   "generaciones": {
+    "mediana": 12,
+    "min": 11,
+    "max": 17
+   },
+   "ms_por_evaluacion": {
+    "mediana": 0.13186559701479658,
+    "min": 0.12649558441548922,
+    "max": 0.1357591834862683
+   }
+  },
+  {
+   "dataset": "003-sinteticaVivienda.xlsx",
+   "escenario": "ideal",
+   "perfil": "rapido",
+   "diametro": "#5",
+   "filas": 15,
+   "piezas": 248,
+   "n": 5,
+   "segundos": {
+    "mediana": 0.024405089999959273,
+    "min": 0.023027063999961683,
+    "max": 0.02662855299996636
+   },
+   "evaluaciones": {
+    "mediana": 171,
+    "min": 166,
+    "max": 204
+   },
+   "generaciones": {
+    "mediana": 9,
+    "min": 9,
+    "max": 11
+   },
+   "ms_por_evaluacion": {
+    "mediana": 0.13871725301181737,
+    "min": 0.1305321225488547,
+    "max": 0.14993391812866544
+   }
+  },
+  {
+   "dataset": "003-sinteticaVivienda.xlsx",
+   "escenario": "solo_minimo",
+   "perfil": "balanceado",
+   "diametro": "#3",
+   "filas": 10,
+   "piezas": 2346,
+   "n": 5,
+   "segundos": {
+    "mediana": 0.14015571699997054,
+    "min": 0.13727392800001326,
+    "max": 0.16729085099996155
+   },
+   "evaluaciones": {
+    "mediana": 736,
+    "min": 724,
+    "max": 757
+   },
+   "generaciones": {
+    "mediana": 15,
+    "min": 15,
+    "max": 15
+   },
+   "ms_por_evaluacion": {
+    "mediana": 0.19042896331517736,
+    "min": 0.18940018097750783,
+    "max": 0.2212841944443936
+   }
+  },
+  {
+   "dataset": "003-sinteticaVivienda.xlsx",
+   "escenario": "solo_minimo",
+   "perfil": "balanceado",
+   "diametro": "#4",
+   "filas": 13,
+   "piezas": 364,
+   "n": 5,
+   "segundos": {
+    "mediana": 0.28455667100001847,
+    "min": 0.20515282099995602,
+    "max": 0.41091805500002465
+   },
+   "evaluaciones": {
+    "mediana": 1550,
+    "min": 1138,
+    "max": 2202
+   },
+   "generaciones": {
+    "mediana": 32,
+    "min": 23,
+    "max": 46
+   },
+   "ms_por_evaluacion": {
+    "mediana": 0.18661128746595124,
+    "min": 0.17872949225801998,
+    "max": 0.19812540718918176
+   }
+  },
+  {
+   "dataset": "003-sinteticaVivienda.xlsx",
+   "escenario": "solo_minimo",
+   "perfil": "balanceado",
+   "diametro": "#5",
+   "filas": 15,
+   "piezas": 248,
+   "n": 5,
+   "segundos": {
+    "mediana": 0.19465597299995352,
+    "min": 0.16586637199998222,
+    "max": 0.30711724000002505
+   },
+   "evaluaciones": {
+    "mediana": 998,
+    "min": 856,
+    "max": 1418
+   },
+   "generaciones": {
+    "mediana": 20,
+    "min": 17,
+    "max": 29
+   },
+   "ms_por_evaluacion": {
+    "mediana": 0.19569721015510144,
+    "min": 0.19134643787572783,
+    "max": 0.2696376119403205
+   }
+  },
+  {
+   "dataset": "003-sinteticaVivienda.xlsx",
+   "escenario": "solo_minimo",
+   "perfil": "profundo",
+   "diametro": "#3",
+   "filas": 10,
+   "piezas": 2346,
+   "n": 5,
+   "segundos": {
+    "mediana": 0.4551173539999809,
+    "min": 0.44842783599995073,
+    "max": 0.46786162000000786
+   },
+   "evaluaciones": {
+    "mediana": 2550,
+    "min": 2549,
+    "max": 2553
+   },
+   "generaciones": {
+    "mediana": 25,
+    "min": 25,
+    "max": 25
+   },
+   "ms_por_evaluacion": {
+    "mediana": 0.17833752115986712,
+    "min": 0.17585405333331403,
+    "max": 0.18354712436249818
+   }
+  },
+  {
+   "dataset": "003-sinteticaVivienda.xlsx",
+   "escenario": "solo_minimo",
+   "perfil": "profundo",
+   "diametro": "#4",
+   "filas": 13,
+   "piezas": 364,
+   "n": 5,
+   "segundos": {
+    "mediana": 0.6674775029999864,
+    "min": 0.48513171000001876,
+    "max": 0.7764642729999878
+   },
+   "evaluaciones": {
+    "mediana": 3697,
+    "min": 2656,
+    "max": 4222
+   },
+   "generaciones": {
+    "mediana": 37,
+    "min": 26,
+    "max": 42
+   },
+   "ms_por_evaluacion": {
+    "mediana": 0.1826550112951878,
+    "min": 0.1748636198172778,
+    "max": 0.18390911250591846
+   }
+  },
+  {
+   "dataset": "003-sinteticaVivienda.xlsx",
+   "escenario": "solo_minimo",
+   "perfil": "profundo",
+   "diametro": "#5",
+   "filas": 15,
+   "piezas": 248,
+   "n": 5,
+   "segundos": {
+    "mediana": 0.6101130499999954,
+    "min": 0.5494111479999901,
+    "max": 0.9842433640000081
+   },
+   "evaluaciones": {
+    "mediana": 2949,
+    "min": 2748,
+    "max": 5003
+   },
+   "generaciones": {
+    "mediana": 29,
+    "min": 27,
+    "max": 50
+   },
+   "ms_por_evaluacion": {
+    "mediana": 0.19969262015932185,
+    "min": 0.19673063441935001,
+    "max": 0.2125807419941761
+   }
+  },
+  {
+   "dataset": "003-sinteticaVivienda.xlsx",
+   "escenario": "solo_minimo",
+   "perfil": "rapido",
+   "diametro": "#3",
+   "filas": 10,
+   "piezas": 2346,
+   "n": 5,
+   "segundos": {
+    "mediana": 0.04068461299993942,
+    "min": 0.03907912700003635,
+    "max": 0.04135426000004827
+   },
+   "evaluaciones": {
+    "mediana": 148,
+    "min": 135,
+    "max": 156
+   },
+   "generaciones": {
+    "mediana": 8,
+    "min": 8,
+    "max": 8
+   },
+   "ms_por_evaluacion": {
+    "mediana": 0.27489603378337446,
+    "min": 0.26204416666695207,
+    "max": 0.2894750148150841
+   }
+  },
+  {
+   "dataset": "003-sinteticaVivienda.xlsx",
+   "escenario": "solo_minimo",
+   "perfil": "rapido",
+   "diametro": "#4",
+   "filas": 13,
+   "piezas": 364,
+   "n": 5,
+   "segundos": {
+    "mediana": 0.05312946700007615,
+    "min": 0.04049433400007274,
+    "max": 0.06301443700010623
+   },
+   "evaluaciones": {
+    "mediana": 240,
+    "min": 184,
+    "max": 298
+   },
+   "generaciones": {
+    "mediana": 15,
+    "min": 10,
+    "max": 18
+   },
+   "ms_por_evaluacion": {
+    "mediana": 0.2174377531915486,
+    "min": 0.21080477516792195,
+    "max": 0.22137277916698395
+   }
+  },
+  {
+   "dataset": "003-sinteticaVivienda.xlsx",
+   "escenario": "solo_minimo",
+   "perfil": "rapido",
+   "diametro": "#5",
+   "filas": 15,
+   "piezas": 248,
+   "n": 5,
+   "segundos": {
+    "mediana": 0.049476059000085115,
+    "min": 0.03998116599996138,
+    "max": 0.06696247100001074
+   },
+   "evaluaciones": {
+    "mediana": 209,
+    "min": 175,
+    "max": 307
+   },
+   "generaciones": {
+    "mediana": 12,
+    "min": 9,
+    "max": 17
+   },
+   "ms_por_evaluacion": {
+    "mediana": 0.22453748989917843,
+    "min": 0.21811879804563758,
+    "max": 0.23672755502433068
+   }
+  },
+  {
+   "dataset": "003-sinteticaVivienda.xlsx",
+   "escenario": "solo_perdida",
+   "perfil": "balanceado",
+   "diametro": "#3",
+   "filas": 10,
+   "piezas": 2346,
+   "n": 5,
+   "segundos": {
+    "mediana": 0.1538889159999144,
+    "min": 0.14502924999999323,
+    "max": 0.18329263999999057
+   },
+   "evaluaciones": {
+    "mediana": 904,
+    "min": 855,
+    "max": 1001
+   },
+   "generaciones": {
+    "mediana": 18,
+    "min": 17,
+    "max": 20
+   },
+   "ms_por_evaluacion": {
+    "mediana": 0.16632866531439408,
+    "min": 0.16043058628317836,
+    "max": 0.18310953046952105
+   }
+  },
+  {
+   "dataset": "003-sinteticaVivienda.xlsx",
+   "escenario": "solo_perdida",
+   "perfil": "balanceado",
+   "diametro": "#4",
+   "filas": 13,
+   "piezas": 364,
+   "n": 5,
+   "segundos": {
+    "mediana": 0.17260245499994653,
+    "min": 0.1610024510000585,
+    "max": 0.33897636200003944
+   },
+   "evaluaciones": {
+    "mediana": 955,
+    "min": 888,
+    "max": 1942
+   },
+   "generaciones": {
+    "mediana": 19,
+    "min": 18,
+    "max": 41
+   },
+   "ms_por_evaluacion": {
+    "mediana": 0.1745501349124817,
+    "min": 0.16661266802938812,
+    "max": 0.18347207995502543
+   }
+  },
+  {
+   "dataset": "003-sinteticaVivienda.xlsx",
+   "escenario": "solo_perdida",
+   "perfil": "balanceado",
+   "diametro": "#5",
+   "filas": 15,
+   "piezas": 248,
+   "n": 5,
+   "segundos": {
+    "mediana": 0.151454516000058,
+    "min": 0.12863763100006054,
+    "max": 0.18435697900008563
+   },
+   "evaluaciones": {
+    "mediana": 815,
+    "min": 763,
+    "max": 950
+   },
+   "generaciones": {
+    "mediana": 16,
+    "min": 15,
+    "max": 19
+   },
+   "ms_por_evaluacion": {
+    "mediana": 0.18583376196326135,
+    "min": 0.16859453604201904,
+    "max": 0.1946681257275664
+   }
+  },
+  {
+   "dataset": "003-sinteticaVivienda.xlsx",
+   "escenario": "solo_perdida",
+   "perfil": "profundo",
+   "diametro": "#3",
+   "filas": 10,
+   "piezas": 2346,
+   "n": 5,
+   "segundos": {
+    "mediana": 0.4479106710000451,
+    "min": 0.40907791899996937,
+    "max": 0.4670238070000323
+   },
+   "evaluaciones": {
+    "mediana": 2836,
+    "min": 2648,
+    "max": 2925
+   },
+   "generaciones": {
+    "mediana": 28,
+    "min": 26,
+    "max": 29
+   },
+   "ms_por_evaluacion": {
+    "mediana": 0.15448561895769236,
+    "min": 0.15080140748899382,
+    "max": 0.16450292603030375
+   }
+  },
+  {
+   "dataset": "003-sinteticaVivienda.xlsx",
+   "escenario": "solo_perdida",
+   "perfil": "profundo",
+   "diametro": "#4",
+   "filas": 13,
+   "piezas": 364,
+   "n": 5,
+   "segundos": {
+    "mediana": 0.7962439829999539,
+    "min": 0.44406257900004675,
+    "max": 1.0378789339999912
+   },
+   "evaluaciones": {
+    "mediana": 5182,
+    "min": 2842,
+    "max": 5916
+   },
+   "generaciones": {
+    "mediana": 52,
+    "min": 28,
+    "max": 60
+   },
+   "ms_por_evaluacion": {
+    "mediana": 0.16123691069100224,
+    "min": 0.15365572809725087,
+    "max": 0.17543592528735483
+   }
+  },
+  {
+   "dataset": "003-sinteticaVivienda.xlsx",
+   "escenario": "solo_perdida",
+   "perfil": "profundo",
+   "diametro": "#5",
+   "filas": 15,
+   "piezas": 248,
+   "n": 5,
+   "segundos": {
+    "mediana": 0.43075580900006116,
+    "min": 0.4210666010000068,
+    "max": 0.4395937360000062
+   },
+   "evaluaciones": {
+    "mediana": 2651,
+    "min": 2554,
+    "max": 2658
+   },
+   "generaciones": {
+    "mediana": 26,
+    "min": 25,
+    "max": 26
+   },
+   "ms_por_evaluacion": {
+    "mediana": 0.16473654186228748,
+    "min": 0.1603211720105464,
+    "max": 0.1706779678934998
+   }
+  },
+  {
+   "dataset": "003-sinteticaVivienda.xlsx",
+   "escenario": "solo_perdida",
+   "perfil": "rapido",
+   "diametro": "#3",
+   "filas": 10,
+   "piezas": 2346,
+   "n": 5,
+   "segundos": {
+    "mediana": 0.04237575000001925,
+    "min": 0.03720254600000317,
+    "max": 0.05595929799994792
+   },
+   "evaluaciones": {
+    "mediana": 193,
+    "min": 167,
+    "max": 288
+   },
+   "generaciones": {
+    "mediana": 11,
+    "min": 9,
+    "max": 17
+   },
+   "ms_por_evaluacion": {
+    "mediana": 0.2142700585104552,
+    "min": 0.19430311805537473,
+    "max": 0.22276973652696508
+   }
+  },
+  {
+   "dataset": "003-sinteticaVivienda.xlsx",
+   "escenario": "solo_perdida",
+   "perfil": "rapido",
+   "diametro": "#4",
+   "filas": 13,
+   "piezas": 364,
+   "n": 5,
+   "segundos": {
+    "mediana": 0.046979694000015115,
+    "min": 0.035043934999976045,
+    "max": 0.05135107299997799
+   },
+   "evaluaciones": {
+    "mediana": 277,
+    "min": 190,
+    "max": 305
+   },
+   "generaciones": {
+    "mediana": 15,
+    "min": 10,
+    "max": 17
+   },
+   "ms_por_evaluacion": {
+    "mediana": 0.1774926202091345,
+    "min": 0.16836417377041962,
+    "max": 0.18444176315776867
+   }
+  },
+  {
+   "dataset": "003-sinteticaVivienda.xlsx",
+   "escenario": "solo_perdida",
+   "perfil": "rapido",
+   "diametro": "#5",
+   "filas": 15,
+   "piezas": 248,
+   "n": 5,
+   "segundos": {
+    "mediana": 0.03241360499998791,
+    "min": 0.030989574999921388,
+    "max": 0.03460193300008996
+   },
+   "evaluaciones": {
+    "mediana": 168,
+    "min": 163,
+    "max": 191
+   },
+   "generaciones": {
+    "mediana": 9,
+    "min": 9,
+    "max": 10
+   },
+   "ms_por_evaluacion": {
+    "mediana": 0.19012009202405758,
+    "min": 0.18116195288005213,
+    "max": 0.197958963190522
+   }
+  },
+  {
+   "dataset": "004-sinteticaEdificio.xlsx",
+   "escenario": "ambos",
+   "perfil": "balanceado",
+   "diametro": "#3",
+   "filas": 35,
+   "piezas": 15208,
+   "n": 5,
+   "segundos": {
+    "mediana": 1.7333263509999597,
+    "min": 1.3743614519999028,
+    "max": 2.477809395999884
+   },
+   "evaluaciones": {
+    "mediana": 2588,
+    "min": 1973,
+    "max": 3795
+   },
+   "generaciones": {
+    "mediana": 53,
+    "min": 40,
+    "max": 78
+   },
+   "ms_por_evaluacion": {
+    "mediana": 0.6707314123263567,
+    "min": 0.6529142018445018,
+    "max": 0.7437898978022175
+   }
+  },
+  {
+   "dataset": "004-sinteticaEdificio.xlsx",
+   "escenario": "ambos",
+   "perfil": "balanceado",
+   "diametro": "#4",
+   "filas": 28,
+   "piezas": 1096,
+   "n": 5,
+   "segundos": {
+    "mediana": 0.9116362299998855,
+    "min": 0.8288935210000545,
+    "max": 0.9215131480000309
+   },
+   "evaluaciones": {
+    "mediana": 2353,
+    "min": 2199,
+    "max": 2572
+   },
+   "generaciones": {
+    "mediana": 48,
+    "min": 45,
+    "max": 53
+   },
+   "ms_por_evaluacion": {
+    "mediana": 0.37694111914509076,
+    "min": 0.35828660497668385,
+    "max": 0.3881953633658925
+   }
+  },
+  {
+   "dataset": "004-sinteticaEdificio.xlsx",
+   "escenario": "ambos",
+   "perfil": "balanceado",
+   "diametro": "#5",
+   "filas": 21,
+   "piezas": 1070,
+   "n": 5,
+   "segundos": {
+    "mediana": 0.5890554390000489,
+    "min": 0.3855967070001043,
+    "max": 0.762060037000083
+   },
+   "evaluaciones": {
+    "mediana": 1807,
+    "min": 1282,
+    "max": 2664
+   },
+   "generaciones": {
+    "mediana": 37,
+    "min": 26,
+    "max": 55
+   },
+   "ms_por_evaluacion": {
+    "mediana": 0.2870364517208757,
+    "min": 0.28605857244747857,
+    "max": 0.32598530105149354
+   }
+  },
+  {
+   "dataset": "004-sinteticaEdificio.xlsx",
+   "escenario": "ambos",
+   "perfil": "balanceado",
+   "diametro": "#6",
+   "filas": 18,
+   "piezas": 928,
+   "n": 5,
+   "segundos": {
+    "mediana": 0.3474879240000064,
+    "min": 0.2628267609998147,
+    "max": 0.40936961399984284
+   },
+   "evaluaciones": {
+    "mediana": 1374,
+    "min": 1047,
+    "max": 1663
+   },
+   "generaciones": {
+    "mediana": 28,
+    "min": 21,
+    "max": 35
+   },
+   "ms_por_evaluacion": {
+    "mediana": 0.24616332772089167,
+    "min": 0.2444841495581305,
+    "max": 0.25290241921397844
+   }
+  },
+  {
+   "dataset": "004-sinteticaEdificio.xlsx",
+   "escenario": "ambos",
+   "perfil": "balanceado",
+   "diametro": "#7",
+   "filas": 3,
+   "piezas": 480,
+   "n": 5,
+   "segundos": {
+    "mediana": 0.04112885900008223,
+    "min": 0.04025750599998901,
+    "max": 0.06783390500004316
+   },
+   "evaluaciones": {
+    "mediana": 699,
+    "min": 686,
+    "max": 707
+   },
+   "generaciones": {
+    "mediana": 15,
+    "min": 15,
+    "max": 15
+   },
+   "ms_por_evaluacion": {
+    "mediana": 0.059434767341159295,
+    "min": 0.05781176386915166,
+    "max": 0.09704421316172127
+   }
+  },
+  {
+   "dataset": "004-sinteticaEdificio.xlsx",
+   "escenario": "ambos",
+   "perfil": "profundo",
+   "diametro": "#3",
+   "filas": 35,
+   "piezas": 15208,
+   "n": 5,
+   "segundos": {
+    "mediana": 4.142284757000198,
+    "min": 3.282678277000059,
+    "max": 6.804160365000143
+   },
+   "evaluaciones": {
+    "mediana": 6297,
+    "min": 5120,
+    "max": 10248
+   },
+   "generaciones": {
+    "mediana": 63,
+    "min": 51,
+    "max": 103
+   },
+   "ms_por_evaluacion": {
+    "mediana": 0.6474855287575458,
+    "min": 0.6377859189264443,
+    "max": 0.6639500746487259
+   }
+  },
+  {
+   "dataset": "004-sinteticaEdificio.xlsx",
+   "escenario": "ambos",
+   "perfil": "profundo",
+   "diametro": "#4",
+   "filas": 28,
+   "piezas": 1096,
+   "n": 5,
+   "segundos": {
+    "mediana": 2.262266251000028,
+    "min": 1.8805520989999422,
+    "max": 3.042392992000032
+   },
+   "evaluaciones": {
+    "mediana": 6393,
+    "min": 5014,
+    "max": 8460
+   },
+   "generaciones": {
+    "mediana": 64,
+    "min": 50,
+    "max": 85
+   },
+   "ms_por_evaluacion": {
+    "mediana": 0.37451689710446145,
+    "min": 0.35386614281245554,
+    "max": 0.3791808761679022
+   }
+  },
+  {
+   "dataset": "004-sinteticaEdificio.xlsx",
+   "escenario": "ambos",
+   "perfil": "profundo",
+   "diametro": "#5",
+   "filas": 21,
+   "piezas": 1070,
+   "n": 5,
+   "segundos": {
+    "mediana": 1.2116104869999162,
+    "min": 1.004845596999985,
+    "max": 2.1715474520001408
+   },
+   "evaluaciones": {
+    "mediana": 4131,
+    "min": 3443,
+    "max": 7248
+   },
+   "generaciones": {
+    "mediana": 41,
+    "min": 34,
+    "max": 73
+   },
+   "ms_por_evaluacion": {
+    "mediana": 0.2932971404018195,
+    "min": 0.28353431066591,
+    "max": 0.29960643653423574
+   }
+  },
+  {
+   "dataset": "004-sinteticaEdificio.xlsx",
+   "escenario": "ambos",
+   "perfil": "profundo",
+   "diametro": "#6",
+   "filas": 18,
+   "piezas": 928,
+   "n": 5,
+   "segundos": {
+    "mediana": 0.9351393859999462,
+    "min": 0.8851730349999798,
+    "max": 1.2677613840000959
+   },
+   "evaluaciones": {
+    "mediana": 4017,
+    "min": 3737,
+    "max": 5292
+   },
+   "generaciones": {
+    "mediana": 40,
+    "min": 37,
+    "max": 53
+   },
+   "ms_por_evaluacion": {
+    "mediana": 0.2368672825796039,
+    "min": 0.23187190329777985,
+    "max": 0.2419955877520543
+   }
+  },
+  {
+   "dataset": "004-sinteticaEdificio.xlsx",
+   "escenario": "ambos",
+   "perfil": "profundo",
+   "diametro": "#7",
+   "filas": 3,
+   "piezas": 480,
+   "n": 5,
+   "segundos": {
+    "mediana": 0.11831785300000774,
+    "min": 0.11701773899994805,
+    "max": 0.12788140699990436
+   },
+   "evaluaciones": {
+    "mediana": 2411,
+    "min": 2392,
+    "max": 2434
+   },
+   "generaciones": {
+    "mediana": 25,
+    "min": 25,
+    "max": 25
+   },
+   "ms_por_evaluacion": {
+    "mediana": 0.04913532101329225,
+    "min": 0.04875355951888072,
+    "max": 0.052756356023062854
+   }
+  },
+  {
+   "dataset": "004-sinteticaEdificio.xlsx",
+   "escenario": "ambos",
+   "perfil": "rapido",
+   "diametro": "#3",
+   "filas": 35,
+   "piezas": 15208,
+   "n": 5,
+   "segundos": {
+    "mediana": 0.5340440480001689,
+    "min": 0.4941102979998959,
+    "max": 0.557025079999903
+   },
+   "evaluaciones": {
+    "mediana": 555,
+    "min": 549,
+    "max": 558
+   },
+   "generaciones": {
+    "mediana": 30,
+    "min": 30,
+    "max": 30
+   },
+   "ms_por_evaluacion": {
+    "mediana": 0.9622415279282323,
+    "min": 0.885502326164688,
+    "max": 1.003648792792618
+   }
+  },
+  {
+   "dataset": "004-sinteticaEdificio.xlsx",
+   "escenario": "ambos",
+   "perfil": "rapido",
+   "diametro": "#4",
+   "filas": 28,
+   "piezas": 1096,
+   "n": 5,
+   "segundos": {
+    "mediana": 0.22092923999980485,
+    "min": 0.20274976900009278,
+    "max": 0.3369736010001816
+   },
+   "evaluaciones": {
+    "mediana": 523,
+    "min": 470,
+    "max": 543
+   },
+   "generaciones": {
+    "mediana": 29,
+    "min": 26,
+    "max": 30
+   },
+   "ms_por_evaluacion": {
+    "mediana": 0.43138248723423994,
+    "min": 0.406867845303508,
+    "max": 0.6346018851227525
+   }
+  },
+  {
+   "dataset": "004-sinteticaEdificio.xlsx",
+   "escenario": "ambos",
+   "perfil": "rapido",
+   "diametro": "#5",
+   "filas": 21,
+   "piezas": 1070,
+   "n": 5,
+   "segundos": {
+    "mediana": 0.17087071800006015,
+    "min": 0.09474099199996999,
+    "max": 0.17902526300008503
+   },
+   "evaluaciones": {
+    "mediana": 507,
+    "min": 260,
+    "max": 525
+   },
+   "generaciones": {
+    "mediana": 30,
+    "min": 14,
+    "max": 30
+   },
+   "ms_por_evaluacion": {
+    "mediana": 0.33704643047626415,
+    "min": 0.3273476676382288,
+    "max": 0.36438843076911537
+   }
+  },
+  {
+   "dataset": "004-sinteticaEdificio.xlsx",
+   "escenario": "ambos",
+   "perfil": "rapido",
+   "diametro": "#6",
+   "filas": 18,
+   "piezas": 928,
+   "n": 5,
+   "segundos": {
+    "mediana": 0.0948175959999844,
+    "min": 0.07183955799996511,
+    "max": 0.11893012600012298
+   },
+   "evaluaciones": {
+    "mediana": 302,
+    "min": 201,
+    "max": 417
+   },
+   "generaciones": {
+    "mediana": 17,
+    "min": 11,
+    "max": 24
+   },
+   "ms_por_evaluacion": {
+    "mediana": 0.312651117646776,
+    "min": 0.2740815569950428,
+    "max": 0.3574107363182344
+   }
+  },
+  {
+   "dataset": "004-sinteticaEdificio.xlsx",
+   "escenario": "ambos",
+   "perfil": "rapido",
+   "diametro": "#7",
+   "filas": 3,
+   "piezas": 480,
+   "n": 5,
+   "segundos": {
+    "mediana": 0.01625788699993791,
+    "min": 0.015822041999854264,
+    "max": 0.016459083999961877
+   },
+   "evaluaciones": {
+    "mediana": 136,
+    "min": 131,
+    "max": 145
+   },
+   "generaciones": {
+    "mediana": 8,
+    "min": 8,
+    "max": 8
+   },
+   "ms_por_evaluacion": {
+    "mediana": 0.11633854411657547,
+    "min": 0.11212335862026145,
+    "max": 0.12464182575720108
+   }
+  },
+  {
+   "dataset": "004-sinteticaEdificio.xlsx",
+   "escenario": "ideal",
+   "perfil": "balanceado",
+   "diametro": "#3",
+   "filas": 35,
+   "piezas": 15208,
+   "n": 5,
+   "segundos": {
+    "mediana": 1.3699083989999963,
+    "min": 1.101499451000052,
+    "max": 1.6516480930000057
+   },
+   "evaluaciones": {
+    "mediana": 3552,
+    "min": 2787,
+    "max": 3938
+   },
+   "generaciones": {
+    "mediana": 73,
+    "min": 57,
+    "max": 81
+   },
+   "ms_por_evaluacion": {
+    "mediana": 0.39522764657339504,
+    "min": 0.37928854672577644,
+    "max": 0.41983937290289924
+   }
+  },
+  {
+   "dataset": "004-sinteticaEdificio.xlsx",
+   "escenario": "ideal",
+   "perfil": "balanceado",
+   "diametro": "#4",
+   "filas": 28,
+   "piezas": 1096,
+   "n": 5,
+   "segundos": {
+    "mediana": 0.5037160570000196,
+    "min": 0.4454091489999996,
+    "max": 0.7572481889999949
+   },
+   "evaluaciones": {
+    "mediana": 2066,
+    "min": 1651,
+    "max": 3331
+   },
+   "generaciones": {
+    "mediana": 42,
+    "min": 34,
+    "max": 69
+   },
+   "ms_por_evaluacion": {
+    "mediana": 0.24381222507261358,
+    "min": 0.22733359021314767,
+    "max": 0.27164373228346356
+   }
+  },
+  {
+   "dataset": "004-sinteticaEdificio.xlsx",
+   "escenario": "ideal",
+   "perfil": "balanceado",
+   "diametro": "#5",
+   "filas": 21,
+   "piezas": 1070,
+   "n": 5,
+   "segundos": {
+    "mediana": 0.2511633960000381,
+    "min": 0.2129368629999817,
+    "max": 0.3838511249999783
+   },
+   "evaluaciones": {
+    "mediana": 1371,
+    "min": 1142,
+    "max": 2074
+   },
+   "generaciones": {
+    "mediana": 28,
+    "min": 23,
+    "max": 43
+   },
+   "ms_por_evaluacion": {
+    "mediana": 0.18319722538295996,
+    "min": 0.1780953581323814,
+    "max": 0.19483300437825113
+   }
+  },
+  {
+   "dataset": "004-sinteticaEdificio.xlsx",
+   "escenario": "ideal",
+   "perfil": "balanceado",
+   "diametro": "#6",
+   "filas": 18,
+   "piezas": 928,
+   "n": 5,
+   "segundos": {
+    "mediana": 0.24519322000003285,
+    "min": 0.18888779999997496,
+    "max": 0.2855464250000068
+   },
+   "evaluaciones": {
+    "mediana": 1560,
+    "min": 1048,
+    "max": 1925
+   },
+   "generaciones": {
+    "mediana": 32,
+    "min": 21,
+    "max": 40
+   },
+   "ms_por_evaluacion": {
+    "mediana": 0.16307619931468123,
+    "min": 0.14640616519479657,
+    "max": 0.187874903625932
+   }
+  },
+  {
+   "dataset": "004-sinteticaEdificio.xlsx",
+   "escenario": "ideal",
+   "perfil": "balanceado",
+   "diametro": "#7",
+   "filas": 3,
+   "piezas": 480,
+   "n": 5,
+   "segundos": {
+    "mediana": 0.02900034900000037,
+    "min": 0.02713136500000246,
+    "max": 0.03053970799999206
+   },
+   "evaluaciones": {
+    "mediana": 699,
+    "min": 670,
+    "max": 704
+   },
+   "generaciones": {
+    "mediana": 15,
+    "min": 15,
+    "max": 15
+   },
+   "ms_por_evaluacion": {
+    "mediana": 0.04207238955222129,
+    "min": 0.03859369132290535,
+    "max": 0.04369056938482412
+   }
+  },
+  {
+   "dataset": "004-sinteticaEdificio.xlsx",
+   "escenario": "ideal",
+   "perfil": "profundo",
+   "diametro": "#3",
+   "filas": 35,
+   "piezas": 15208,
+   "n": 5,
+   "segundos": {
+    "mediana": 3.1644857260000094,
+    "min": 2.4843298470000263,
+    "max": 3.36606373799998
+   },
+   "evaluaciones": {
+    "mediana": 8361,
+    "min": 6397,
+    "max": 8472
+   },
+   "generaciones": {
+    "mediana": 84,
+    "min": 64,
+    "max": 85
+   },
+   "ms_por_evaluacion": {
+    "mediana": 0.38205926227573184,
+    "min": 0.37443546711259545,
+    "max": 0.4021581526881696
+   }
+  },
+  {
+   "dataset": "004-sinteticaEdificio.xlsx",
+   "escenario": "ideal",
+   "perfil": "profundo",
+   "diametro": "#4",
+   "filas": 28,
+   "piezas": 1096,
+   "n": 5,
+   "segundos": {
+    "mediana": 1.857794685999977,
+    "min": 1.5676701179999668,
+    "max": 2.0724126499999898
+   },
+   "evaluaciones": {
+    "mediana": 7165,
+    "min": 6297,
+    "max": 8254
+   },
+   "generaciones": {
+    "mediana": 72,
+    "min": 63,
+    "max": 83
+   },
+   "ms_por_evaluacion": {
+    "mediana": 0.24895507670318673,
+    "min": 0.23416347341242374,
+    "max": 0.26217819446796176
+   }
+  },
+  {
+   "dataset": "004-sinteticaEdificio.xlsx",
+   "escenario": "ideal",
+   "perfil": "profundo",
+   "diametro": "#5",
+   "filas": 21,
+   "piezas": 1070,
+   "n": 5,
+   "segundos": {
+    "mediana": 0.8193350039999814,
+    "min": 0.6675448109999707,
+    "max": 0.9918333310000094
+   },
+   "evaluaciones": {
+    "mediana": 4217,
+    "min": 3827,
+    "max": 5116
+   },
+   "generaciones": {
+    "mediana": 42,
+    "min": 38,
+    "max": 51
+   },
+   "ms_por_evaluacion": {
+    "mediana": 0.18148633140577733,
+    "min": 0.17443031382283006,
+    "max": 0.19429333744367594
+   }
+  },
+  {
+   "dataset": "004-sinteticaEdificio.xlsx",
+   "escenario": "ideal",
+   "perfil": "profundo",
+   "diametro": "#6",
+   "filas": 18,
+   "piezas": 928,
+   "n": 5,
+   "segundos": {
+    "mediana": 0.5783418500000153,
+    "min": 0.5024365419999981,
+    "max": 0.6748900159999494
+   },
+   "evaluaciones": {
+    "mediana": 4026,
+    "min": 3232,
+    "max": 4806
+   },
+   "generaciones": {
+    "mediana": 40,
+    "min": 32,
+    "max": 48
+   },
+   "ms_por_evaluacion": {
+    "mediana": 0.1436517262791891,
+    "min": 0.1404265534748126,
+    "max": 0.1659779368811835
+   }
+  },
+  {
+   "dataset": "004-sinteticaEdificio.xlsx",
+   "escenario": "ideal",
+   "perfil": "profundo",
+   "diametro": "#7",
+   "filas": 3,
+   "piezas": 480,
+   "n": 5,
+   "segundos": {
+    "mediana": 0.07949619799995844,
+    "min": 0.0783109980000063,
+    "max": 0.09484112000001232
+   },
+   "evaluaciones": {
+    "mediana": 2409,
+    "min": 2374,
+    "max": 2417
+   },
+   "generaciones": {
+    "mediana": 25,
+    "min": 25,
+    "max": 25
+   },
+   "ms_por_evaluacion": {
+    "mediana": 0.03289044187006969,
+    "min": 0.032670420525659695,
+    "max": 0.03994992417860671
+   }
+  },
+  {
+   "dataset": "004-sinteticaEdificio.xlsx",
+   "escenario": "ideal",
+   "perfil": "rapido",
+   "diametro": "#3",
+   "filas": 35,
+   "piezas": 15208,
+   "n": 5,
+   "segundos": {
+    "mediana": 0.2749454850000461,
+    "min": 0.20217110300001195,
+    "max": 0.2900484049999932
+   },
+   "evaluaciones": {
+    "mediana": 547,
+    "min": 352,
+    "max": 549
+   },
+   "generaciones": {
+    "mediana": 30,
+    "min": 19,
+    "max": 30
+   },
+   "ms_por_evaluacion": {
+    "mediana": 0.5302530255941375,
+    "min": 0.4835327704918059,
+    "max": 0.5743497244318522
+   }
+  },
+  {
+   "dataset": "004-sinteticaEdificio.xlsx",
+   "escenario": "ideal",
+   "perfil": "rapido",
+   "diametro": "#4",
+   "filas": 28,
+   "piezas": 1096,
+   "n": 5,
+   "segundos": {
+    "mediana": 0.13621452199998885,
+    "min": 0.1105582389999995,
+    "max": 0.14026000399996974
+   },
+   "evaluaciones": {
+    "mediana": 531,
+    "min": 377,
+    "max": 539
+   },
+   "generaciones": {
+    "mediana": 30,
+    "min": 21,
+    "max": 30
+   },
+   "ms_por_evaluacion": {
+    "mediana": 0.2641431337099242,
+    "min": 0.23482373283856417,
+    "max": 0.2932579283819615
+   }
+  },
+  {
+   "dataset": "004-sinteticaEdificio.xlsx",
+   "escenario": "ideal",
+   "perfil": "rapido",
+   "diametro": "#5",
+   "filas": 21,
+   "piezas": 1070,
+   "n": 5,
+   "segundos": {
+    "mediana": 0.09740983099999312,
+    "min": 0.06024401100000887,
+    "max": 0.11886785299998337
+   },
+   "evaluaciones": {
+    "mediana": 490,
+    "min": 279,
+    "max": 526
+   },
+   "generaciones": {
+    "mediana": 30,
+    "min": 16,
+    "max": 30
+   },
+   "ms_por_evaluacion": {
+    "mediana": 0.20858636188435356,
+    "min": 0.19304989768338285,
+    "max": 0.2259845114068125
+   }
+  },
+  {
+   "dataset": "004-sinteticaEdificio.xlsx",
+   "escenario": "ideal",
+   "perfil": "rapido",
+   "diametro": "#6",
+   "filas": 18,
+   "piezas": 928,
+   "n": 5,
+   "segundos": {
+    "mediana": 0.07023369899997078,
+    "min": 0.04923000700000557,
+    "max": 0.07262816100001146
+   },
+   "evaluaciones": {
+    "mediana": 357,
+    "min": 270,
+    "max": 446
+   },
+   "generaciones": {
+    "mediana": 21,
+    "min": 16,
+    "max": 26
+   },
+   "ms_por_evaluacion": {
+    "mediana": 0.1823333592592799,
+    "min": 0.15895771300449468,
+    "max": 0.19673305042008624
+   }
+  },
+  {
+   "dataset": "004-sinteticaEdificio.xlsx",
+   "escenario": "ideal",
+   "perfil": "rapido",
+   "diametro": "#7",
+   "filas": 3,
+   "piezas": 480,
+   "n": 5,
+   "segundos": {
+    "mediana": 0.00963581600001362,
+    "min": 0.009099722999962978,
+    "max": 0.012018670999964343
+   },
+   "evaluaciones": {
+    "mediana": 137,
+    "min": 133,
+    "max": 145
+   },
+   "generaciones": {
+    "mediana": 8,
+    "min": 8,
+    "max": 8
+   },
+   "ms_por_evaluacion": {
+    "mediana": 0.06841896992453367,
+    "min": 0.06556314788717443,
+    "max": 0.08772752554718498
+   }
+  },
+  {
+   "dataset": "004-sinteticaEdificio.xlsx",
+   "escenario": "solo_minimo",
+   "perfil": "balanceado",
+   "diametro": "#3",
+   "filas": 35,
+   "piezas": 15208,
+   "n": 5,
+   "segundos": {
+    "mediana": 2.0353600039999264,
+    "min": 1.4514210330000878,
+    "max": 4.032796449999978
+   },
+   "evaluaciones": {
+    "mediana": 2841,
+    "min": 2258,
+    "max": 4410
+   },
+   "generaciones": {
+    "mediana": 58,
+    "min": 46,
+    "max": 91
+   },
+   "ms_por_evaluacion": {
+    "mediana": 0.681324809574106,
+    "min": 0.6348632431982189,
+    "max": 0.9144663151927388
+   }
+  },
+  {
+   "dataset": "004-sinteticaEdificio.xlsx",
+   "escenario": "solo_minimo",
+   "perfil": "balanceado",
+   "diametro": "#4",
+   "filas": 28,
+   "piezas": 1096,
+   "n": 5,
+   "segundos": {
+    "mediana": 1.597935856999925,
+    "min": 0.8375988190000498,
+    "max": 1.9893617669999912
+   },
+   "evaluaciones": {
+    "mediana": 3448,
+    "min": 2151,
+    "max": 4494
+   },
+   "generaciones": {
+    "mediana": 71,
+    "min": 44,
+    "max": 93
+   },
+   "ms_por_evaluacion": {
+    "mediana": 0.3901731263440992,
+    "min": 0.3798339977748064,
+    "max": 0.5769610693155427
+   }
+  },
+  {
+   "dataset": "004-sinteticaEdificio.xlsx",
+   "escenario": "solo_minimo",
+   "perfil": "balanceado",
+   "diametro": "#5",
+   "filas": 21,
+   "piezas": 1070,
+   "n": 5,
+   "segundos": {
+    "mediana": 0.6881341099999645,
+    "min": 0.4510127209999837,
+    "max": 1.206800921000081
+   },
+   "evaluaciones": {
+    "mediana": 1947,
+    "min": 1500,
+    "max": 2837
+   },
+   "generaciones": {
+    "mediana": 40,
+    "min": 31,
+    "max": 60
+   },
+   "ms_por_evaluacion": {
+    "mediana": 0.4052615488810156,
+    "min": 0.29010603184385186,
+    "max": 0.5535784041284775
+   }
+  },
+  {
+   "dataset": "004-sinteticaEdificio.xlsx",
+   "escenario": "solo_minimo",
+   "perfil": "balanceado",
+   "diametro": "#6",
+   "filas": 18,
+   "piezas": 928,
+   "n": 5,
+   "segundos": {
+    "mediana": 0.3256140690000393,
+    "min": 0.30270120200009387,
+    "max": 0.47841670099990097
+   },
+   "evaluaciones": {
+    "mediana": 1247,
+    "min": 1138,
+    "max": 1320
+   },
+   "generaciones": {
+    "mediana": 25,
+    "min": 23,
+    "max": 27
+   },
+   "ms_por_evaluacion": {
+    "mediana": 0.27455222368424775,
+    "min": 0.25241400697677463,
+    "max": 0.36243689469689466
+   }
+  },
+  {
+   "dataset": "004-sinteticaEdificio.xlsx",
+   "escenario": "solo_minimo",
+   "perfil": "balanceado",
+   "diametro": "#7",
+   "filas": 3,
+   "piezas": 480,
+   "n": 5,
+   "segundos": {
+    "mediana": 0.05976751299999705,
+    "min": 0.04209573299999647,
+    "max": 0.06710441400002765
+   },
+   "evaluaciones": {
+    "mediana": 700,
+    "min": 679,
+    "max": 708
+   },
+   "generaciones": {
+    "mediana": 15,
+    "min": 15,
+    "max": 15
+   },
+   "ms_por_evaluacion": {
+    "mediana": 0.08661958405796674,
+    "min": 0.06013676142856639,
+    "max": 0.09882829749635882
+   }
+  },
+  {
+   "dataset": "004-sinteticaEdificio.xlsx",
+   "escenario": "solo_minimo",
+   "perfil": "profundo",
+   "diametro": "#3",
+   "filas": 35,
+   "piezas": 15208,
+   "n": 5,
+   "segundos": {
+    "mediana": 4.872975710000105,
+    "min": 4.566077920999987,
+    "max": 9.33058323299997
+   },
+   "evaluaciones": {
+    "mediana": 8279,
+    "min": 7777,
+    "max": 12814
+   },
+   "generaciones": {
+    "mediana": 83,
+    "min": 78,
+    "max": 129
+   },
+   "ms_por_evaluacion": {
+    "mediana": 0.5885947227926205,
+    "min": 0.5773369831420773,
+    "max": 0.7281553951147159
+   }
+  },
+  {
+   "dataset": "004-sinteticaEdificio.xlsx",
+   "escenario": "solo_minimo",
+   "perfil": "profundo",
+   "diametro": "#4",
+   "filas": 28,
+   "piezas": 1096,
+   "n": 5,
+   "segundos": {
+    "mediana": 2.962995603999957,
+    "min": 2.1250042320000375,
+    "max": 3.4907506959999637
+   },
+   "evaluaciones": {
+    "mediana": 7982,
+    "min": 5610,
+    "max": 9145
+   },
+   "generaciones": {
+    "mediana": 80,
+    "min": 56,
+    "max": 92
+   },
+   "ms_por_evaluacion": {
+    "mediana": 0.37878863315508693,
+    "min": 0.3542981709912659,
+    "max": 0.4079427858932719
+   }
+  },
+  {
+   "dataset": "004-sinteticaEdificio.xlsx",
+   "escenario": "solo_minimo",
+   "perfil": "profundo",
+   "diametro": "#5",
+   "filas": 21,
+   "piezas": 1070,
+   "n": 5,
+   "segundos": {
+    "mediana": 1.4636066099999425,
+    "min": 1.3128084889999627,
+    "max": 1.5437448350000977
+   },
+   "evaluaciones": {
+    "mediana": 4915,
+    "min": 4512,
+    "max": 5398
+   },
+   "generaciones": {
+    "mediana": 49,
+    "min": 45,
+    "max": 54
+   },
+   "ms_por_evaluacion": {
+    "mediana": 0.28828405721849537,
+    "min": 0.2776715253272515,
+    "max": 0.31408847100714093
+   }
+  },
+  {
+   "dataset": "004-sinteticaEdificio.xlsx",
+   "escenario": "solo_minimo",
+   "perfil": "profundo",
+   "diametro": "#6",
+   "filas": 18,
+   "piezas": 928,
+   "n": 5,
+   "segundos": {
+    "mediana": 1.0967129400000886,
+    "min": 0.8197094289999995,
+    "max": 1.2253563159999885
+   },
+   "evaluaciones": {
+    "mediana": 4519,
+    "min": 3442,
+    "max": 5091
+   },
+   "generaciones": {
+    "mediana": 45,
+    "min": 34,
+    "max": 51
+   },
+   "ms_por_evaluacion": {
+    "mediana": 0.2425282927908201,
+    "min": 0.23814916589192317,
+    "max": 0.25967722228349654
+   }
+  },
+  {
+   "dataset": "004-sinteticaEdificio.xlsx",
+   "escenario": "solo_minimo",
+   "perfil": "profundo",
+   "diametro": "#7",
+   "filas": 3,
+   "piezas": 480,
+   "n": 5,
+   "segundos": {
+    "mediana": 0.11987004299999171,
+    "min": 0.11711930900003154,
+    "max": 0.20007586099995933
+   },
+   "evaluaciones": {
+    "mediana": 2422,
+    "min": 2407,
+    "max": 2426
+   },
+   "generaciones": {
+    "mediana": 25,
+    "min": 25,
+    "max": 25
+   },
+   "ms_por_evaluacion": {
+    "mediana": 0.049582205650200335,
+    "min": 0.048356444673836305,
+    "max": 0.08247150082438555
+   }
+  },
+  {
+   "dataset": "004-sinteticaEdificio.xlsx",
+   "escenario": "solo_minimo",
+   "perfil": "rapido",
+   "diametro": "#3",
+   "filas": 35,
+   "piezas": 15208,
+   "n": 5,
+   "segundos": {
+    "mediana": 0.4523958080000057,
+    "min": 0.44089611699996567,
+    "max": 0.47038105100000394
+   },
+   "evaluaciones": {
+    "mediana": 554,
+    "min": 543,
+    "max": 558
+   },
+   "generaciones": {
+    "mediana": 30,
+    "min": 30,
+    "max": 30
+   },
+   "ms_por_evaluacion": {
+    "mediana": 0.8165989314079525,
+    "min": 0.8079566660683111,
+    "max": 0.8505986455696274
+   }
+  },
+  {
+   "dataset": "004-sinteticaEdificio.xlsx",
+   "escenario": "solo_minimo",
+   "perfil": "rapido",
+   "diametro": "#4",
+   "filas": 28,
+   "piezas": 1096,
+   "n": 5,
+   "segundos": {
+    "mediana": 0.22140976699995463,
+    "min": 0.17960106800001086,
+    "max": 0.33951066100007665
+   },
+   "evaluaciones": {
+    "mediana": 540,
+    "min": 443,
+    "max": 544
+   },
+   "generaciones": {
+    "mediana": 30,
+    "min": 25,
+    "max": 30
+   },
+   "ms_por_evaluacion": {
+    "mediana": 0.410018087036953,
+    "min": 0.40052376709788307,
+    "max": 0.6241004797795526
+   }
+  },
+  {
+   "dataset": "004-sinteticaEdificio.xlsx",
+   "escenario": "solo_minimo",
+   "perfil": "rapido",
+   "diametro": "#5",
+   "filas": 21,
+   "piezas": 1070,
+   "n": 5,
+   "segundos": {
+    "mediana": 0.15842542799998682,
+    "min": 0.14777029699996547,
+    "max": 0.17584900399992875
+   },
+   "evaluaciones": {
+    "mediana": 471,
+    "min": 450,
+    "max": 540
+   },
+   "generaciones": {
+    "mediana": 30,
+    "min": 27,
+    "max": 30
+   },
+   "ms_por_evaluacion": {
+    "mediana": 0.32157530360941633,
+    "min": 0.3187634366196918,
+    "max": 0.3907755644442861
+   }
+  },
+  {
+   "dataset": "004-sinteticaEdificio.xlsx",
+   "escenario": "solo_minimo",
+   "perfil": "rapido",
+   "diametro": "#6",
+   "filas": 18,
+   "piezas": 928,
+   "n": 5,
+   "segundos": {
+    "mediana": 0.10951461600006951,
+    "min": 0.08857305399999404,
+    "max": 0.13203700099995785
+   },
+   "evaluaciones": {
+    "mediana": 399,
+    "min": 288,
+    "max": 472
+   },
+   "generaciones": {
+    "mediana": 23,
+    "min": 16,
+    "max": 28
+   },
+   "ms_por_evaluacion": {
+    "mediana": 0.29019173152712224,
+    "min": 0.27447272180468546,
+    "max": 0.3075453263888682
+   }
+  },
+  {
+   "dataset": "004-sinteticaEdificio.xlsx",
+   "escenario": "solo_minimo",
+   "perfil": "rapido",
+   "diametro": "#7",
+   "filas": 3,
+   "piezas": 480,
+   "n": 5,
+   "segundos": {
+    "mediana": 0.01574293700002727,
+    "min": 0.015507220000017696,
+    "max": 0.016321985999979916
+   },
+   "evaluaciones": {
+    "mediana": 138,
+    "min": 134,
+    "max": 143
+   },
+   "generaciones": {
+    "mediana": 8,
+    "min": 8,
+    "max": 8
+   },
+   "ms_por_evaluacion": {
+    "mediana": 0.11237115942041809,
+    "min": 0.11156981294933097,
+    "max": 0.1218058656714919
+   }
+  },
+  {
+   "dataset": "004-sinteticaEdificio.xlsx",
+   "escenario": "solo_perdida",
+   "perfil": "balanceado",
+   "diametro": "#3",
+   "filas": 35,
+   "piezas": 15208,
+   "n": 5,
+   "segundos": {
+    "mediana": 1.7669214239999746,
+    "min": 1.3906216649999124,
+    "max": 1.821520611999972
+   },
+   "evaluaciones": {
+    "mediana": 2924,
+    "min": 2454,
+    "max": 3266
+   },
+   "generaciones": {
+    "mediana": 60,
+    "min": 50,
+    "max": 67
+   },
+   "ms_por_evaluacion": {
+    "mediana": 0.5666754951099887,
+    "min": 0.5495867570761974,
+    "max": 0.6229550656634651
+   }
+  },
+  {
+   "dataset": "004-sinteticaEdificio.xlsx",
+   "escenario": "solo_perdida",
+   "perfil": "balanceado",
+   "diametro": "#4",
+   "filas": 28,
+   "piezas": 1096,
+   "n": 5,
+   "segundos": {
+    "mediana": 0.9069708270000092,
+    "min": 0.720797030999961,
+    "max": 1.1539952110000513
+   },
+   "evaluaciones": {
+    "mediana": 2666,
+    "min": 2237,
+    "max": 3478
+   },
+   "generaciones": {
+    "mediana": 55,
+    "min": 46,
+    "max": 72
+   },
+   "ms_por_evaluacion": {
+    "mediana": 0.3243980260078004,
+    "min": 0.308157933218194,
+    "max": 0.3401991099024791
+   }
+  },
+  {
+   "dataset": "004-sinteticaEdificio.xlsx",
+   "escenario": "solo_perdida",
+   "perfil": "balanceado",
+   "diametro": "#5",
+   "filas": 21,
+   "piezas": 1070,
+   "n": 5,
+   "segundos": {
+    "mediana": 0.5070267849999937,
+    "min": 0.3794099269999833,
+    "max": 0.7872152529999994
+   },
+   "evaluaciones": {
+    "mediana": 1998,
+    "min": 1486,
+    "max": 3072
+   },
+   "generaciones": {
+    "mediana": 41,
+    "min": 30,
+    "max": 64
+   },
+   "ms_por_evaluacion": {
+    "mediana": 0.25376715965965646,
+    "min": 0.2398292838179414,
+    "max": 0.26584481157466366
+   }
+  },
+  {
+   "dataset": "004-sinteticaEdificio.xlsx",
+   "escenario": "solo_perdida",
+   "perfil": "balanceado",
+   "diametro": "#6",
+   "filas": 18,
+   "piezas": 928,
+   "n": 5,
+   "segundos": {
+    "mediana": 0.32312960700005533,
+    "min": 0.2221820250000519,
+    "max": 0.348587580999947
+   },
+   "evaluaciones": {
+    "mediana": 1516,
+    "min": 1099,
+    "max": 1764
+   },
+   "generaciones": {
+    "mediana": 31,
+    "min": 22,
+    "max": 36
+   },
+   "ms_por_evaluacion": {
+    "mediana": 0.20216744767975606,
+    "min": 0.19326028710048318,
+    "max": 0.22749612773997058
+   }
+  },
+  {
+   "dataset": "004-sinteticaEdificio.xlsx",
+   "escenario": "solo_perdida",
+   "perfil": "balanceado",
+   "diametro": "#7",
+   "filas": 3,
+   "piezas": 480,
+   "n": 5,
+   "segundos": {
+    "mediana": 0.03682738899999549,
+    "min": 0.03557671700002629,
+    "max": 0.03795153200007917
+   },
+   "evaluaciones": {
+    "mediana": 694,
+    "min": 681,
+    "max": 707
+   },
+   "generaciones": {
+    "mediana": 15,
+    "min": 15,
+    "max": 15
+   },
+   "ms_por_evaluacion": {
+    "mediana": 0.052241875183592204,
+    "min": 0.05117185390074465,
+    "max": 0.05556593265018912
+   }
+  },
+  {
+   "dataset": "004-sinteticaEdificio.xlsx",
+   "escenario": "solo_perdida",
+   "perfil": "profundo",
+   "diametro": "#3",
+   "filas": 35,
+   "piezas": 15208,
+   "n": 5,
+   "segundos": {
+    "mediana": 3.6896874279999565,
+    "min": 3.179107713999997,
+    "max": 4.873959076999995
+   },
+   "evaluaciones": {
+    "mediana": 6702,
+    "min": 5801,
+    "max": 8964
+   },
+   "generaciones": {
+    "mediana": 67,
+    "min": 58,
+    "max": 90
+   },
+   "ms_por_evaluacion": {
+    "mediana": 0.5498577869470709,
+    "min": 0.5437259122043725,
+    "max": 0.5707608710267987
+   }
+  },
+  {
+   "dataset": "004-sinteticaEdificio.xlsx",
+   "escenario": "solo_perdida",
+   "perfil": "profundo",
+   "diametro": "#4",
+   "filas": 28,
+   "piezas": 1096,
+   "n": 5,
+   "segundos": {
+    "mediana": 1.816069170999981,
+    "min": 1.4078741539999555,
+    "max": 3.497454275999985
+   },
+   "evaluaciones": {
+    "mediana": 5905,
+    "min": 4821,
+    "max": 11612
+   },
+   "generaciones": {
+    "mediana": 59,
+    "min": 48,
+    "max": 117
+   },
+   "ms_por_evaluacion": {
+    "mediana": 0.30465510431836856,
+    "min": 0.2920294864135979,
+    "max": 0.31805064290717705
+   }
+  },
+  {
+   "dataset": "004-sinteticaEdificio.xlsx",
+   "escenario": "solo_perdida",
+   "perfil": "profundo",
+   "diametro": "#5",
+   "filas": 21,
+   "piezas": 1070,
+   "n": 5,
+   "segundos": {
+    "mediana": 1.0307492339999271,
+    "min": 0.9669641210000464,
+    "max": 1.3888577830000486
+   },
+   "evaluaciones": {
+    "mediana": 4318,
+    "min": 3928,
+    "max": 5286
+   },
+   "generaciones": {
+    "mediana": 43,
+    "min": 39,
+    "max": 53
+   },
+   "ms_por_evaluacion": {
+    "mediana": 0.2559850684826939,
+    "min": 0.2345861525958385,
+    "max": 0.2716857947965666
+   }
+  },
+  {
+   "dataset": "004-sinteticaEdificio.xlsx",
+   "escenario": "solo_perdida",
+   "perfil": "profundo",
+   "diametro": "#6",
+   "filas": 18,
+   "piezas": 928,
+   "n": 5,
+   "segundos": {
+    "mediana": 0.6846385009999949,
+    "min": 0.6547048760000962,
+    "max": 0.9750727529999494
+   },
+   "evaluaciones": {
+    "mediana": 3429,
+    "min": 3246,
+    "max": 5112
+   },
+   "generaciones": {
+    "mediana": 34,
+    "min": 32,
+    "max": 51
+   },
+   "ms_por_evaluacion": {
+    "mediana": 0.2062164159638539,
+    "min": 0.19074193133801828,
+    "max": 0.21157798549250761
+   }
+  },
+  {
+   "dataset": "004-sinteticaEdificio.xlsx",
+   "escenario": "solo_perdida",
+   "perfil": "profundo",
+   "diametro": "#7",
+   "filas": 3,
+   "piezas": 480,
+   "n": 5,
+   "segundos": {
+    "mediana": 0.11794926899995062,
+    "min": 0.1042390620000333,
+    "max": 0.1364760669999896
+   },
+   "evaluaciones": {
+    "mediana": 2392,
+    "min": 2365,
+    "max": 2409
+   },
+   "generaciones": {
+    "mediana": 25,
+    "min": 25,
+    "max": 25
+   },
+   "ms_por_evaluacion": {
+    "mediana": 0.0495122088003519,
+    "min": 0.04370610566039132,
+    "max": 0.05705521195651739
+   }
+  },
+  {
+   "dataset": "004-sinteticaEdificio.xlsx",
+   "escenario": "solo_perdida",
+   "perfil": "rapido",
+   "diametro": "#3",
+   "filas": 35,
+   "piezas": 15208,
+   "n": 5,
+   "segundos": {
+    "mediana": 0.4442597149999301,
+    "min": 0.41217459699998926,
+    "max": 0.464316202999953
+   },
+   "evaluaciones": {
+    "mediana": 550,
+    "min": 520,
+    "max": 554
+   },
+   "generaciones": {
+    "mediana": 30,
+    "min": 28,
+    "max": 30
+   },
+   "ms_por_evaluacion": {
+    "mediana": 0.8077449363635093,
+    "min": 0.7480482704174034,
+    "max": 0.8929157749999097
+   }
+  },
+  {
+   "dataset": "004-sinteticaEdificio.xlsx",
+   "escenario": "solo_perdida",
+   "perfil": "rapido",
+   "diametro": "#4",
+   "filas": 28,
+   "piezas": 1096,
+   "n": 5,
+   "segundos": {
+    "mediana": 0.16141149899999618,
+    "min": 0.12406348100000741,
+    "max": 0.194192826999938
+   },
+   "evaluaciones": {
+    "mediana": 439,
+    "min": 297,
+    "max": 537
+   },
+   "generaciones": {
+    "mediana": 25,
+    "min": 16,
+    "max": 30
+   },
+   "ms_por_evaluacion": {
+    "mediana": 0.3671815750000936,
+    "min": 0.35195454018695466,
+    "max": 0.41772215824918324
+   }
+  },
+  {
+   "dataset": "004-sinteticaEdificio.xlsx",
+   "escenario": "solo_perdida",
+   "perfil": "rapido",
+   "diametro": "#5",
+   "filas": 21,
+   "piezas": 1070,
+   "n": 5,
+   "segundos": {
+    "mediana": 0.09138615300003039,
+    "min": 0.08163915400007227,
+    "max": 0.1210131249999904
+   },
+   "evaluaciones": {
+    "mediana": 304,
+    "min": 280,
+    "max": 444
+   },
+   "generaciones": {
+    "mediana": 18,
+    "min": 15,
+    "max": 26
+   },
+   "ms_por_evaluacion": {
+    "mediana": 0.2915684071431152,
+    "min": 0.26558007226096997,
+    "max": 0.30720301010116924
+   }
+  },
+  {
+   "dataset": "004-sinteticaEdificio.xlsx",
+   "escenario": "solo_perdida",
+   "perfil": "rapido",
+   "diametro": "#6",
+   "filas": 18,
+   "piezas": 928,
+   "n": 5,
+   "segundos": {
+    "mediana": 0.08443692699995609,
+    "min": 0.06407773400007954,
+    "max": 0.08697238799993556
+   },
+   "evaluaciones": {
+    "mediana": 311,
+    "min": 207,
+    "max": 357
+   },
+   "generaciones": {
+    "mediana": 18,
+    "min": 11,
+    "max": 21
+   },
+   "ms_por_evaluacion": {
+    "mediana": 0.2715013729902125,
+    "min": 0.2402227731092954,
+    "max": 0.30955427053178525
+   }
+  },
+  {
+   "dataset": "004-sinteticaEdificio.xlsx",
+   "escenario": "solo_perdida",
+   "perfil": "rapido",
+   "diametro": "#7",
+   "filas": 3,
+   "piezas": 480,
+   "n": 5,
+   "segundos": {
+    "mediana": 0.01484458300001279,
+    "min": 0.01385433199993713,
+    "max": 0.015664667999999438
+   },
+   "evaluaciones": {
+    "mediana": 142,
+    "min": 134,
+    "max": 147
+   },
+   "generaciones": {
+    "mediana": 8,
+    "min": 8,
+    "max": 8
+   },
+   "ms_por_evaluacion": {
+    "mediana": 0.11031456338027773,
+    "min": 0.09500240136056622,
+    "max": 0.11548425925916996
+   }
+  }
+ ],
+ "linea_base": {
+  "registros_comparados": 136,
+  "con_diferencias": 0,
+  "diferencias": [],
+  "razon_tiempo_frente_a_base": [
+   {
+    "dataset": "001-pruebaInicial.xlsx",
+    "perfil_o_metodo": "balanceado",
+    "mediana": 1.1612883799818037,
+    "min": 0.989670445191573,
+    "max": 1.3283188312693968
+   },
+   {
+    "dataset": "001-pruebaInicial.xlsx",
+    "perfil_o_metodo": "bfd",
+    "mediana": 0.9852538324221697,
+    "min": 0.6857359839486787,
+    "max": 1.345806312154601
+   },
+   {
+    "dataset": "001-pruebaInicial.xlsx",
+    "perfil_o_metodo": "ffd",
+    "mediana": 1.334194738341997,
+    "min": 0.9182106275775174,
+    "max": 2.2739025562899537
+   },
+   {
+    "dataset": "001-pruebaInicial.xlsx",
+    "perfil_o_metodo": "profundo",
+    "mediana": 1.256889644558001,
+    "min": 1.059305395556774,
+    "max": 1.4601926445286417
+   },
+   {
+    "dataset": "001-pruebaInicial.xlsx",
+    "perfil_o_metodo": "rapido",
+    "mediana": 1.1773843530975463,
+    "min": 0.8926638617067179,
+    "max": 1.427475882118239
+   },
+   {
+    "dataset": "002-ingeBigTest.xlsx",
+    "perfil_o_metodo": "balanceado",
+    "mediana": 1.2166948382325289,
+    "min": 1.036923650847183,
+    "max": 1.3888945489916764
+   },
+   {
+    "dataset": "002-ingeBigTest.xlsx",
+    "perfil_o_metodo": "bfd",
+    "mediana": 1.2611416158860904,
+    "min": 1.0433811755092997,
+    "max": 1.59463341198913
+   },
+   {
+    "dataset": "002-ingeBigTest.xlsx",
+    "perfil_o_metodo": "ffd",
+    "mediana": 1.215908896944761,
+    "min": 1.146779113015986,
+    "max": 1.4909271467156886
+   },
+   {
+    "dataset": "002-ingeBigTest.xlsx",
+    "perfil_o_metodo": "profundo",
+    "mediana": 1.1920993207380852,
+    "min": 1.0684988668660407,
+    "max": 1.3280759718930089
+   },
+   {
+    "dataset": "002-ingeBigTest.xlsx",
+    "perfil_o_metodo": "rapido",
+    "mediana": 1.1868047313532324,
+    "min": 0.9855982713452239,
+    "max": 1.3638152719751655
+   }
+  ]
+ }
+}

@@ -1,5 +1,39 @@
 # Estado actual — 2026-10-04
 
+## Bloque N — Corpus ampliado con cartillas sintéticas (rama `feat/cartillas-sinteticas`)
+
+Rama creada desde `origin/production` (`f9599a0`), sin commits propios todavía. La enmienda 4
+(PR #8, rama `fix/nombres-descarga`) sigue abierta: su bitácora se subió en `85cd0c4`.
+- **Decisiones del usuario (INF-017):**
+  - 002 es un proyecto real; su cartilla viene de una ferretería que no se nombra.
+  - 001 es un ejercicio del curso Construcción de edificaciones.
+  - No hay datos de compra: RIESGO-AC-009 queda como limitación aceptada.
+  - Comparadores: solo FFD/BFD y la cota.
+- **Hecho:**
+  - NSR-10 verificada; fichas REF-NSR10-GANCHOS-RECUBRIMIENTOS, REF-NSR10-EMPALMES y REF-NSR10-DMO.
+  - Generador `scripts/generar_cartillas_sinteticas.py` y 9 pruebas en `tests/cartillas/`, en verde.
+  - Cartillas `tests/data/003` (vivienda, 2958 piezas) y `tests/data/004` (edificio, 18782 piezas),
+    cada una con su `MEMORIA_DESPIECE.md`.
+  - INF-018 pendiente; RIESGO-AC-011 nuevo.
+- **Ejecutado el 2026-10-04:**
+  - CP-1: el usuario aprobó las cartillas, que quedan congeladas.
+  - Imagen `oica-worker:local` construida con aprobación; contenedor `oica-experimentos` en marcha.
+  - Matriz de las 4 cartillas: 272 registros válidos; los 136 de 001 y 002 coinciden con la línea
+    base.
+  - Controles: 12 registros, reproducidos sin diferencias.
+  - Cota: 284 registros, ninguno por debajo.
+  - Resumen de tiempo según tamaño.
+  - Análisis de 003 y 004 redactados.
+- **Resultados clave (escenario ambos):**
+  - 003: FFD 5.13 %, AG 5.10 % (mediana), cota 2.87 %. El AG casi no mejora.
+  - 004: FFD 6.47 %, AG 5.88 %, cota 4.84 %. La brecha baja un 36 %.
+  - Tiempo máximo de todas las medianas: 24.3 s (002, profundo).
+- **Siguiente:**
+  - CP-3: revisión de los análisis por el usuario.
+  - Luego los capítulos 1, 3 y 4 y el Word. Ver el Bloque N de `PLAN_TRABAJO.md`.
+- En Windows, el arnés exige `PYTHONUTF8=1`. Sin esa variable lee las fuentes en cp1252 y
+  corrompe «N° Orden».
+
 ## Bloque L — Spec 002: presentación de resultados y explorador de patrones
 
 **Cerrada (2026-10-04).** El PR #7 se fusionó en `production` (`5b1e2d5`) y «Publicar

@@ -80,7 +80,11 @@ Este repositorio es el trabajo de tesis de pregrado de su autor. La aplicación 
 - No toda decisión técnica es libre — algunas están condicionadas por los objetivos académicos del Cap. 1.
 - Los resultados que genere la app serán presentados en el Cap. 4. Si los resultados son inválidos por un bug de dominio, la tesis entera queda comprometida.
 - Toda fuente citada necesita su ficha en `docs/tesis-doc/Referencias.md`. Una fuente no verificada no se presenta como verificada.
-- Las cartillas 001 y 002 provienen de una obra colombiana confidencial: presentarlas anonimizadas.
+- Procedencia de las cartillas (INF-017):
+  - 002 es de un proyecto real en Colombia y se obtuvo de un proveedor de acero. Es confidencial:
+    presentarla anonimizada, sin nombrar al proveedor.
+  - 001 es un ejercicio del curso Construcción de edificaciones (REF-CARTILLA-001).
+  - 003 y 004 son sintéticas: no presentarlas como datos de obra.
 
 ---
 
