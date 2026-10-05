@@ -1,19 +1,53 @@
 # Estado actual — 2026-10-04
 
+## Bloque N — Corpus ampliado con cartillas sintéticas (rama `feat/cartillas-sinteticas`)
+
+Rama creada desde `origin/production` (`f9599a0`), con los commits `5a8d832` (corpus y ensayos) y
+`1e1477d` (Word), y con `origin/production` (`8eb27bf`, enmienda 4) integrada por merge.
+- **Decisiones del usuario (INF-017):**
+  - 002 es un proyecto real; su cartilla viene de una ferretería que no se nombra.
+  - 001 es un ejercicio del curso Construcción de edificaciones.
+  - No hay datos de compra: RIESGO-AC-009 queda como limitación aceptada.
+  - Comparadores: solo FFD/BFD y la cota.
+- **Hecho:**
+  - NSR-10 verificada; fichas REF-NSR10-GANCHOS-RECUBRIMIENTOS, REF-NSR10-EMPALMES y REF-NSR10-DMO.
+  - Generador `scripts/generar_cartillas_sinteticas.py` y 9 pruebas en `tests/cartillas/`, en verde.
+  - Cartillas `tests/data/003` (vivienda, 2958 piezas) y `tests/data/004` (edificio, 18782 piezas),
+    cada una con su `MEMORIA_DESPIECE.md`.
+  - INF-018 validada en el CP-1; RIESGO-AC-011 nuevo.
+- **Ejecutado el 2026-10-04:**
+  - CP-1: el usuario aprobó las cartillas, que quedan congeladas.
+  - Imagen `oica-worker:local` construida con aprobación; contenedor `oica-experimentos` en marcha.
+  - Matriz de las 4 cartillas: 272 registros válidos; los 136 de 001 y 002 coinciden con la línea
+    base.
+  - Controles: 12 registros, reproducidos sin diferencias.
+  - Cota: 284 registros, ninguno por debajo.
+  - Resumen de tiempo según tamaño.
+  - Análisis de 003 y 004 redactados.
+- **Resultados clave (escenario ambos):**
+  - 003: FFD 5.13 %, AG 5.10 % (mediana), cota 2.87 %. El AG casi no mejora.
+  - 004: FFD 6.47 %, AG 5.88 %, cota 4.84 %. La brecha baja un 36 %.
+  - Tiempo máximo de todas las medianas: 24.3 s (002, profundo).
+- **Siguiente:**
+  - CP-3: revisión de los análisis por el usuario.
+  - Luego los capítulos 1, 3 y 4 en Markdown. El Word ya tiene el Bloque N (sección siguiente).
+- En Windows, el arnés exige `PYTHONUTF8=1`. Sin esa variable lee las fuentes en cp1252 y
+  corrompe «N° Orden».
+
 ## Enmienda 4 de la spec 002: nombres de descarga (rama `fix/nombres-descarga`)
 
 Las descargas se llamaban con el UUID de la versión (`plan_corte_<uuid>.pdf`) y el inventario
 siempre `inventario_final.xlsx`. Ahora: `OICA_<proyecto>_v<versión>_<perfil>_<tipo>.<ext>`
 (FR-036; `nombre_descarga` en `backend/server.py`). Solo cambia `Content-Disposition`: archivos,
 rutas y contenido iguales. Verificación delegada a la CI del PR (decisión del usuario).
-- **PR #8** hacia `production` (`a5f7972`), abierto y sin fusionar. CI «Verificar OICA» en verde:
-  168 pruebas OK, arranque desde cero, regresión 002 y flujo completo. Falta fusionar y publicar,
-  solo por instrucción del usuario.
+- **PR #8** hacia `production` (`a5f7972`), fusionado en `8eb27bf`. CI «Verificar OICA» en verde:
+  168 pruebas OK, arranque desde cero, regresión 002 y flujo completo. La publicación no consta en
+  este registro.
 - **Entorno local**: no hay imágenes, contenedores ni volúmenes de OICA, ni en Docker Desktop ni en
   el Docker de Ubuntu (WSL). Al abrir Docker Desktop (estaba cerrado) se creó un
   `docker_data.vhdx` vacío de 1.3 GB en `%LOCALAPPDATA%\Docker\wsl\disk`; no se borró.
 - La rama local `production` está atrasada (`ae56668`); la referencia vigente es
-  `origin/production` (`f9599a0`).
+  `origin/production` (`8eb27bf` al 2026-10-04).
 
 ## Bloque L — Spec 002: presentación de resultados y explorador de patrones
 
@@ -88,8 +122,21 @@ producción» terminó con éxito.
 
 - Actualizar los capítulos 3 y 4 (salidas reorganizadas y explorador de patrones) y pasar las
   cifras de los capítulos 1 a 4 a punto decimal y sin separador de miles.
-- `Tesis_F.docx` **no está en el disco** y su generador quedó en el scratchpad de otra sesión, sin
-  versionar. Hay que regenerarlo desde los `.md` actualizados.
+- `Tesis_F.docx` **sí está en el disco** (`docs/tesis-doc/`, sin commit). El 2026-10-04 se
+  regeneró con el Bloque N (ver abajo); su generador sigue en el scratchpad de la sesión del
+  2026-10-03, sin versionar. Falta llevarle los cambios de la spec 002 (§3.3.4 y §3.3.5).
+
+## Word con el Bloque N (2026-10-04)
+
+`Tesis_F.docx` pasó de 61 a 69 páginas, con las cifras verificadas contra
+`2026-10-04-tamano-matriz.jsonl`, `-cota-tamano.jsonl`, `-tamano-tiempo.json` y los controles:
+- §3.1: corpus de cuatro cartillas y procedencia de 001 (curso) y 002 (proveedor anónimo);
+  §3.1.1 nueva con la generación de 003 y 004 y la tabla de supuestos NSR-10 (INF-018).
+- §4.1 con la tabla del corpus; §4.5 nueva (cartillas sintéticas: desperdicio, brecha, #7 óptimo
+  con 20.28 %, controles); §4.6 nueva (tiempo según tamaño, Figura 4-3 y tiempo por diámetro).
+- Resumen, Abstract, Cap. 5, Anexos A y B y bibliografía (REF-CARTILLA-001) actualizados;
+  INF-015 ya no figura como pendiente; datos de compra como limitación aceptada.
+- Se hizo antes del CP-3 y antes de pasar el Bloque N a los `.md`: el Word va por delante.
 
 ## Documento Word de la tesis (`docs/tesis-doc/Tesis_F.docx`, 2026-10-03)
 

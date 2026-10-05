@@ -15,7 +15,9 @@ import sys
 PROFILES = ['rapido', 'balanceado', 'profundo']
 # Nombre del campo `dataset` de las líneas base → cartilla del repositorio.
 DATASETS = {'001-pruebaInicial.xlsx': 'tests/data/001/001-pruebaInicial.xlsx',
-            '002-ingeBigTest.xlsx': 'tests/data/002/002-ingeBigTest.xlsx'}
+            '002-ingeBigTest.xlsx': 'tests/data/002/002-ingeBigTest.xlsx',
+            '003-sinteticaVivienda.xlsx': 'tests/data/003/003-sinteticaVivienda.xlsx',
+            '004-sinteticaEdificio.xlsx': 'tests/data/004/004-sinteticaEdificio.xlsx'}
 # Claves temporales, de entorno o añadidas después de la línea base: no se comparan.
 IGNORED = {'duracion_segundos', 'timings', 'memoria_maxima_kib', 'codigo_sha256', 'python', 'plataforma',
            'artefactos_generados', 'analisis', 'analisis_segundos', 'artifacts_seconds', 'pipeline_seconds',

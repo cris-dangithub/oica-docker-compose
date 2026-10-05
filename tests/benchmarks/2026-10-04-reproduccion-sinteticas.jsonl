@@ -1,0 +1,12 @@
+{"dataset": "003-sinteticaVivienda.xlsx", "escenario": "individual", "metodo": "ffd", "perfil": "rapido", "seed": 0, "diferencias": {}, "ok": true}
+{"dataset": "003-sinteticaVivienda.xlsx", "escenario": "individual", "metodo": "bfd", "perfil": "rapido", "seed": 0, "diferencias": {}, "ok": true}
+{"dataset": "003-sinteticaVivienda.xlsx", "escenario": "individual", "metodo": "ag", "perfil": "rapido", "seed": 0, "diferencias": {}, "ok": true}
+{"dataset": "004-sinteticaEdificio.xlsx", "escenario": "individual", "metodo": "ffd", "perfil": "rapido", "seed": 0, "diferencias": {}, "ok": true}
+{"dataset": "004-sinteticaEdificio.xlsx", "escenario": "individual", "metodo": "bfd", "perfil": "rapido", "seed": 0, "diferencias": {}, "ok": true}
+{"dataset": "004-sinteticaEdificio.xlsx", "escenario": "individual", "metodo": "ag", "perfil": "rapido", "seed": 0, "diferencias": {}, "ok": true}
+{"dataset": "003-sinteticaVivienda.xlsx", "escenario": "individual", "metodo": "ffd", "perfil": "rapido", "seed": 0, "diferencias": {}, "ok": true}
+{"dataset": "003-sinteticaVivienda.xlsx", "escenario": "individual", "metodo": "bfd", "perfil": "rapido", "seed": 0, "diferencias": {}, "ok": true}
+{"dataset": "003-sinteticaVivienda.xlsx", "escenario": "individual", "metodo": "ag", "perfil": "rapido", "seed": 0, "diferencias": {}, "ok": true}
+{"dataset": "004-sinteticaEdificio.xlsx", "escenario": "individual", "metodo": "ffd", "perfil": "rapido", "seed": 0, "diferencias": {}, "ok": true}
+{"dataset": "004-sinteticaEdificio.xlsx", "escenario": "individual", "metodo": "bfd", "perfil": "rapido", "seed": 0, "diferencias": {}, "ok": true}
+{"dataset": "004-sinteticaEdificio.xlsx", "escenario": "individual", "metodo": "ag", "perfil": "rapido", "seed": 0, "diferencias": {}, "ok": true}

@@ -1,8 +1,8 @@
 # Plan de Trabajo — OICA Tesis
 
-> **Última actualización:** 2026-10-02
+> **Última actualización:** 2026-10-04
 > **Estado global:** Motor secuencial validado; dirección visual aprobada y Design System v1 en preparación
-> **Bloque activo:** K — Alineación con el título fijo (spec 001); J con pendientes de QA/Figma
+> **Bloque activo:** N — Corpus ampliado con cartillas sintéticas (rama `feat/cartillas-sinteticas`); M en curso
 
 ---
 
@@ -22,6 +22,7 @@
 | K | Alineación con el título fijo (spec 001) | ✅ Cerrada (2026-10-04): en producción; queda la redacción de fuentes pendientes | ALTA |
 | L | Presentación de resultados y explorador de patrones (spec 002) | ✅ Cerrada (2026-10-04): en producción con el PR #7 | ALTA |
 | M | Tesis tras la spec 002 (capítulos 3 y 4, cifras con punto decimal) | 🔄 En curso | ALTA |
+| N | Corpus ampliado: cartillas sintéticas 003 y 004, procedencia de 001 y 002 | 🔄 En curso: cartillas generadas, en revisión (CP-1) | ALTA |
 
 ---
 
@@ -419,3 +420,44 @@ la app y la plantilla USCO.
 - [ ] Regenerar `Tesis_F.docx` desde los `.md` actualizados. Su generador no se versionó.
 - [ ] RIESGO-AC-010 (borrador «Tesis final 1»): pendiente del autor.
 
+## Bloque N — Corpus ampliado con cartillas sintéticas
+
+**Objetivo:** que el análisis de resultados cubra tamaños intermedios de cartilla (OE2: tiempo
+según el tamaño) y mezclas de diámetros que 001 y 002 no tienen, y corregir la procedencia de 001.
+Decisiones del usuario del 2026-10-04 en INF-017; supuestos de despiece en INF-018. El motor no
+cambia. Rama `feat/cartillas-sinteticas`, creada desde `origin/production` (`f9599a0`).
+
+- [x] Procedencia aclarada: 002 es un proyecto real con cartilla de un proveedor de acero (anónimo);
+  001 es un ejercicio del curso Construcción de edificaciones. Sin datos de compra (RIESGO-AC-009
+  aceptado como limitación).
+- [x] NSR-10, Título C, verificada para ganchos, recubrimientos, traslapos y separaciones DMO:
+  fichas REF-NSR10-GANCHOS-RECUBRIMIENTOS, REF-NSR10-EMPALMES y REF-NSR10-DMO. Ficha
+  REF-CARTILLA-001 con los datos del curso pendientes.
+- [x] Generador determinista `scripts/generar_cartillas_sinteticas.py` y pruebas
+  `tests/cartillas/` (9 OK, `PYTHONUTF8=1 python -m unittest discover -s tests/cartillas -v`).
+- [x] Cartillas generadas, con su `MEMORIA_DESPIECE.md`:
+  - 003 vivienda: 38 filas, 2958 piezas, #3 a #5, 5 etapas.
+  - 004 edificio: 105 filas, 18782 piezas, #3 a #7, 11 etapas.
+- [x] **CP-1:** el usuario aprobó las dos cartillas (2026-10-04); INF-018 validada y entradas
+  congeladas. Ficha REF-CARTILLA-001 con docente, programa y universidad; falta el periodo.
+- [x] **CP-2:** imagen del worker `oica-worker:local` (`a7823883f0cd`, 858 MB; el disco de Docker
+  pasó de 1.3 a 2.83 GB) y contenedor suelto `oica-experimentos`. En Windows, siempre `PYTHONUTF8=1`.
+- [x] 003 y 004 en `DATASETS`; pruebas de humo válidas; `--artifacts-smoke` correcto
+  (`2026-10-04-sinteticas-artefactos.jsonl`); sonda de tiempo: profundo sobre 004 en 9.2 s.
+- [x] Matriz única de las 4 cartillas (`2026-10-04-tamano-matriz.jsonl`, 272 registros válidos,
+  15 min), controles de 003 y 004 (12 registros), reproducibilidad de los controles (0
+  diferencias) y cota (`2026-10-04-cota-tamano.jsonl`, 284 registros, ninguno por debajo). Los 136
+  registros de 001 y 002 coinciden con la línea base salvo los tiempos.
+- [x] `scripts/resumir_tamano_tiempo.py` y `tests/benchmarks/2026-10-04-tamano-tiempo.json`.
+- [ ] **CP-3:** revisión del usuario de `tests/data/003/ANALISIS_RESULTADOS.md` y
+  `tests/data/004/ANALISIS_RESULTADOS.md` (redactados).
+- [ ] Capítulos 1, 3 y 4 (§4.12 cartillas sintéticas y §4.13 tiempo según tamaño, después de la
+  §4.11 del Bloque M), RIESGO-AC-008, nota de procedencia en `tests/data/001/`, CLAUDE.md, AGENTS.md
+  y `docs/CORTE_SECUENCIAL.md`.
+- [ ] **CP-4:** revisión del Markdown y luego `Tesis_F.docx`, idealmente junto con el Bloque M.
+  - [x] 2026-10-04, a pedido del usuario: `Tesis_F.docx` ya incorpora el Bloque N (69 páginas):
+    §3.1.1 cartillas sintéticas, §4.5 cartillas 003 y 004, §4.6 tiempo según tamaño, procedencia
+    de 001 y 002 (INF-017), INF-015 validada, Resumen, Abstract, Cap. 5, Anexos A y B y
+    bibliografía. Se hizo antes del CP-3 y antes de actualizar los `.md`: el Word va por delante
+    del Markdown en estos puntos. La numeración real del Word es §4.5 y §4.6, no §4.12 y §4.13.
+  - [ ] Pendiente: los cambios de la spec 002 (Bloque M) en §3.3.4 y §3.3.5 (nota resaltada).

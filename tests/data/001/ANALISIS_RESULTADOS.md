@@ -1,3 +1,7 @@
+> Procedencia (2026-10-04, INF-017 y REF-CARTILLA-001): 001 no es una cartilla de obra. Es un
+> ejercicio del curso Construcción de edificaciones (Ingeniería Civil, Universidad Surcolombiana),
+> elaborado por el grupo del autor a partir de un proyecto real que no se puede identificar.
+
 > Actualización 2026-09-13: el análisis siguiente corresponde al motor histórico. La evaluación vigente usa `backend/cutting/`, etapas sucesivas e inventario trazable; ver `docs/CORTE_SECUENCIAL.md`, `docs/tesis-doc/04_Capitulo4.md` y `tests/benchmarks/2026-09-13-agrupado.jsonl`. Sus métricas no son directamente comparables con las anteriores. El motor y la aplicación local con imágenes nuevas ya pasaron validación; ver la sección 4.7 del capítulo 4 y `tests/benchmarks/2026-09-13-integracion-local.json`.
 
 # Test 001 — Análisis de Resultados

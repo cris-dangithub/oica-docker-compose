@@ -30,6 +30,8 @@
 | INF-014 | Académica | Alta | [VALIDADA] | Título fijo con IA/nesting/desperdicios admisibles; se alinea la app (spec 001) y los objetivos reales |
 | INF-015 | Metodología | Alta | [VALIDADA] | El umbral admisible se compara con el desperdicio de INF-012 (incluye saldo reutilizable) |
 | INF-016 | Técnica | Media | [VALIDADA] | Cota Gilmore–Gomory con scipy/HiGHS, certificado lagrangiano y etapas relajadas |
+| INF-017 | Datos y metodología | Alta | [VALIDADA] | Corpus 001–004: procedencia real de 001 y 002 y cartillas sintéticas 003 y 004 |
+| INF-018 | Datos | Media | [VALIDADA] | Supuestos de despiece S-01 a S-14 de las cartillas sintéticas |
 
 ---
 
@@ -251,6 +253,10 @@ Bugs confirmados por análisis estático — pendientes de corrección en Bloque
 ---
 
 ## INF-005
+
+> Actualización 2026-10-04: la respuesta «Usar exclusivamente 001 y 002» rige el piloto de
+> 34 ensayos y la matriz del 2026-09-13. El corpus se amplía con las cartillas sintéticas 003 y
+> 004 (INF-017).
 
 > Actualización 2026-09-13: la descripción que sigue es histórica. El capítulo 4 ahora presenta 34 ensayos verificables de 001/002 y distingue tiempos del motor de tiempos de la aplicación. La decisión de escribir resultados solo con evidencia queda satisfecha para este piloto; permanecen pendientes E2E real, procedencia de datos y revisión del director.
 
@@ -638,6 +644,9 @@ Unificar este repositorio; acceso público sin login; puertos 80/443 libres en V
 
 ## INF-012
 
+> Actualización 2026-10-04: el corpus se amplía con las cartillas sintéticas 003 y 004, y se
+> corrige la procedencia de 001 (INF-017).
+
 ### Categoría
 Datos y metodología
 
@@ -805,7 +814,9 @@ Solicitó registrar la evaluación y las alternativas (2026-09-29). El 2026-10-0
   del precio unitario). Se reporta cumple/excede sin cambiar el motor.
 - Patrones de corte: salida «patrón × repeticiones» y cota inferior Gilmore–Gomory como métrica.
 - Nesting: nesting lineal (1D) con fuente; sin nesting 2D.
-- Cartillas 001/002: obra colombiana, datos confidenciales y anonimizados.
+- Cartillas 001/002: obra colombiana, datos confidenciales y anonimizados. *(Corregido el
+  2026-10-04 por INF-017: solo 002 es de obra; 001 es un ejercicio del curso Construcción de
+  edificaciones, sacado de un proyecto real no identificado.)*
 - Objetivos vigentes aportados por el autor (distintos de los del 13 de septiembre). Aceptó ajustar
   su redacción: «reducir el desperdicio a niveles admisibles», OE1 resumen de compra por longitud,
   OE2 tiempo según cartilla y perfil, OE3 «sobrantes», OE4 planes verificados, OE5 con heurísticas
@@ -891,3 +902,104 @@ Ninguna.
 - cota calculada para los 148 registros, todos con desperdicio ≥ cota y cota «ajustada» (`tests/benchmarks/2026-10-02-cota-ensayos.jsonl`).
 Presupuesto efectivo: 4 s por plan, en lugar de los 6 s previstos, para preservar SC-007.
 
+
+---
+
+## INF-017
+
+### Categoría
+Datos y metodología
+### Prioridad
+Alta
+### Pregunta inferida
+¿Bastan 001 y 002 para el análisis de resultados, y de dónde provienen?
+### Respuesta asumida
+No es una suposición: decisiones del usuario del 2026-10-04.
+- **Procedencia de 002:** proyecto real en Colombia. La cartilla se obtuvo de un proveedor de acero
+  (una ferretería); no hay datos detallados del proyecto ni datos de compra. Se presenta como
+  «cartilla de despiece de un proyecto real en Colombia, obtenida de un proveedor de acero», sin
+  nombrar al proveedor. El nombre no se escribe en el repositorio; el autor lo comunica al director.
+- **Procedencia de 001:** ejercicio del curso Construcción de edificaciones («Cartilla N°1»). Cada
+  grupo elaboró una cartilla a partir de un proyecto real distinto; el proyecto no se puede
+  identificar y la cartilla original no se conserva. Se cita el curso (REF-CARTILLA-001) sin
+  identificar ninguna obra, de modo que el Principio V de la constitución no cambia.
+- **Corpus ampliado** con dos cartillas sintéticas generadas por
+  `scripts/generar_cartillas_sinteticas.py` (supuestos en INF-018):
+  - 003, vivienda de dos pisos: 38 filas, 2958 piezas, #3 a #5, 5 etapas, 5219.005 kg.
+  - 004, edificio de cinco pisos: 105 filas, 18782 piezas, #3 a #7, 11 etapas, 47732.309 kg.
+- **Papel de cada cartilla:** 002 sigue siendo el «proyecto real» del OE5. 003 y 004 sirven para el
+  OE2 (tiempo según el tamaño de la cartilla) y para la robustez de la comparación; no son evidencia
+  de desperdicio en obra.
+- **Comparadores:** FFD/BFD y la cota Gilmore–Gomory (INF-016). No se agregan otros.
+- **Datos de compra:** no se pueden conseguir; RIESGO-AC-009 pasa a limitación aceptada.
+### Justificación
+El OE2 pide el tiempo «según el tamaño de la cartilla», y 001 y 002 saltan de 92 a 67443 piezas sin
+tamaños intermedios. Además, 88 de las 92 piezas de 001 son #5, y 58500 de las 67443 de 002 son #3.
+### Impacto
+Cap. 1 (Resumen, Abstract, §1.3.3 y §1.4), Cap. 3 (§3.1 y §3.6), Cap. 4 (§4.1 y secciones nuevas),
+Anexo A, `tests/data/003/` y `tests/data/004/`, `DATASETS` de `scripts/check_cutting_container.py`
+y nuevos registros en `tests/benchmarks/`. El motor no cambia.
+### Riesgo si la asunción es incorrecta
+Medio: las cartillas sintéticas pueden no representar una obra (RIESGO-AC-011). Se mitiga con la
+memoria de despiece, la revisión del usuario y la etiqueta «sintética» en todo el documento.
+### Fecha
+2026-10-04
+### Inferencias relacionadas
+INF-005, INF-012, INF-014, INF-016, INF-018
+### Puede consolidarse con
+Ninguna: amplía INF-005 e INF-012 y corrige un punto de INF-014, que conservan su historia.
+### Estado
+[VALIDADA] — 2026-10-04, decisiones del usuario en la planificación del Bloque N.
+### Respuesta del usuario
+- 001: «es un ejercicio que nos puso el profesor, y que sacamos esa cartilla de un proyecto real
+  (que era por grupos, así que todos teníamos algo diferente), pero no recuerdo bien los datos del
+  proyecto real y ni siquiera tengo la cartilla real del proyecto». Eligió citar el curso.
+- 002: «la cartilla 002 si es de un proyecto real; pero tampoco tenemos los datos muy específicos
+  que digamos; pero sabemos de qué ferretería viene la cartilla de acero». Eligió el proveedor
+  anónimo.
+- Datos de compra de la ferretería: «No es posible».
+- Cartillas sintéticas: vivienda y edificio. Comparadores: «Creo que con la cota inferior es
+  suficiente».
+
+---
+
+## INF-018
+
+### Categoría
+Datos
+### Prioridad
+Media
+### Pregunta inferida
+¿Con qué reglas se despiezan las cartillas sintéticas 003 y 004?
+### Respuesta asumida
+Los supuestos S-01 a S-14 de `tests/data/003/MEMORIA_DESPIECE.md` y
+`tests/data/004/MEMORIA_DESPIECE.md`:
+- Geometría ficticia de pórticos de concreto con losa aligerada en una dirección.
+- Valores verificados en la NSR-10, Título C, el 2026-10-04: recubrimientos (C.7.7.1), gancho de
+  90° con 12 db (C.7.1.2), ganchos sísmicos de 135° (C.7.1.4), traslapo clase B = 1.3 ld con el ld
+  del caso favorable (C.12.2.2 y C.12.15.1), separaciones dentro de los límites de DMO (C.21.3.4 y
+  C.21.3.5) y empalmes de columna en la mitad central (C.21.3.5.3). Fichas
+  REF-NSR10-GANCHOS-RECUBRIMIENTOS, REF-NSR10-EMPALMES y REF-NSR10-DMO.
+- Supuestos propios: f'c = 21 MPa y fy = 420 MPa; ψt = 1 también en barras superiores; 0.10 m por
+  gancho sísmico; tramos de 12 m para barras más largas, sin modelar la posición del empalme;
+  redondeo hacia arriba a 0.05 m; separaciones de cimentación, losa y escalera; secuencia de etapas;
+  agregación de filas.
+### Justificación
+El usuario pidió verificar en la NSR-10 los valores de ganchos, traslapos y recubrimientos
+(2026-10-04). El resto son decisiones de modelado declaradas.
+### Impacto
+Longitudes y cantidades de 003 y 004 y, por tanto, sus resultados en el Cap. 4.
+### Riesgo si la asunción es incorrecta
+Medio para la representatividad, bajo para la validez del experimento: el motor optimiza cualquier
+demanda válida. Por ejemplo, ψt = 1.3 alargaría los traslapos de barras superiores, y un despiece
+real desplazaría los empalmes fuera de los nudos.
+### Fecha
+2026-10-04
+### Inferencias relacionadas
+INF-017
+### Puede consolidarse con
+Ninguna.
+### Estado
+[VALIDADA] — 2026-10-04. El usuario aprobó las dos cartillas en el punto CP-1 del Bloque N
+(«Te doy la aprobación para ambas cartillas»). Las entradas quedan congeladas: cualquier cambio
+lleva un nombre de archivo nuevo.
