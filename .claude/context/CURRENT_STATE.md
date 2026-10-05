@@ -1,5 +1,17 @@
 # Estado actual — 2026-10-04
 
+## Enmienda 4 de la spec 002: nombres de descarga (rama `fix/nombres-descarga`)
+
+Las descargas se llamaban con el UUID de la versión (`plan_corte_<uuid>.pdf`) y el inventario
+siempre `inventario_final.xlsx`. Ahora: `OICA_<proyecto>_v<versión>_<perfil>_<tipo>.<ext>`
+(FR-036; `nombre_descarga` en `backend/server.py`). Solo cambia `Content-Disposition`: archivos,
+rutas y contenido iguales. Verificación delegada a la CI del PR (decisión del usuario).
+- **Entorno local**: no hay imágenes, contenedores ni volúmenes de OICA, ni en Docker Desktop ni en
+  el Docker de Ubuntu (WSL). Al abrir Docker Desktop (estaba cerrado) se creó un
+  `docker_data.vhdx` vacío de 1.3 GB en `%LOCALAPPDATA%\Docker\wsl\disk`; no se borró.
+- La rama local `production` está atrasada (`ae56668`); la referencia vigente es
+  `origin/production` (`f9599a0`).
+
 ## Bloque L — Spec 002: presentación de resultados y explorador de patrones
 
 **Cerrada (2026-10-04).** El PR #7 se fusionó en `production` (`5b1e2d5`) y «Publicar

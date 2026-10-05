@@ -4,7 +4,7 @@
 
 **Created**: 2026-10-03 · **Amended**: 2026-10-04
 
-**Status**: Implementada y cerrada (2026-10-04). En producción con el PR #7 (`5b1e2d5`); enmiendas 1 (explorador de patrones), 2 (estándar numérico) y 3 (punto decimal, sin separador de miles).
+**Status**: Implementada y cerrada (2026-10-04). En producción con el PR #7 (`5b1e2d5`); enmiendas 1 (explorador de patrones), 2 (estándar numérico) y 3 (punto decimal, sin separador de miles). Enmienda 4 (nombres de descarga, FR-036) implementada en la rama `fix/nombres-descarga`, pendiente de PR.
 
 **Input**: User description: "Mejorar la presentación de los resultados que la aplicación muestra al usuario (Excel, PDF, imagen de nesting y pantalla de detalle), sin alterar el plan de corte ni el formato del inventario final reimportable. Decisiones aprobadas por el usuario el 2026-10-03: (1) Excel: nueva hoja «Resumen» al inicio con indicadores legibles (indicador, valor, unidad) y una tabla «Totales de compra» por diámetro y total general (la hoja «Resumen de compra» queda sin filas de total para no romper el auditor); nueva hoja «Trazabilidad» con los datos técnicos (valido, escala, motor, huella, semilla, perfil, método, tiempos, versión del análisis, cota ajustada); se elimina «Metricas»; orden de hojas: Resumen, Resumen de compra, Patrones, Cortes, Barras, Descartados, Admisibilidad, Cota, Avisos, Inventario, Inventario excluido, Parámetros, Trazabilidad; se quita stock_id de Barras; parámetros en formato legible; barras_minimas renombrada a barras mínimas teóricas de la cota simple. (2) PDF: nuevo orden (encabezado con proyecto, versión, perfil y fecha; plan verificado; indicadores clave; resumen de compra con totales; patrones con la imagen de nesting incrustada y una línea de cobertura «se muestran N de M patrones que cubren B de T barras»; desperdicio y admisibilidad por diámetro; calidad con cota y brecha; avisos; datos técnicos legibles al final), coma decimal y menos decimales. El límite de 150 es de patrones, no de barras. (3) Imagen: longitud escrita sobre cada pieza cuando cabe, leyenda de etapas y de pérdida/descarte/reutilizable, 200 dpi, se mantiene el tope de 60 patrones y se informa la cobertura de barras. (4) Pantalla: nueva sección «Patrones de corte» con los 10 más repetidos (incluida su secuencia por etapa) y vista previa de la imagen; totales en el resumen de compra (compra separada del inventario adicional); se quita la tarjeta «cota simple» de la pantalla. El resumen persistido de patrones debe incluir la secuencia, con nueva versión del análisis (analisis-2); las versiones históricas muestran «no disponible» donde falte un dato y sus artefactos no se modifican. Los 136 ensayos y 12 controles deben seguir con 0 diferencias."
 
@@ -33,6 +33,13 @@ de tesis, cuya plantilla USCO usa punto decimal y miles sin separador. FR-032 ca
 y punto de miles a **punto decimal y sin separador de miles**. Los decimales por tipo de cifra
 (FR-033), el espacio antes de la unidad, las entradas que aceptan coma o punto (FR-034) y los datos
 nativos (FR-035) no cambian.
+
+**Enmienda 4 (2026-10-04, nombres de descarga)** (decisión del usuario): "Al descargar cualquiera
+de estos archivos, se descargan con un nombre larguísimo que no tiene sentido". Los archivos se
+llamaban con el identificador interno de la versión (`plan_corte_<uuid de 36 caracteres>.pdf`), y el
+inventario siempre como `inventario_final.xlsx`. El usuario eligió el formato
+`OICA_<proyecto>_v<versión>_<perfil>_<tipo>.<ext>` (FR-036). Solo cambia el nombre que recibe el
+navegador: el contenido de los archivos, sus nombres en disco y las rutas de descarga no cambian.
 
 ## Contexto
 
@@ -458,6 +465,15 @@ versión nueva y una histórica; reimportar el inventario final de una versión 
   guardado, celdas numéricas del Excel e inventario final reimportable. Las celdas numéricas del
   Excel MUST seguir siendo números, y su separador lo decide la configuración regional de quien
   abre el archivo.
+
+**Nombres de descarga** *(enmienda 4)*
+
+- **FR-036**: Cada descarga (Excel, PDF, imagen e inventario) MUST llegar al navegador con el nombre
+  `OICA_<proyecto>_v<versión>_<perfil>_<tipo>.<ext>`, sin el identificador interno de la versión.
+  `<proyecto>` es el nombre del archivo subido, sin extensión, en ASCII seguro y recortado a 40
+  caracteres (`proyecto` si no queda nada); `<tipo>` es `resultados`, `plan_corte`, `nesting` o
+  `inventario`. Las versiones sin perfil registrado lo omiten. Aplica también a las versiones
+  históricas, porque solo cambia el nombre de la descarga y no el archivo (FR-020).
 
 **Datos del análisis y compatibilidad**
 

@@ -99,7 +99,11 @@ class CuttingApiTests(unittest.TestCase):
         self.assertEqual(result.metricas['barras'], 1)
         response = self.client.get(f'/descargar-inventario/{result.storage_uuid}')
         self.assertEqual(response.status_code, 200)
+        self.assertIn('OICA_cartilla_v1_rapido_inventario.xlsx', response.headers['Content-Disposition'])
         inventory = read_rows(io.BytesIO(response.data), 'inventario.xlsx')
+        excel = self.client.get(f'/descargar-excel/{result.storage_uuid}')
+        self.assertIn('OICA_cartilla_v1_rapido_resultados.xlsx', excel.headers['Content-Disposition'])
+        excel.close()
         if physical:
             self.assertEqual(inventory, [])
             self.assertAlmostEqual(result.metricas['perdida_corte_kg'], .003)
@@ -153,6 +157,31 @@ class CuttingApiTests(unittest.TestCase):
             versions = self.server.ProcessingResult.query.order_by(self.server.ProcessingResult.version_number).all()
             self.assertEqual(len(versions), 2)
             self.assertEqual(versions[1].execution_config, original_snapshot)
+
+    def test_nombres_de_descarga(self):
+        """Spec 002, FR-036: OICA_<proyecto>_v<versión>_<perfil>_<tipo>.<ext>, sin el UUID interno."""
+        from types import SimpleNamespace
+        def version(file_name, numero=2, perfil='balanceado'):
+            return SimpleNamespace(uploaded_file=SimpleNamespace(file_name=file_name),
+                                   version_number=numero, perfil_usado=perfil)
+        nombre = self.server.nombre_descarga
+        v2 = version('002-ingeBigTest.xlsx')
+        self.assertEqual(nombre(v2, 'excel'), 'OICA_002-ingeBigTest_v2_balanceado_resultados.xlsx')
+        self.assertEqual(nombre(v2, 'pdf'), 'OICA_002-ingeBigTest_v2_balanceado_plan_corte.pdf')
+        self.assertEqual(nombre(v2, 'imagen'), 'OICA_002-ingeBigTest_v2_balanceado_nesting.png')
+        self.assertEqual(nombre(v2, 'inventario'), 'OICA_002-ingeBigTest_v2_balanceado_inventario.xlsx')
+        # Nombre largo: el proyecto se recorta a 40 caracteres.
+        self.assertEqual(nombre(version('a' * 60 + '.xlsx', 1, 'rapido'), 'excel'),
+                         f"OICA_{'a' * 40}_v1_rapido_resultados.xlsx")
+        # Versión histórica sin perfil registrado.
+        self.assertEqual(nombre(version('cartilla.csv', 1, None), 'pdf'), 'OICA_cartilla_v1_plan_corte.pdf')
+        # Espacios, tildes y símbolos quedan en ASCII seguro; sin nada utilizable, «proyecto».
+        self.assertEqual(nombre(version('Cartilla N°2 diseño.xlsx', 3, 'profundo'), 'imagen'),
+                         'OICA_Cartilla_N2_diseno_v3_profundo_nesting.png')
+        for vacio in ('', '°°°.xlsx', None):
+            with self.subTest(file_name=vacio):
+                self.assertEqual(nombre(version(vacio, 1, 'rapido'), 'inventario'),
+                                 'OICA_proyecto_v1_rapido_inventario.xlsx')
 
     def test_worker_con_condiciones_fisicas(self):
         self.test_worker_y_roundtrip_inventario(physical=True)
