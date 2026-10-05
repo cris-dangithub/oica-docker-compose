@@ -107,8 +107,21 @@ producción» terminó con éxito.
 
 - Actualizar los capítulos 3 y 4 (salidas reorganizadas y explorador de patrones) y pasar las
   cifras de los capítulos 1 a 4 a punto decimal y sin separador de miles.
-- `Tesis_F.docx` **no está en el disco** y su generador quedó en el scratchpad de otra sesión, sin
-  versionar. Hay que regenerarlo desde los `.md` actualizados.
+- `Tesis_F.docx` **sí está en el disco** (`docs/tesis-doc/`, sin commit). El 2026-10-04 se
+  regeneró con el Bloque N (ver abajo); su generador sigue en el scratchpad de la sesión del
+  2026-10-03, sin versionar. Falta llevarle los cambios de la spec 002 (§3.3.4 y §3.3.5).
+
+## Word con el Bloque N (2026-10-04)
+
+`Tesis_F.docx` pasó de 61 a 69 páginas, con las cifras verificadas contra
+`2026-10-04-tamano-matriz.jsonl`, `-cota-tamano.jsonl`, `-tamano-tiempo.json` y los controles:
+- §3.1: corpus de cuatro cartillas y procedencia de 001 (curso) y 002 (proveedor anónimo);
+  §3.1.1 nueva con la generación de 003 y 004 y la tabla de supuestos NSR-10 (INF-018).
+- §4.1 con la tabla del corpus; §4.5 nueva (cartillas sintéticas: desperdicio, brecha, #7 óptimo
+  con 20.28 %, controles); §4.6 nueva (tiempo según tamaño, Figura 4-3 y tiempo por diámetro).
+- Resumen, Abstract, Cap. 5, Anexos A y B y bibliografía (REF-CARTILLA-001) actualizados;
+  INF-015 ya no figura como pendiente; datos de compra como limitación aceptada.
+- Se hizo antes del CP-3 y antes de pasar el Bloque N a los `.md`: el Word va por delante.
 
 ## Documento Word de la tesis (`docs/tesis-doc/Tesis_F.docx`, 2026-10-03)
 

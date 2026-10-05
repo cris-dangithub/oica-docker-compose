@@ -229,8 +229,8 @@ Al generar `docs/tesis-doc/Tesis_F.docx` (2026-10-03) se contrastó el borrador 
 
 **Estado:** [PENDIENTE — fuentes a cargo del autor] El punto de la procedencia de 001 quedó
 resuelto el 2026-10-04 (INF-017, REF-CARTILLA-001): 001 es un ejercicio del curso Construcción de
-edificaciones, sacado de un proyecto real no identificado. Falta corregir el Cap. 1, el Cap. 3 y el
-Word (Bloque N), y completar los datos del curso en la ficha.
+edificaciones, sacado de un proyecto real no identificado. El Word ya lo corrige (2026-10-04); falta
+corregir el Cap. 1 y el Cap. 3 en Markdown y completar los datos del curso en la ficha.
 
 ---
 

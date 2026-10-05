@@ -445,3 +445,9 @@ cambia. Rama `feat/cartillas-sinteticas`, creada desde `origin/production` (`f95
   §4.11 del Bloque M), RIESGO-AC-008, nota de procedencia en `tests/data/001/`, CLAUDE.md, AGENTS.md
   y `docs/CORTE_SECUENCIAL.md`.
 - [ ] **CP-4:** revisión del Markdown y luego `Tesis_F.docx`, idealmente junto con el Bloque M.
+  - [x] 2026-10-04, a pedido del usuario: `Tesis_F.docx` ya incorpora el Bloque N (69 páginas):
+    §3.1.1 cartillas sintéticas, §4.5 cartillas 003 y 004, §4.6 tiempo según tamaño, procedencia
+    de 001 y 002 (INF-017), INF-015 validada, Resumen, Abstract, Cap. 5, Anexos A y B y
+    bibliografía. Se hizo antes del CP-3 y antes de actualizar los `.md`: el Word va por delante
+    del Markdown en estos puntos. La numeración real del Word es §4.5 y §4.6, no §4.12 y §4.13.
+  - [ ] Pendiente: los cambios de la spec 002 (Bloque M) en §3.3.4 y §3.3.5 (nota resaltada).
